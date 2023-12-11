@@ -25,11 +25,11 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
         const obj = {
             tarefa: anotarTarefas,
             id: tarefas.length + 1,
-            // completed: false
+             completed: false
         }
         setTarefas([...tarefas, obj])
-        setAnotarTarefas('');
-        closeModalCreateTarefas        
+        // setAnotarTarefas('');
+        // closeModalCreateTarefas();
     }
 
   return (

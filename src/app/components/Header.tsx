@@ -11,7 +11,7 @@ export const Header = () => {
     <header 
   className={`flex p-5 border-b ${IsThemeDark ? 'border-white' : 'border-black'} flex-row justify-between items-center`}
   >
-      <h1>App post it</h1>
+      <h1 className=' text-2xl'>App post it ✌️</h1>
 
 
 {    IsThemeDark?
