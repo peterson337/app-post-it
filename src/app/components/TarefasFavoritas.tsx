@@ -23,7 +23,7 @@ export const TarefasFavoritas = () => {
             const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
 
   return (
-    <div className='grid  grid-cols-1 md:grid-cols-5'> 
+    <div className='grid  grid-cols-1 md:grid-cols-3'> 
         {/* {
             iSOpenModalEditarTarefas?
             <ModalEditarTarefa/>
@@ -45,9 +45,9 @@ export const TarefasFavoritas = () => {
           className=''
         key={val.id}
       >
-         <Card className='w-60 h-32 p-3 bg-yellow-200'>
+         <Card className='w-96 h-60 p-3 bg-yellow-200'>
     <Typography className={`${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-     w-full break-words h-16 overflow-auto`}
+     w-full break-words h-40 overflow-auto`}
      sx={{ fontSize: 20 }}
      color="text.secondary" gutterBottom>
     {val.tarefa}

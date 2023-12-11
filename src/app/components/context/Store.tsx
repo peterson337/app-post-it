@@ -14,7 +14,12 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   const [TarefaConcluida, setTarefaConcluida] = useState(false);
   const [ArmazenarTarefa, setArmazenarTarefa] = useState();
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
-  
+  const [Filtro, setFiltro] = useState<number>(0);
+
+  const handleChandeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setFiltro(newValue)
+  }
+
   const excluirTarefas = (id: number) => {
     const deletarTarefa = tarefas.filter((val) => val.id != id)
     setTarefas(deletarTarefa);
@@ -107,6 +112,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
       anotarTarefasEditada,
       ArmazenarTarefa,
       tarefasFavoritas,
+      Filtro,
       setTarefasFavoritas,
       setAnotarTarefas,
       setTarefas,
@@ -119,12 +125,14 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
       //? Funções
       excluirTarefas,
       MacarTarefaComoConcluida,
+      setFiltro,
       atualizarTarefa,
       favoritarTarefa,
       MacarTarefavoritaComoConcluida,
       atualizarTarefaFavorita,
       excluirTarefasFavorita,
       desfavoritarTarefa,
+      handleChandeTab,
     }}>
       {children}
     </GlobalContext.Provider>
