@@ -1,4 +1,5 @@
-import React, {useContext} from 'react'
+'use client';
+import React, {useContext, useState} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
@@ -10,11 +11,12 @@ import  {GlobalContext}  from "./context/Store";
 
 
 export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props) => {
+
+    const [anotarTarefas, setAnotarTarefas] = useState('');
     
     const {
         tarefas,
-        anotarTarefas,
-        setAnotarTarefas,
+
         setTarefas,
     } = useContext(GlobalContext);
     
@@ -45,10 +47,20 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
      onChange={(e : T) => setAnotarTarefas(e.target.value)} value={anotarTarefas}
      />
 
+    
     <div className='flex flex-row m-3 gap-3'>
-        <Button variant="contained" className='bg-red-500 hover:bg-red-700' onClick={closeModalCreateTarefas}
-        >Cancelar</Button>
-        <Button variant="contained" className='bg-sky-500 hover:bg-sky-700' onClick={salvarTarefa}>Criar tarefa</Button>
+
+        <Button variant="contained" className='bg-red-500 hover:bg-red-700'
+         onClick={closeModalCreateTarefas}
+        >
+        Cancelar
+        </Button>
+
+        <Button variant="contained" className='bg-sky-500 hover:bg-sky-700'
+         onClick={salvarTarefa}>
+        Criar tarefa
+        </Button>
+        
     </div>
 
         </section>

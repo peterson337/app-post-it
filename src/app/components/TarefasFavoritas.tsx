@@ -45,22 +45,22 @@ export const TarefasFavoritas = () => {
           className=''
         key={val.id}
       >
-         <Card className='w-96 h-60 p-3 bg-yellow-200'>
-    <Typography className={`${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-     w-full break-words h-40 overflow-auto`}
+         <Card className='md:w-[33rem] w-60 h-60 p-5 bg-yellow-200 text-2xl'>
+    <Typography className={`text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+     w-full break-words h-36 overflow-auto`}
      sx={{ fontSize: 20 }}
      color="text.secondary" gutterBottom>
     {val.tarefa}
     </Typography>
   <CardActions className=' flex flex-row justify-between'>
     <button
-    className='hover:bg-gray-300 p-2 hover:rounded-full text-red-500'
+    className='hover:bg-gray-300 p-3 hover:rounded-full text-red-500'
       onClick={() => excluirTarefasFavorita(val.id)}><FaTrash /> </button>
     <button
-    className='hover:bg-gray-300 p-2 hover:rounded-full text-green-500'
+    className='hover:bg-gray-300 p-3 hover:rounded-full text-green-500'
       onClick={() => MacarTarefavoritaComoConcluida(val.id)}><FaCheck /> </button>
     <button
-    className='hover:bg-gray-300 p-2 hover:rounded-full '
+    className='hover:bg-gray-300 p-3 hover:rounded-full '
       onClick={() => desfavoritarTarefa(val.id)}><BsBookmarkStar /> </button>
      {/* <button
     className='hover:bg-gray-300 p-2 hover:rounded-full text-blue-500'

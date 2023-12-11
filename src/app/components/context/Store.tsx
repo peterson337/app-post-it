@@ -8,7 +8,6 @@ type N = { id: number, tarefa: string, completed: boolean };
 export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [tarefas, setTarefas] = useState<N[]>([]);
   const [tarefasFavoritas, setTarefasFavoritas] = useState<N[]>([]);
-  const [anotarTarefas, setAnotarTarefas] = useState('');
   
   const [IsThemeDark, setIsThemeDark] = useState(true);
   const [TarefaConcluida, setTarefaConcluida] = useState(false);
@@ -107,14 +106,12 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
     <GlobalContext.Provider value={{
       tarefas,
       IsThemeDark,
-      anotarTarefas,
       TarefaConcluida,
       anotarTarefasEditada,
       ArmazenarTarefa,
       tarefasFavoritas,
       Filtro,
       setTarefasFavoritas,
-      setAnotarTarefas,
       setTarefas,
       setIsThemeDark,
       setTarefaConcluida,

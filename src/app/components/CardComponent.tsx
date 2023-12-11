@@ -25,8 +25,6 @@ export const CardComponent = (val: any) => {
     setArmazenarTarefa,
     MacarTarefaComoConcluida,
     tarefasFavoritas,
-    //  Filtro,
-    //  setFiltro,
     setTarefasFavoritas,
     favoritarTarefa,
 } = useContext(GlobalContext);
@@ -60,12 +58,12 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
  
     <section className='bg-slate-300 p-10 
      md:w-[90rem] md:h-[30rem] h-96 m-5 overflow-auto 
-     w-72
+     w-72 rounded-xl
      '>
 
       <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example">
           <Tab label="Todas as tarefas" />
-          <Tab label="tarefas favoritas"  />
+          <Tab label="favoritos"  />
         </Tabs>
 {       Filtro === 1?
       <section className='flex flex-col '>
@@ -90,13 +88,8 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
      { 
 
-
-
-
-      
-
       Filtro === 0?
-<div>
+      <div>
   {
           tarefas.length === 0 ?
 
@@ -116,25 +109,26 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
                 className=' '
                 key={val.id}
               >
-                <Card className='w-96 h-60 p-3 bg-yellow-200'>
-            <Typography className={`${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-            w-full break-words h-40 overflow-auto`}
+                <Card className='md:w-[33rem] w-60 h-60 p-5 bg-yellow-200 text-2xl'>
+
+            <Typography className={` text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+            w-full break-words  h-36 overflow-auto`}
             sx={{ fontSize: 20 }}
             color="text.secondary" gutterBottom>
             {val.tarefa}
             </Typography>
           <CardActions className=' flex flex-row justify-between'>
             <button
-            className='hover:bg-gray-300 p-2 hover:rounded-full text-red-500'
+            className='hover:bg-gray-300 p-3 hover:rounded-full text-red-500'
               onClick={() => excluirTarefas(val.id)}><FaTrash /> </button>
             <button
-            className='hover:bg-gray-300 p-2 hover:rounded-full text-green-500'
+            className='hover:bg-gray-300 p-3 hover:rounded-full text-green-500'
               onClick={() => MacarTarefaComoConcluida(val.id)}><FaCheck /> </button>
             <button
-            className='hover:bg-gray-300 p-2 hover:rounded-full '
+            className='hover:bg-gray-300 p-3 hover:rounded-full '
               onClick={() => favoritarTarefa(val.id)}><BsBookmarkStar /> </button>
             <button
-            className='hover:bg-gray-300 p-2 hover:rounded-full text-blue-500'
+            className='hover:bg-gray-300 p-3 hover:rounded-full text-blue-500'
               onClick={() => openModalEditarTarefas(val.id)}><FaPen /></button>
           </CardActions>
             </Card>
