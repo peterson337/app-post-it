@@ -11,7 +11,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   
   const [IsThemeDark, setIsThemeDark] = useState(true);
   const [TarefaConcluida, setTarefaConcluida] = useState(false);
-  const [ArmazenarTarefa, setArmazenarTarefa] = useState();
+  const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
 
@@ -39,8 +39,6 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
     setTarefasFavoritas(atualizarTarefaFavorita); 
 }
 
-    console.log(tarefas,'tarefas');
-    console.log(tarefasFavoritas,'tarefasFavoritas');
   const MacarTarefaComoConcluida = (id : number) => {
 
         const atualizarTarefa = tarefas.map((val) => {

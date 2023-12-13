@@ -11,13 +11,11 @@ import { FaCheck } from "react-icons/fa6";
 import { BsBookmarkStar } from "react-icons/bs";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
 
-export const CardComponent = (val: any) => {
+export const CardComponent = () => {
   
   const {
     tarefas,
@@ -25,18 +23,18 @@ export const CardComponent = (val: any) => {
     setArmazenarTarefa,
     MacarTarefaComoConcluida,
     tarefasFavoritas,
+    Filtro, 
+    setFiltro,
+    handleChandeTab,
     setTarefasFavoritas,
     favoritarTarefa,
+    IsThemeDark,
 } = useContext(GlobalContext);
 
 const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
 
 const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
- const [Filtro, setFiltro] = useState<number>(0);
- const handleChandeTab = (event: React.SyntheticEvent, newValue: number) => {
-   setFiltro(newValue)
- }
 
   const openModalEditarTarefas = (id : number) => {
     setISOpenModalEditarTarefas(true);
@@ -56,10 +54,9 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
       null
     }
  
-    <section className='bg-slate-300 p-10 
+    <section className={`${IsThemeDark? 'bg-[#e6f0f5]' : 'bg-[#edf2fc]'}  p-10 
      md:w-[90rem] md:h-[30rem] h-96 m-5 overflow-auto 
-     w-72 rounded-xl
-     '>
+     w-72 rounded-xl`}>
 
       <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example">
           <Tab label="Todas as tarefas" />
@@ -70,7 +67,8 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
         {
           tarefasFavoritas.length === 0 ?
-          <p className=' text-red-500 text-2xl font-bold mt-3'> <span className=' flex flex-row items-center gap-4'>
+          <p className=' text-red-500 text-2xl font-bold mt-3'>
+             <span className=' flex flex-row items-center gap-4'>
             Adicione uma tarefa nos favoritos clicando no 
           seguinte botão: <BsBookmarkStar></BsBookmarkStar></span></p>
           :
@@ -93,7 +91,8 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
   {
           tarefas.length === 0 ?
 
-          <p className='text-center text-red-500 text-2xl font-bold'>Não existem tarefas salvas 😞</p>
+          <p className='text-center text-red-500 text-2xl font-bold'>
+            Não existem tarefas salvas 😞</p>
 
           :
 

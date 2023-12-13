@@ -14,9 +14,14 @@ export type Types = {
     MacarTarefaComoConcluida: (value: boolean) => void;
     anotarTarefasEditada: string;
     setAnotarTarefasEditada: (value: string) => void;
+    setArmazenarTarefa: Number;
+    Filtro: number;
+    setFiltro: (value: number) => void;
+    favoritarTarefa: (id : number) => void;
+    handleChandeTab:  (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-type Tarefas = {
+export type Tarefas = {
     id: number;
     tarefa: string;
      completed: boolean;

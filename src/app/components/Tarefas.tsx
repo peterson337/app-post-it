@@ -47,7 +47,7 @@ export const Tarefas = () => {
 <div className='w-full flex justify-end'>
       <Fab
       aria-label="add"
-      className='mr-2 mb-24 bg-sky-500 hover:bg-sky-700'
+      className='mr-2 mb-24 bg-sky-500 hover:bg-sky-700 text-white text-2xl'
       onClick={openModalCreateTarefas} 
       >
       <FaPlus/>
