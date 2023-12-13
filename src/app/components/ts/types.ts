@@ -1,9 +1,9 @@
 export type  Props = {
-    openModalCreateTarefas:(value: boolean) => void;
-    closeModalCreateTarefas: (value: boolean) => void;
+    openModalCreateTarefas?:(value: boolean) => void;
+    closeModalCreateTarefas?: () => void | ((value: boolean) => void);
 
-    openModalEditarTarefas: (value: boolean) => void;
-    closeModalEditarTarefas: (value: boolean) => void;
+    openModalEditarTarefas?: (value: number) => void;
+    closeModalEditarTarefas?: (value: boolean) => void;
 
 }
 

@@ -51,7 +51,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
       closeModalEditarTarefas={closeModalEditarTarefas}
       />
       :
-      null
+      null 
     }
  
     <section className={`${IsThemeDark? 'bg-[#e6f0f5]' : 'bg-[#edf2fc]'}  p-10 

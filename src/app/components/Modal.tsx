@@ -16,22 +16,29 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
     
     const {
         tarefas,
-
         setTarefas,
     } = useContext(GlobalContext);
     
     const salvarTarefa = () => {
-        // anotarTarefas.length === 0?
-        // alert('Por favor escreva alguma coisa para salvar uma tarefa');
-        // :
+    
+         if (!anotarTarefas.trim()) {
+             alert('Por favor escreva alguma coisa para salvar uma tarefa');
+             return;
+            
+         }
+
         const obj = {
             tarefa: anotarTarefas,
-            id: tarefas.length + 1,
-             completed: false
+            id: new Date().getTime(),
+            completed: false
         }
-        setTarefas([...tarefas, obj])
-        // setAnotarTarefas('');
-        // closeModalCreateTarefas();
+        setTarefas([...tarefas, obj]);
+
+        localStorage.setItem('tarefas', JSON.stringify([...tarefas, obj]));
+
+         setAnotarTarefas('');
+
+         closeModalCreateTarefas?  closeModalCreateTarefas() : null
     }
 
   return (
@@ -43,9 +50,17 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
         <section className='p-4'>
     <DialogTitle className='border-b border-black mb-2'>Criar tarefa</DialogTitle>
 
-    <TextField id="standard-basic" label="Standard" variant="standard"
-     onChange={(e : T) => setAnotarTarefas(e.target.value)} value={anotarTarefas}
-     />
+
+
+        <TextField
+          fullWidth 
+          id="standard-basic"
+          label="Tarefa"
+          variant="standard"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnotarTarefas(e.target.value)}
+          value={anotarTarefas}
+          required // Adicione esta linha para tornar o campo obrigatório
+        />
 
     
     <div className='flex flex-row m-3 gap-3'>

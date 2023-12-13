@@ -1,20 +1,64 @@
 "use client";
 
-import { Children, createContext, useState } from "react";
-import { Types } from "./ts/types";
-export const GlobalContext = createContext<Types>({});
-type N = { id: number, tarefa: string, completed: boolean };
-// Correção da definição da propriedade no GlobalContextProvider
+import { Children, createContext, useState, useEffect } from "react";
+import { Types, Tarefas } from "./ts/types";
+
+export const GlobalContext = createContext<Types>({
+  IsThemeDark: false,
+  IsModalEditarTarefa: false,
+  setTarefas: () => {},
+  setTarefasFavoritas: () => {},
+  setIsThemeDark: () => {},
+  setIsModalEditarTarefa: () => {},
+  tarefas: [],
+  tarefasFavoritas: [],
+  anotarTarefas: '',
+  setAnotarTarefas: () => {},
+  excluirTarefas: () => {},
+  TarefaConcluida: false,
+  MacarTarefaComoConcluida: () => {},
+  anotarTarefasEditada: '',
+  setAnotarTarefasEditada: () => {},
+  setArmazenarTarefa: () => {},
+  Filtro: 0,
+  setFiltro: () => {},
+  favoritarTarefa: () => {},
+  handleChandeTab: () => {},
+  ArmazenarTarefa: 0,
+
+  //? Funções
+
+  
+  MacarTarefavoritaComoConcluida: () => {},
+  atualizarTarefaFavorita: () => {},
+  excluirTarefasFavorita:() => {},
+  desfavoritarTarefa: () => {},
+})
+
 export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tarefas, setTarefas] = useState<N[]>([]);
-  const [tarefasFavoritas, setTarefasFavoritas] = useState<N[]>([]);
+  
+  const [tarefas, setTarefas] = useState<Tarefas[]>([]);
+  const [tarefasFavoritas, setTarefasFavoritas] = useState<Tarefas[]>([]);
   
   const [IsThemeDark, setIsThemeDark] = useState(true);
-  const [TarefaConcluida, setTarefaConcluida] = useState(false);
-  const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
+  const [ArmazenarTarefa, setArmazenarTarefa] = useState<number | null>(null);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
+  
+  useEffect(() => {
+    const data = localStorage.getItem('tarefas');
+    const dataFavoritas = localStorage.getItem('tarefasFavoritas');    
+    
+    if (data) {
+      setTarefas(JSON.parse(data));
+    }
+     if (dataFavoritas){
+      setTarefasFavoritas(JSON.parse(dataFavoritas));
 
+    }
+    
+  }, []);
+  
   const handleChandeTab = (event: React.SyntheticEvent, newValue: number) => {
     setFiltro(newValue)
   }
@@ -22,10 +66,14 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   const excluirTarefas = (id: number) => {
     const deletarTarefa = tarefas.filter((val) => val.id != id)
     setTarefas(deletarTarefa);
+    localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
+
   }
   const excluirTarefasFavorita = (id: number) => {
     const deletarTarefa = tarefasFavoritas.filter((val) => val.id != id)
     setTarefasFavoritas(deletarTarefa);
+    localStorage.setItem('tarefasFavoritas', JSON.stringify(deletarTarefa));
+
   }
 
   const MacarTarefavoritaComoConcluida = (id : number) => {
@@ -37,18 +85,23 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
       return val;
     })
     setTarefasFavoritas(atualizarTarefaFavorita); 
+    localStorage.setItem('tarefasFavoritas', JSON.stringify(atualizarTarefaFavorita));
+
+
 }
 
-  const MacarTarefaComoConcluida = (id : number) => {
+const MacarTarefaComoConcluida = (id: number) => {
+  const atualizarTarefa = tarefas.map((val) => {
+      if (val.id === id) {
+          return { ...val, completed: !val.completed };
+      }   
+      return val;
+  });
 
-        const atualizarTarefa = tarefas.map((val) => {
-          if (val.id === id) {
-           return { ...val, completed: !val.completed }
-          }   
-          return val;
-        })
-        setTarefas(atualizarTarefa); 
-  }
+  setTarefas(atualizarTarefa); 
+  localStorage.setItem('tarefas', JSON.stringify(atualizarTarefa));
+}
+
 
   const favoritarTarefa = (id : number) => {
           excluirTarefas(id);
@@ -61,6 +114,12 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
           }
 
           setTarefasFavoritas([...tarefasFavoritas, favoritarTarefas]);
+        
+           localStorage.setItem('tarefasFavoritas', JSON.stringify([...tarefasFavoritas, favoritarTarefas]));
+
+
+
+
   }
 
   const desfavoritarTarefa = (id : number) => {
@@ -74,29 +133,25 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
           }
 
           setTarefas([...tarefas, desfavoritarTarefas]);
+
+        localStorage.setItem('tarefas', JSON.stringify([...tarefas, desfavoritarTarefas]));
+
+
+
   }
 
 
   
-   const atualizarTarefa = (ArmazenarTarefa : number) => {
-     setTarefas(tarefas.map(
-     (val : N) => val.id === ArmazenarTarefa? 
+  
 
-     { ...val, tarefa: anotarTarefasEditada } 
-     :
-    val
-      )
-     )
-   }
    const atualizarTarefaFavorita = (ArmazenarTarefa : number) => {
-    setTarefasFavoritas(tarefasFavoritas.map(
-     (val : N) => val.id === ArmazenarTarefa? 
+    const atualizarTarefaFavorita = tarefasFavoritas.map((val : N) => val.id === ArmazenarTarefa? 
+    { ...val, tarefa: anotarTarefasEditada } : val)
 
-     { ...val, tarefa: anotarTarefasEditada } 
-     :
-    val
-      )
-     )
+    setTarefasFavoritas(atualizarTarefaFavorita);
+
+     localStorage.setItem('tarefasFavoritas', JSON.stringify(atualizarTarefaFavorita));
+
    }
 
 
@@ -104,15 +159,14 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
     <GlobalContext.Provider value={{
       tarefas,
       IsThemeDark,
-      TarefaConcluida,
       anotarTarefasEditada,
       ArmazenarTarefa,
       tarefasFavoritas,
       Filtro,
+      setFiltro,
       setTarefasFavoritas,
       setTarefas,
       setIsThemeDark,
-      setTarefaConcluida,
       setAnotarTarefasEditada,
       setArmazenarTarefa,
 
@@ -120,8 +174,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
       //? Funções
       excluirTarefas,
       MacarTarefaComoConcluida,
-      setFiltro,
-      atualizarTarefa,
+      //atualizarTarefa,
       favoritarTarefa,
       MacarTarefavoritaComoConcluida,
       atualizarTarefaFavorita,
