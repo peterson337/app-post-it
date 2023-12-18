@@ -5,9 +5,9 @@ import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import {Props, T} from "./ts/types";
+import {TypesEditarTarefa} from "./ts/types";
 import  {GlobalContext}  from "./context/Store";
-export const ModalEditarTarefa = ({openModalEditarTarefas, closeModalEditarTarefas}: Props ) => {
+export const ModalEditarTarefa: React.FC<TypesEditarTarefa> = ({openModalEditarTarefas, closeModalEditarTarefas}: TypesEditarTarefa ) => {
 
   const [teste, setTeste] = useState('');
   const {
@@ -39,14 +39,15 @@ const atualizarTarefa = (ArmazenarTarefa : number) => {
 
      <Dialog  
      onClose={closeModalEditarTarefas} 
-     open={openModalEditarTarefas}
+     open={typeof openModalEditarTarefas === 'function' ? true : openModalEditarTarefas}
      className='flex flex-col justify-center items-center text-center p-12'
      >
          <section className='p-4'>
      <DialogTitle className='border-b border-black mb-2'>Editar Tarefa</DialogTitle>
 
      <TextField id="standard-basic" label="Standard" variant="standard"
-      onChange={(e : T) => setTeste(e.target.value)} value={teste}
+      onChange={(e :  React.ChangeEvent<HTMLInputElement>) => setTeste(e.target.value)}
+      value={teste}
       />
 
      <div className='flex flex-row m-3 gap-3'>

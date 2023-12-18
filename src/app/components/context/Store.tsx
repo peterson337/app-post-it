@@ -41,7 +41,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   const [tarefasFavoritas, setTarefasFavoritas] = useState<Tarefas[]>([]);
   
   const [IsThemeDark, setIsThemeDark] = useState(true);
-  const [ArmazenarTarefa, setArmazenarTarefa] = useState<number | null>(null);
+  const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
   
@@ -117,9 +117,6 @@ const MacarTarefaComoConcluida = (id: number) => {
         
            localStorage.setItem('tarefasFavoritas', JSON.stringify([...tarefasFavoritas, favoritarTarefas]));
 
-
-
-
   }
 
   const desfavoritarTarefa = (id : number) => {
@@ -136,16 +133,10 @@ const MacarTarefaComoConcluida = (id: number) => {
 
         localStorage.setItem('tarefas', JSON.stringify([...tarefas, desfavoritarTarefas]));
 
-
-
   }
 
-
-  
-  
-
    const atualizarTarefaFavorita = (ArmazenarTarefa : number) => {
-    const atualizarTarefaFavorita = tarefasFavoritas.map((val : N) => val.id === ArmazenarTarefa? 
+    const atualizarTarefaFavorita = tarefasFavoritas.map((val : Tarefas) => val.id === ArmazenarTarefa? 
     { ...val, tarefa: anotarTarefasEditada } : val)
 
     setTarefasFavoritas(atualizarTarefaFavorita);

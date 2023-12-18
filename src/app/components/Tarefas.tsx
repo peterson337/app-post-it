@@ -21,10 +21,6 @@ export const Tarefas = () => {
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true)
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false)
 
-
-
-
-
   const [iSOpenModalCreateTareas, setISOpenModalCreateTareas] = useState(false);
 
   return (
@@ -34,8 +30,7 @@ export const Tarefas = () => {
 
   {iSOpenModalCreateTareas?
    <Modal
-  openModalCreateTarefas={openModalCreateTarefas}
-  closeModalCreateTarefas={closeModalCreateTarefas}
+   setISOpenModalCreateTareas={setISOpenModalCreateTareas}
  />
    : null}
 

@@ -6,11 +6,11 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import {Props, T} from "./ts/types";
+import {Props} from "./ts/types";
 import  {GlobalContext}  from "./context/Store";
 
 
-export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props) => {
+export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) => {
 
     const [anotarTarefas, setAnotarTarefas] = useState('');
     
@@ -37,14 +37,14 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
         localStorage.setItem('tarefas', JSON.stringify([...tarefas, obj]));
 
          setAnotarTarefas('');
-
-         closeModalCreateTarefas?  closeModalCreateTarefas() : null
+         setISOpenModalCreateTareas(false);
+        
     }
 
   return (
     <Dialog  
-    onClose={closeModalCreateTarefas} 
-    open={openModalCreateTarefas}
+    onClose={() => setISOpenModalCreateTareas(false)} 
+    open={typeof setISOpenModalCreateTareas === 'function' ? true : setISOpenModalCreateTareas}
     className='flex flex-col justify-center items-center text-center p-12'
     >
         <section className='p-4'>
@@ -66,7 +66,7 @@ export const Modal = ( {openModalCreateTarefas, closeModalCreateTarefas} : Props
     <div className='flex flex-row m-3 gap-3'>
 
         <Button variant="contained" className='bg-red-500 hover:bg-red-700'
-         onClick={closeModalCreateTarefas}
+         onClick={() => setISOpenModalCreateTareas(false)}
         >
         Cancelar
         </Button>

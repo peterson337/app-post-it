@@ -1,18 +1,11 @@
-export type  Props = {
-    openModalCreateTarefas?:(value: boolean) => void;
-    closeModalCreateTarefas?: () => void | ((value: boolean) => void);
+import { Dispatch, SetStateAction } from "react";
 
-    openModalEditarTarefas?: (value: number) => void;
-    closeModalEditarTarefas?: (value: boolean) => void;
+export type Props = {
+    setISOpenModalCreateTareas: Dispatch<SetStateAction<boolean>> | (() => void);
+};
 
-}
+export type TypesEditarTarefa = {
+  openModalEditarTarefas: (value: number) => void;
+  closeModalEditarTarefas: () => void;
+};
 
-export type T = {
-    e: {
-        value: {
-            target: {
-                value: string
-            }
-        }
-    }
-}
