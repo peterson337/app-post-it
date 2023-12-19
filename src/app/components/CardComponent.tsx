@@ -54,11 +54,13 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
       null 
     }
  
-    <section className={`${IsThemeDark? 'bg-[#e6f0f5]' : 'bg-[#edf2fc]'}  p-10 
-     md:w-[90rem] md:h-[30rem] h-96 m-5 overflow-auto 
-     w-72 rounded-xl`}>
+    <section className={`${IsThemeDark? 'bg-[#e6f0f5]' : 'bg-[#edf2fc]'}  md:p-10 
+     md:w-[90rem] md:h-[30rem] h-80 m-5 overflow-auto 
+     w-96 rounded-xl`}>
 
-      <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example">
+      <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example"
+      className='mt-3'
+      >
           <Tab label="Todas as tarefas" />
           <Tab label="favoritos"  />
         </Tabs>
@@ -67,7 +69,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
         {
           tarefasFavoritas.length === 0 ?
-          <p className=' text-red-500 text-2xl font-bold mt-3'>
+          <p className=' text-red-500 md:text-2xl font-bold mt-3'>
              <span className=' flex flex-row items-center gap-4'>
             Adicione uma tarefa nos favoritos clicando no 
           seguinte botão: <BsBookmarkStar></BsBookmarkStar></span></p>
@@ -91,12 +93,15 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
   {
           tarefas.length === 0 ?
 
-          <p className='text-center text-red-500 text-2xl font-bold'>
+          <p className='md:text-center text-red-500 md:text-2xl font-bold
+           text-start text-[22px] mt-3'>
             Não existem tarefas salvas 😞</p>
 
           :
 
-          <section  className='grid  grid-cols-1 md:grid-cols-3'>
+          <section  
+          className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 
+          '>
             
             {tarefas.map((val) => {
                 const TarefaConcluida = val.completed;
@@ -104,15 +109,16 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
           
                 <Box
                 component="span"
-                sx={{ mx: '2px', transform: 'scale(0.8)'}}
-                className=' '
+                sx={{ mx: '2px', transform: 'scale(0.9)'}}
+                
                 key={val.id}
               >
-                <Card className='md:w-[33rem] w-60 h-60 p-5 text-2xl'
+                <Card className='md:w-[25rem] w-80  h-60 p-5 text-2xl'
                  sx={{backgroundColor: '#fef08a'}}
                  >
 
-            <Typography className={` text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+            <Typography
+            className={` text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
             w-full break-words  h-36 overflow-auto`}
             sx={{ fontSize: 20 }}
             color="text.secondary" gutterBottom>

@@ -39,11 +39,13 @@ export const Tarefas = () => {
        
       
 
-<div className='w-full flex justify-end'>
+<div className='w-full flex justify-end 
+                mb-10
+                '>
 <Fab 
-    color="primary" 
-    className='bg-sky-500 hover:bg-sky-700 text-white'
-    sx={{mx: '20px', my: '95px',}}
+    className='bg-sky-500 hover:bg-sky-700 text-white 
+    md:mb-24 md:mr-10   
+    mb-32 mr-5'
     onClick={openModalCreateTarefas}
   >
     <FaPlus />

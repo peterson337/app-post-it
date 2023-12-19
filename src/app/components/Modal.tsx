@@ -65,15 +65,17 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
     
     <div className='flex flex-row m-3 gap-3'>
 
-        <Button variant="contained" className='bg-red-500 hover:bg-red-700'
+        <Button variant="contained"
+         className='bg-red-500 hover:bg-red-700 h-12'
          onClick={() => setISOpenModalCreateTareas(false)}
         >
         Cancelar
         </Button>
 
-        <Button variant="contained" className='bg-sky-500 hover:bg-sky-700'
+        <Button variant="contained"
+         className='bg-sky-500 hover:bg-sky-700 h-12 w-40'
          onClick={salvarTarefa}>
-        Criar tarefa
+        Salvar tarefa
         </Button>
         
     </div>
