@@ -108,7 +108,9 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
                 className=' '
                 key={val.id}
               >
-                <Card className='md:w-[33rem] w-60 h-60 p-5 bg-yellow-200 text-2xl'>
+                <Card className='md:w-[33rem] w-60 h-60 p-5 text-2xl'
+                 sx={{backgroundColor: '#fef08a'}}
+                 >
 
             <Typography className={` text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
             w-full break-words  h-36 overflow-auto`}

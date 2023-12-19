@@ -40,7 +40,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   const [tarefas, setTarefas] = useState<Tarefas[]>([]);
   const [tarefasFavoritas, setTarefasFavoritas] = useState<Tarefas[]>([]);
   
-  const [IsThemeDark, setIsThemeDark] = useState(true);
+  const [IsThemeDark, setIsThemeDark] = useState(false);
   const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
@@ -48,6 +48,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   useEffect(() => {
     const data = localStorage.getItem('tarefas');
     const dataFavoritas = localStorage.getItem('tarefasFavoritas');    
+    const IsThemeDarkLocalStorage = localStorage.getItem('IsThemeDark');
     
     if (data) {
       setTarefas(JSON.parse(data));
@@ -55,6 +56,10 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
      if (dataFavoritas){
       setTarefasFavoritas(JSON.parse(dataFavoritas));
 
+    }
+
+    if (IsThemeDarkLocalStorage) {
+      setIsThemeDark(JSON.parse(IsThemeDarkLocalStorage));
     }
     
   }, []);

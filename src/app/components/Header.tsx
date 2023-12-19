@@ -1,3 +1,4 @@
+'use client';
 import React, {useContext} from 'react'
 import { CiSun } from "react-icons/ci";
 import { FaRegMoon } from "react-icons/fa";
@@ -5,7 +6,12 @@ import { GlobalContext } from './context/Store';
 
 export const Header = () => {
 
-  const  {IsThemeDark, setIsThemeDark} = useContext(GlobalContext)
+  const  {IsThemeDark, setIsThemeDark} = useContext(GlobalContext);
+
+      const isThemeDarkLocalStorage = () => {
+        setIsThemeDark(!IsThemeDark);
+        localStorage.setItem('IsThemeDark', JSON.stringify(!IsThemeDark));
+      }
 
   return (
     <header 
@@ -16,13 +22,13 @@ export const Header = () => {
 
 {    IsThemeDark?
         <CiSun 
-        onClick={() => setIsThemeDark(false)}
+        onClick={isThemeDarkLocalStorage}
         className='  w-10 h-10 text-2x1'
         />
         
         :
         <FaRegMoon
-         onClick={() => setIsThemeDark(true)} 
+         onClick={isThemeDarkLocalStorage}
          className='w-10 h-10 text-2x1'
          />
         }

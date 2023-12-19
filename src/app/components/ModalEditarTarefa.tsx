@@ -7,7 +7,9 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {TypesEditarTarefa} from "./ts/types";
 import  {GlobalContext}  from "./context/Store";
-export const ModalEditarTarefa: React.FC<TypesEditarTarefa> = ({openModalEditarTarefas, closeModalEditarTarefas}: TypesEditarTarefa ) => {
+export const ModalEditarTarefa: React.FC<TypesEditarTarefa> = ({openModalEditarTarefas, closeModalEditarTarefas}
+  :
+   TypesEditarTarefa ) => {
 
   const [teste, setTeste] = useState('');
   const {
@@ -28,7 +30,7 @@ export const ModalEditarTarefa: React.FC<TypesEditarTarefa> = ({openModalEditarT
 
 const atualizarTarefa = (ArmazenarTarefa : number) => {
   const atualizarTarefa = tarefas.map(
-    (val) => val.id === ArmazenarTarefa? { ...val, tarefa: teste } :val
+    (val) => val.id === ArmazenarTarefa? { ...val, tarefa: teste } : val
     )
 
     setTarefas(atualizarTarefa);
