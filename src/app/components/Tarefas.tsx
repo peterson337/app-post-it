@@ -42,6 +42,7 @@ export const Tarefas = () => {
 <div className='w-full flex justify-end'>
 <Fab 
     color="primary" 
+    className='bg-sky-500 hover:bg-sky-700 text-white'
     sx={{mx: '20px', my: '95px',}}
     onClick={openModalCreateTarefas}
   >
