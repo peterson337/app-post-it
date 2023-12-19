@@ -69,10 +69,9 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
         {
           tarefasFavoritas.length === 0 ?
-          <p className=' text-red-500 md:text-2xl font-bold mt-3'>
-             <span className=' flex flex-row items-center gap-4'>
-            Adicione uma tarefa nos favoritos clicando no 
-          seguinte botão: <BsBookmarkStar></BsBookmarkStar></span></p>
+          <p className=' text-red-500 text-[22px] md:text-2xl font-bold m-3 md:text-center'>
+            Não existem tarefas favoritas 😞
+          </p>
           :
 
             <TarefasFavoritas></TarefasFavoritas>
@@ -94,7 +93,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
           tarefas.length === 0 ?
 
           <p className='md:text-center text-red-500 md:text-2xl font-bold
-           text-start text-[22px] mt-3'>
+           text-start text-[22px] m-3'>
             Não existem tarefas salvas 😞</p>
 
           :
