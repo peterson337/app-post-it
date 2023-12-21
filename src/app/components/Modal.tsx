@@ -47,8 +47,10 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
     open={typeof setISOpenModalCreateTareas === 'function' ? true : setISOpenModalCreateTareas}
     className='flex flex-col justify-center items-center text-center p-12'
     >
-        <section className='p-4'>
-    <DialogTitle className='border-b border-black mb-2'>Criar tarefa</DialogTitle>
+        <section className='p-4 md:p-8'>
+    <DialogTitle className='font-bangers text-2xl md:text-3xl'>
+        Criar tarefa
+    </DialogTitle>
 
 
 
@@ -66,14 +68,14 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
     <div className='flex flex-row m-3 gap-3'>
 
         <Button variant="contained"
-         className='bg-red-500 hover:bg-red-700 h-12'
+         className='bg-red-500 hover:bg-red-700 h-12 font-bangers text-2xl'
          onClick={() => setISOpenModalCreateTareas(false)}
         >
         Cancelar
         </Button>
 
         <Button variant="contained"
-         className='bg-sky-500 hover:bg-sky-700 h-12 w-40'
+         className='bg-sky-500 hover:bg-sky-700 h-12 w-40 font-bangers text-2xl'
          onClick={salvarTarefa}>
         Salvar tarefa
         </Button>

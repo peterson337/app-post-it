@@ -54,22 +54,27 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
       null 
     }
  
-    <section className={`${IsThemeDark? 'bg-[#e6f0f5]' : 'bg-[#edf2fc]'}  md:p-10 
+    <section className={`${IsThemeDark? 'bg-[#373737]' : 'bg-[#edf2fc]'}  md:p-10 
      md:w-[90rem] md:h-[30rem] h-80 m-5 overflow-auto 
      w-96 rounded-xl`}>
 
       <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example"
       className='mt-3'
       >
-          <Tab label="Todas as tarefas" />
-          <Tab label="favoritos"  />
+          <Tab label="Todas as tarefas" className={`font-bangers md:text-2xl 
+          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+
+          <Tab label="favoritos"  className={`font-bangers md:text-2xl 
+          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+          
         </Tabs>
 {       Filtro === 1?
       <section className='flex flex-col '>
 
         {
           tarefasFavoritas.length === 0 ?
-          <p className=' text-red-500 text-[22px] md:text-2xl font-bold m-3 md:text-center'>
+          <p className=' text-red-500 text-[22px] md:text-2xl font-bold m-3 md:text-center
+           font-agbalumo'>
             Não existem tarefas favoritas 😞
           </p>
           :
@@ -93,7 +98,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
           tarefas.length === 0 ?
 
           <p className='md:text-center text-red-500 md:text-2xl font-bold
-           text-start text-[22px] m-3'>
+           text-start text-[22px] m-3 font-agbalumo'>
             Não existem tarefas salvas 😞</p>
 
           :
@@ -112,14 +117,14 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
                 
                 key={val.id}
               >
-                <Card className='md:w-[25rem] w-80  h-60 p-5 text-2xl'
-                 sx={{backgroundColor: '#fef08a'}}
+                <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
+                `}
                  >
 
             <Typography
-            className={` text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-            w-full break-words  h-36 overflow-auto`}
-            sx={{ fontSize: 20 }}
+            className={` text-3xl md:text-4xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+            w-full break-words  h-36 overflow-auto font-agbalumo`}
+            
             color="text.secondary" gutterBottom>
             {val.tarefa}
             </Typography>

@@ -46,9 +46,8 @@ export const TarefasFavoritas = () => {
         key={val.id}
       >
          <Card className='md:w-[25rem] w-80  h-60 p-5  bg-yellow-200 text-2xl'>
-    <Typography className={`text-2xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-     w-full break-words h-36 overflow-auto`}
-     sx={{ fontSize: 20 }}
+    <Typography className={`md:text-4xl text-3xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+     w-full break-words h-36 overflow-auto font-agbalumo`}
      color="text.secondary" gutterBottom>
     {val.tarefa}
     </Typography>
