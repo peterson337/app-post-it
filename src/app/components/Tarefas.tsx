@@ -10,13 +10,7 @@ import Fab from '@mui/material/Fab';
 export const Tarefas = () => {
 
 
-    const {
-      tarefas,
-      tarefasFavoritas,
-      excluirTarefas,
-      setArmazenarTarefa,
-      MacarTarefaComoConcluida,
-  } = useContext(GlobalContext);
+    const {Filtro} = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true)
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false)
@@ -39,7 +33,8 @@ export const Tarefas = () => {
        
       
 
-<div className='w-full flex justify-end 
+{   Filtro === 0? 
+  <div className='w-full flex justify-end 
                 mb-10
                 '>
 <Fab 
@@ -52,6 +47,11 @@ export const Tarefas = () => {
   </Fab>
 
 </div>
+
+:
+
+null
+}
 
 
   

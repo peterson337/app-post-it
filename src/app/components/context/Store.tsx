@@ -26,6 +26,8 @@ export const GlobalContext = createContext<Types>({
   handleChandeTab: () => {},
   ArmazenarTarefa: 0,
 
+
+
   //? Funções
 
   
@@ -39,11 +41,13 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   
   const [tarefas, setTarefas] = useState<Tarefas[]>([]);
   const [tarefasFavoritas, setTarefasFavoritas] = useState<Tarefas[]>([]);
-  
+
   const [IsThemeDark, setIsThemeDark] = useState(false);
   const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
+
+
   
   useEffect(() => {
     const data = localStorage.getItem('tarefas');
@@ -160,12 +164,12 @@ const MacarTarefaComoConcluida = (id: number) => {
       tarefasFavoritas,
       Filtro,
       setFiltro,
+
       setTarefasFavoritas,
       setTarefas,
       setIsThemeDark,
       setAnotarTarefasEditada,
       setArmazenarTarefa,
-
 
       //? Funções
       excluirTarefas,

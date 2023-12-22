@@ -4,7 +4,7 @@ export type Types = {
     IsThemeDark?: boolean;
     IsModalEditarTarefa?: boolean
     setTarefas: (() => void) | ((atualizarTarefa: Tarefas[]) => void);
-    setTarefasFavoritas?: Dispatch<SetStateAction<Tarefas[]>>;
+    setTarefasFavoritas: Dispatch<SetStateAction<Tarefas[]>>;
     setIsThemeDark: (value: boolean) => void;
     setIsModalEditarTarefa?: (value: boolean) => void;
     tarefas: Tarefas[];
@@ -26,11 +26,20 @@ export type Types = {
     atualizarTarefaFavorita?: (id: number) => void;
     excluirTarefasFavorita:(id: number) => void;
     desfavoritarTarefa: (id: number) => void;
+
 }
 
 export type Tarefas = {
     id: number;
     tarefa: string;
      completed: boolean;
+}
+
+
+export type ListaDeCompra = {
+    ListaDeCompra: Tarefas[], 
+    setListaDeCompra: Dispatch<SetStateAction<Tarefas[]>>,
+    adiconarTarefaDeCompra: string,
+    setAdiconarTarefaDeCompra: (value: string) => void,
 }
 

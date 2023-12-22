@@ -1,4 +1,4 @@
-import React,{useState,useEffect, useContext} from 'react'
+import React,{useState,useEffect, useContext, useRef} from 'react'
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,9 +11,11 @@ import { FaCheck } from "react-icons/fa6";
 import { BsBookmarkStar } from "react-icons/bs";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { ListaDeCompra } from "./ListaDeCompra"
 
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
+import { DragEvent } from 'react'; // Importe o tipo DragEvent
 
 export const CardComponent = () => {
   
@@ -29,17 +31,45 @@ export const CardComponent = () => {
     setTarefasFavoritas,
     favoritarTarefa,
     IsThemeDark,
+    setTarefas,
 } = useContext(GlobalContext);
 
 const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
 
 const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
+const dragListaDeCompra = useRef<number | null>(null);
+const dragOverListaDeCompra = useRef<number | null>(null); 
+
 
   const openModalEditarTarefas = (id : number) => {
     setISOpenModalEditarTarefas(true);
     setArmazenarTarefa(id);
     }
+
+
+    const handleDragStart = (e: DragEvent<HTMLElement>, index: number) => {
+      dragListaDeCompra.current = index;
+      e.dataTransfer.setData('text/plain', String(index));
+    };
+  
+    const handleDragEnter = (e: DragEvent<HTMLElement>, index: number) => {
+      dragOverListaDeCompra.current = index;
+      e.preventDefault();
+    };
+
+    const handlerSort = () => {
+      if (dragListaDeCompra.current !== null && dragOverListaDeCompra.current !== null) {
+        const ListaDeCompraClone = [...tarefas];
+        const temp = ListaDeCompraClone[dragListaDeCompra.current];
+        ListaDeCompraClone[dragListaDeCompra.current] = ListaDeCompraClone[dragOverListaDeCompra.current];
+        ListaDeCompraClone[dragOverListaDeCompra.current] = temp;
+        setTarefas(ListaDeCompraClone);
+        localStorage.setItem('tarefas', JSON.stringify(ListaDeCompraClone));
+
+      }
+    };
+
 
     
     return (
@@ -65,6 +95,9 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
           ${IsThemeDark? 'text-white' : 'text-black'}`} />
 
           <Tab label="favoritos"  className={`font-bangers md:text-2xl 
+          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+
+          <Tab label="Lista de compras"  className={`font-bangers md:text-2xl 
           ${IsThemeDark? 'text-white' : 'text-black'}`} />
           
         </Tabs>
@@ -105,9 +138,11 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
           <section  
           className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 
-          '>
+          '
+ 
+          >
             
-            {tarefas.map((val) => {
+            {tarefas.map((val, index) => {
                 const TarefaConcluida = val.completed;
                 return(
           
@@ -116,6 +151,10 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
                 sx={{ mx: '2px', transform: 'scale(0.9)'}}
                 
                 key={val.id}
+                draggable
+                onDragStart={(e : any) => handleDragStart(e, index)}
+                onDragEnter={(e : any) => handleDragEnter(e, index)}
+                onDragEnd={handlerSort}
               >
                 <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
                 `}
@@ -155,6 +194,16 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
 null
 
+}
+
+{
+  Filtro === 2?
+  <ListaDeCompra></ListaDeCompra>
+  // <p>Nenhuma lista de compra encontrada.</p>
+  :
+  <div>
+
+  </div>
 }
     </section>
       </main>
