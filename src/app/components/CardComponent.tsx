@@ -74,7 +74,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
         {
           tarefasFavoritas.length === 0 ?
           <p className=' text-red-500 text-[22px] md:text-2xl font-bold m-3 md:text-center
-           font-agbalumo'>
+          '>
             Não existem tarefas favoritas 😞
           </p>
           :
@@ -98,7 +98,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
           tarefas.length === 0 ?
 
           <p className='md:text-center text-red-500 md:text-2xl font-bold
-           text-start text-[22px] m-3 font-agbalumo'>
+           text-start text-[22px] m-3'>
             Não existem tarefas salvas 😞</p>
 
           :
@@ -123,7 +123,7 @@ const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
             <Typography
             className={` text-3xl md:text-4xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-            w-full break-words  h-36 overflow-auto font-agbalumo`}
+            w-full break-words  h-36 overflow-auto font-bangers`}
             
             color="text.secondary" gutterBottom>
             {val.tarefa}
