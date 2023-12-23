@@ -72,7 +72,7 @@ export const TarefasFavoritas = () => {
             <Box
         component="span"
         sx={{ mx: '2px', transform: 'scale(0.8)'}}
-          className=''
+          className='cursor-grab'
         key={val.id}
         draggable
         onDragStart={(e : any) => handleDragStart(e, index)}

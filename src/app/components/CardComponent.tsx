@@ -155,6 +155,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
                 onDragStart={(e : any) => handleDragStart(e, index)}
                 onDragEnter={(e : any) => handleDragEnter(e, index)}
                 onDragEnd={handlerSort}
+                className='cursor-grab'
               >
                 <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
                 `}

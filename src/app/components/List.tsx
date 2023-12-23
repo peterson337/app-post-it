@@ -90,7 +90,7 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
               onDragStart={(e) => handleDragStart(e, index)}
               onDragEnter={(e) => handleDragEnter(e, index)}
               onDragEnd={handlerSort}
-              className={` cursor-move p-3 border m-3 border-b-[#ccc] 
+              className={`  p-3 border m-3 border-b-[#ccc] 
               flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
                `}
             >
