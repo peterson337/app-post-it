@@ -6,7 +6,7 @@ import { GlobalContext } from './context/Store';
 
 export const Header = () => {
 
-  const  {IsThemeDark, setIsThemeDark} = useContext(GlobalContext);
+  const  {IsThemeDark, setIsThemeDark, Filtro} = useContext(GlobalContext);
 
       const isThemeDarkLocalStorage = () => {
         setIsThemeDark(!IsThemeDark);
@@ -17,7 +17,8 @@ export const Header = () => {
     <header 
   className={`flex p-5 border-b ${IsThemeDark ? 'border-white' : 'border-black'} flex-row justify-between items-center`}
   >
-      <h1 className=' text-2xl font-bangers'>App post it 😎</h1>
+      <h1 className=' text-2xl font-bangers'>{Filtro === 0? 'App post it 😎' : Filtro === 2? 'Lista de compra 🛒' : 'App post it 😎'}
+      </h1>
 
 
 {    IsThemeDark?

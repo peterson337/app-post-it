@@ -36,6 +36,8 @@ export const CardComponent = () => {
 
 const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
 
+const [Searchtarefas, setSearchtarefas] = useState('');
+
 const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
 const dragListaDeCompra = useRef<number | null>(null);
@@ -68,9 +70,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
         localStorage.setItem('tarefas', JSON.stringify(ListaDeCompraClone));
 
       }
-    };
-
-
+    };    
     
     return (
       <main className='flex justify-center  items-center'>
@@ -101,6 +101,21 @@ const dragOverListaDeCompra = useRef<number | null>(null);
           ${IsThemeDark? 'text-white' : 'text-black'}`} />
           
         </Tabs>
+
+
+        { Filtro === 0 && tarefas.length != 0?
+          <div className='flex justify-center items-center'>
+        <input type="text" className='text-black p-2 rounded-full mt-3 outline-none' 
+        onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
+        placeholder='Pesquise por uma tarefa aqui...'
+         />
+
+        </div>
+
+        :
+        null
+}
+
 {       Filtro === 1?
       <section className='flex flex-col '>
 
@@ -128,7 +143,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
       Filtro === 0?
       <div>
   {
-          tarefas.length === 0 ?
+          tarefas.length === 0?
 
           <p className='md:text-center text-red-500 md:text-2xl font-bold
            text-start text-[22px] m-3'>
@@ -136,58 +151,78 @@ const dragOverListaDeCompra = useRef<number | null>(null);
 
           :
 
+
           <section  
           className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 
           '
  
           >
+
             
             {tarefas.map((val, index) => {
                 const TarefaConcluida = val.completed;
-                return(
-          
-                <Box
-                component="span"
-                sx={{ mx: '2px', transform: 'scale(0.9)'}}
-                
-                key={val.id}
-                draggable
-                onDragStart={(e : any) => handleDragStart(e, index)}
-                onDragEnter={(e : any) => handleDragEnter(e, index)}
-                onDragEnd={handlerSort}
-                className='cursor-grab'
-              >
-                <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
-                `}
-                 >
+                const isMatchingSearch = val.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
 
-            <Typography
-            className={` text-3xl md:text-4xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
-            w-full break-words  h-36 overflow-auto font-bangers`}
-            
-            color="text.secondary" gutterBottom>
-            {val.tarefa}
-            </Typography>
-          <CardActions className=' flex flex-row justify-between'>
-            <button
-            className='hover:bg-gray-300 p-3 hover:rounded-full text-red-500'
-              onClick={() => excluirTarefas(val.id)}><FaTrash /> </button>
-            <button
-            className='hover:bg-gray-300 p-3 hover:rounded-full text-green-500'
-              onClick={() => MacarTarefaComoConcluida(val.id)}><FaCheck /> </button>
-            <button
-            className='hover:bg-gray-300 p-3 hover:rounded-full '
-              onClick={() => favoritarTarefa(val.id)}><BsBookmarkStar /> </button>
-            <button
-            className='hover:bg-gray-300 p-3 hover:rounded-full text-blue-500'
-              onClick={() => openModalEditarTarefas(val.id)}><FaPen /></button>
-          </CardActions>
-            </Card>
                 
-              </Box>
+                return(
+
+                    
+                     <section  key={val.id}>
+                    { 
+                   isMatchingSearch || Searchtarefas.length === 0?
+                    <Box
+                     component="span"
+                     sx={{ mx: '2px', transform: 'scale(0.9)',
+                    }}
+                     
+                     draggable
+                     onDragStart={(e : any) => handleDragStart(e, index)}
+                     onDragEnter={(e : any) => handleDragEnter(e, index)}
+                     onDragEnd={handlerSort}
+                     className='cursor-grab'
+                   >
+                     <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
+                     `}
+                      >
+     
+                 <Typography
+                 className={` text-3xl md:text-4xl ${TarefaConcluida? 'line-through text-green-500' : 'text-black'}
+                 w-full break-words  h-36 overflow-auto font-bangers`}
+                 
+                 color="text.secondary" gutterBottom>
+                 {val.tarefa}
+                 </Typography>
+               <CardActions className=' flex flex-row justify-between'>
+                 <button
+                 className='hover:bg-gray-300 p-3 hover:rounded-full text-red-500'
+                   onClick={() => excluirTarefas(val.id)}><FaTrash /> </button>
+                 <button
+                 className='hover:bg-gray-300 p-3 hover:rounded-full text-green-500'
+                   onClick={() => MacarTarefaComoConcluida(val.id)}><FaCheck /> </button>
+                 <button
+                 className='hover:bg-gray-300 p-3 hover:rounded-full '
+                   onClick={() => favoritarTarefa(val.id)}><BsBookmarkStar /> </button>
+                 <button
+                 className='hover:bg-gray-300 p-3 hover:rounded-full text-blue-500'
+                   onClick={() => openModalEditarTarefas(val.id)}><FaPen /></button>
+               </CardActions>
+                 </Card>
+                     
+                   </Box>
+
+                   :
+
+                   null
+                   }
+
+                  </section>
+          
                 )
               })}
           </section>
+
+        
+          
   }
 </div>
 
@@ -199,6 +234,7 @@ null
 
 {
   Filtro === 2?
+
   <ListaDeCompra></ListaDeCompra>
   // <p>Nenhuma lista de compra encontrada.</p>
   :

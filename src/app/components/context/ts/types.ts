@@ -26,6 +26,8 @@ export type Types = {
     atualizarTarefaFavorita?: (id: number) => void;
     excluirTarefasFavorita:(id: number) => void;
     desfavoritarTarefa: (id: number) => void;
+    isOpenModal: boolean, 
+    setIsOpenModal: (value: boolean) => void,
 
 }
 

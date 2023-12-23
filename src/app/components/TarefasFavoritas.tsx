@@ -21,9 +21,12 @@ export const TarefasFavoritas = () => {
         desfavoritarTarefa,
         atualizarTarefaFavorita,
         setTarefasFavoritas,
+        Filtro,
     } = useContext(GlobalContext);
 
           const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
+            const [Searchtarefas, setSearchtarefas] = useState('');
+
 
           const dragListaDeCompra = useRef<number | null>(null);
           const dragOverListaDeCompra = useRef<number | null>(null); 
@@ -53,7 +56,21 @@ export const TarefasFavoritas = () => {
         
 
   return (
-    <div className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'> 
+    <main>
+     { Filtro === 1 && tarefasFavoritas.length != 0?
+          <div className='flex justify-center items-center'>
+        <input type="text" className='text-black p-2 rounded-full mt-3 outline-none' 
+        onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
+        placeholder='Pesquise por uma tarefa aqui...'
+         />
+
+        </div>
+
+        :
+        null
+}    
+
+          <div className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'> 
         {/* {
             iSOpenModalEditarTarefas?
             <ModalEditarTarefa/>
@@ -66,14 +83,17 @@ export const TarefasFavoritas = () => {
             
          tarefasFavoritas.map((val, index) => {
         const TarefaConcluida = val.completed;
+        const isMatchingSearch = val.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
+
 
            return(
-
-            <Box
+            <section key={val.id}>
+            { isMatchingSearch?
+              <Box
         component="span"
         sx={{ mx: '2px', transform: 'scale(0.8)'}}
           className='cursor-grab'
-        key={val.id}
+        
         draggable
         onDragStart={(e : any) => handleDragStart(e, index)}
         onDragEnter={(e : any) => handleDragEnter(e, index)}
@@ -104,8 +124,14 @@ export const TarefasFavoritas = () => {
   </CardActions>
     </Card>
         
-            </Box>   
-    
+            </Box> 
+
+            :
+
+            null
+            }  
+
+            </section>
               )
          })
        }
@@ -114,5 +140,6 @@ export const TarefasFavoritas = () => {
          
        */}
     </div>
+    </main>
   )
 }

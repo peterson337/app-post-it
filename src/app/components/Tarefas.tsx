@@ -3,14 +3,18 @@ import React,{useState,useEffect, useContext} from 'react'
 import  {GlobalContext}  from "./context/Store";
 import { Modal } from "../components/Modal";
 import { CardComponent } from "../components/CardComponent";
-import { FaPlus } from "react-icons/fa";
 import Fab from '@mui/material/Fab';
+
+import { FaPlus } from "react-icons/fa";
+import { FaCartPlus } from "react-icons/fa";
+
 
 
 export const Tarefas = () => {
 
 
-    const {Filtro} = useContext(GlobalContext);
+    const {Filtro,    isOpenModal, 
+      setIsOpenModal,} = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true)
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false)
@@ -33,17 +37,20 @@ export const Tarefas = () => {
        
       
 
-{   Filtro === 0? 
+{   Filtro === 0 || Filtro === 2? 
   <div className='w-full flex justify-end 
                 mb-10
                 '>
 <Fab 
-    className='bg-sky-500 hover:bg-sky-700 text-white 
+    className={`${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
+     ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
+     text-white 
+     text-2xl
     md:mb-24 md:mr-10   
-    mb-32 mr-5'
-    onClick={openModalCreateTarefas}
+    mb-32 mr-5`}
+    onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
   >
-    <FaPlus />
+ {  Filtro === 0? <FaPlus /> : <FaCartPlus />  }
   </Fab>
 
 </div>

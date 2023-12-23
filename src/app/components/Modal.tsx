@@ -13,6 +13,8 @@ import  {GlobalContext}  from "./context/Store";
 export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) => {
 
     const [anotarTarefas, setAnotarTarefas] = useState('');
+
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { salvarTarefa()}};
     
     const {
         tarefas,
@@ -61,8 +63,8 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
           variant="standard"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnotarTarefas(e.target.value)}
           value={anotarTarefas}
-          required // Adicione esta linha para tornar o campo obrigatório
-        />
+          onKeyPress={handleKeyPress}
+          />
 
     
     <div className='flex flex-row m-3 gap-3'>
@@ -74,9 +76,10 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
         Cancelar
         </Button>
 
-        <Button variant="contained"
-         className='bg-sky-500 hover:bg-sky-700 h-12 w-40 font-bangers text-2xl'
-         onClick={salvarTarefa}>
+        <Button
+         className='bg-sky-500 hover:bg-sky-700 h-12 w-40 font-bangers text-2xl text-white' 
+         onClick={salvarTarefa}
+         >
         Salvar tarefa
         </Button>
         

@@ -28,22 +28,29 @@ export const ModalEditarTarefa: React.FC<TypesEditarTarefa> = ({openModalEditarT
                   });
             }, [])
 
-const atualizarTarefa = (ArmazenarTarefa : number) => {
-  if (!teste.trim()) {
-    alert('Por favor escreva alguma coisa para salvar uma tarefa');
-    return;
-   
-}
+const atualizarTarefa = (  ArmazenarTarefa : number  ) => {
 
-  const atualizarTarefa = tarefas.map(
-    (val) => val.id === ArmazenarTarefa? { ...val, tarefa: teste } : val
-    )
+    if (!teste.trim()) {
+      alert('Por favor escreva alguma coisa para salvar uma tarefa');
+      return;
+     
+  }
+  
+    const atualizarTarefa = tarefas.map(
+      (val) => val.id === ArmazenarTarefa? { ...val, tarefa: teste } : val
+      )
+  
+      setTarefas(atualizarTarefa);
+    localStorage.setItem('tarefas', JSON.stringify(atualizarTarefa));
+    closeModalEditarTarefas();
 
-    setTarefas(atualizarTarefa);
-  localStorage.setItem('tarefas', JSON.stringify(atualizarTarefa));
-  closeModalEditarTarefas();
+  
   
 }
+
+      const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) =>
+      {if (e.key === 'Enter') { atualizarTarefa(ArmazenarTarefa)}};
+
   return (
 
      <Dialog  
@@ -59,6 +66,7 @@ const atualizarTarefa = (ArmazenarTarefa : number) => {
       fullWidth 
       onChange={(e :  React.ChangeEvent<HTMLInputElement>) => setTeste(e.target.value)}
       value={teste}
+      onKeyPress={handleKeyPress}
       />
 
      <div className='flex flex-row m-3 gap-3 items-center'>

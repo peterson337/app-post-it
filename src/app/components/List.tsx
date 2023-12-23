@@ -1,6 +1,7 @@
 'use client';
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useRef, useState, useEffect, useContext} from 'react'
 import { ListaDeCompra, Tarefas} from "./context/ts/types";
+import  {GlobalContext}  from "./context/Store";
 
 import { FaPen } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
@@ -12,6 +13,10 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
     const dragOverListaDeCompra = useRef<number | null>(null);    
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
     const [tarefaEmEdicaoId, setTarefaEmEdicaoId] = useState<number | null>(null); 
+    const [SearchTarefas, setSearchTarefas] = useState('');
+
+
+    const {Filtro} = useContext(GlobalContext);
 
     const handlerSort = () => {
         if (dragListaDeCompra.current !== null && dragOverListaDeCompra.current !== null) {
@@ -72,10 +77,27 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
         dragOverListaDeCompra.current = index;
         e.preventDefault();
       };
+
+        const [Searchtarefas, setSearchtarefas] = useState('');
+
     
       return (
         <main className=''>
             <section className='bg-white p-3   m-3 h-96 overflow-auto  rounded-xl'>
+
+            { Filtro === 2 && ListaDeCompra.length != 0?
+          <div className='flex justify-center items-center'>
+        <input type="text" className='text-black p-2 rounded-full border border-black
+          mt-3 outline-none bg-[#edf2fc]' 
+        onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
+        placeholder='Pesquise por uma tarefa aqui...'
+         />
+
+        </div>
+
+        :
+        null
+}
 
           {
             ListaDeCompra.length === 0 ?
@@ -83,41 +105,48 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
             :
           ListaDeCompra.map((item, index) => {
             const tarefaSalva = item.completed;
+            const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
+
             return(
-            <div
-              key={item.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnter={(e) => handleDragEnter(e, index)}
-              onDragEnd={handlerSort}
-              className={`  p-3 border m-3 border-b-[#ccc] 
-              flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
-               `}
-            >
-              {  tarefaEmEdicaoId != item.id?
-                <h1 className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</h1>
-                :
-                <input type="text" className='text-black  w-28 md:w-96 p-1 rounded-full pl-3'
-                 value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
-                onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
-              } 
+              <section key={item.id}>
+               {  isMatchingSearch ?
+               <div
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, index)}
+                  onDragEnter={(e) => handleDragEnter(e, index)}
+                  onDragEnd={handlerSort}
+                  className={`  p-3 border m-3 border-b-[#ccc] 
+                  flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
+                  `}
+                >
+                  {  tarefaEmEdicaoId != item.id?
+                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</p>
+                    :
+                    <input type="text" className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
+                    value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
+                    onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
+                  } 
 
-              <div className='flex  flex-row gap-4'>
-                <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id)  :
-                 atualizarTarefaDeCompra.length === 0? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
-                () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
-                }>
-                    { tarefaEmEdicaoId === item.id? <IoIosSave /> :  <FaPen/>  }
-                </button>
-                <button onClick={() => excluirTarefas(item.id)}>
-                    <FaTrash></FaTrash>
-                </button>
-                <button onClick={() => MacarTarefaComoConcluida(item.id)}>
-                    <FaCheck></FaCheck>
-                </button>
+                  <div className='flex  flex-row gap-4'>
+                    <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id)  :
+                    atualizarTarefaDeCompra.length === 0? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
+                    () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
+                    }>
+                        { tarefaEmEdicaoId === item.id? <IoIosSave /> :  <FaPen/>  }
+                    </button>
+                    <button onClick={() => excluirTarefas(item.id)}>
+                        <FaTrash></FaTrash>
+                    </button>
+                    <button onClick={() => MacarTarefaComoConcluida(item.id)}>
+                        <FaCheck></FaCheck>
+                    </button>
 
-              </div>
-            </div>
+                  </div>
+               </div>
+               :
+               null
+              }
+              </section>
 
             )
           })}   
