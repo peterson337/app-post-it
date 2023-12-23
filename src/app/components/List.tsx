@@ -108,7 +108,7 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
             const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
 
             return(
-              <section key={item.id}>
+              <section key={item.id} >
                {  isMatchingSearch ?
                <div
                   draggable

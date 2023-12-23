@@ -87,7 +87,7 @@ export const TarefasFavoritas = () => {
 
 
            return(
-            <section key={val.id}>
+            <section key={val.id} className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'>
             { isMatchingSearch?
               <Box
         component="span"

@@ -153,9 +153,8 @@ const dragOverListaDeCompra = useRef<number | null>(null);
 
 
           <section  
-          className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 
-          '
- 
+        
+              className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 '
           >
 
             
@@ -167,19 +166,21 @@ const dragOverListaDeCompra = useRef<number | null>(null);
                 return(
 
                     
-                     <section  key={val.id}>
+                     <section  key={val.id}   className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2  
+                     
+                     '>
                     { 
                    isMatchingSearch || Searchtarefas.length === 0?
                     <Box
                      component="span"
                      sx={{ mx: '2px', transform: 'scale(0.9)',
                     }}
-                     
+                    
                      draggable
                      onDragStart={(e : any) => handleDragStart(e, index)}
                      onDragEnter={(e : any) => handleDragEnter(e, index)}
                      onDragEnd={handlerSort}
-                     className='cursor-grab'
+                     className='cursor-grab w-24'
                    >
                      <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
                      `}
