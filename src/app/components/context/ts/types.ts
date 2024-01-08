@@ -37,11 +37,40 @@ export type Tarefas = {
      completed: boolean;
 }
 
+export type TarefasDeCompra = {
+    id: number;
+    tarefa: string;
+    completed: boolean;
+    preco: number;
+    precoTotal: number;
+
+}
+
 
 export type ListaDeCompra = {
     ListaDeCompra: Tarefas[], 
     setListaDeCompra: Dispatch<SetStateAction<Tarefas[]>>,
     adiconarTarefaDeCompra: string,
     setAdiconarTarefaDeCompra: (value: string) => void,
+    precoTotal: number;
+
 }
 
+export interface State {
+    adiconarTarefaDeCompra: string;
+    precoDoProduto: number;
+    precoTotal: number;
+    ListaDeCompra: TarefasDeCompra[];
+    isOpenModal: boolean;
+  }
+  
+  export interface Action {
+    type: string;
+    payload?: any; // Pode ser ajustado conforme necessário
+  }
+
+  export type Teste = {
+         type: string; 
+         payload: number; 
+  }
+  

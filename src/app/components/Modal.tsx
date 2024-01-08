@@ -1,5 +1,5 @@
 'use client';
-import React, {useContext, useState} from 'react'
+import React, {useContext, useState, useRef, useEffect} from 'react'
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
@@ -12,10 +12,20 @@ import  {GlobalContext}  from "./context/Store";
 
 export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) => {
 
-    const [anotarTarefas, setAnotarTarefas] = useState('');
-
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { salvarTarefa()}};
     
+    const [anotarTarefas, setAnotarTarefas] = useState('');
+    
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (anotarTarefas !== '') {
+            if (e.key === 'Enter') { 
+                salvarTarefa();
+                
+            }
+            
+        }
+    };
+    
+
     const {
         tarefas,
         setTarefas,
@@ -41,7 +51,7 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
          setAnotarTarefas('');
          setISOpenModalCreateTareas(false);
         
-    }
+    }  
 
   return (
     <Dialog  
@@ -64,8 +74,9 @@ export const Modal: React.FC<Props> = ( {setISOpenModalCreateTareas} : Props) =>
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAnotarTarefas(e.target.value)}
           value={anotarTarefas}
           onKeyPress={handleKeyPress}
+          autoFocus
+          
           />
-
     
     <div className='flex flex-row m-3 gap-3'>
 

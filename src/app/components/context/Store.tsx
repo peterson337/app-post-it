@@ -36,7 +36,7 @@ export const GlobalContext = createContext<Types>({
   
   MacarTarefavoritaComoConcluida: () => {},
   atualizarTarefaFavorita: () => {},
-  excluirTarefasFavorita:() => {},
+  excluirTarefasFavorita: (id: number | null) => {}, // Adicione a definição correta aqui
   desfavoritarTarefa: () => {},
 })
 
@@ -77,17 +77,24 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
     setFiltro(newValue)
   }
 
-  const excluirTarefas = (id: number) => {
-    const deletarTarefa = tarefas.filter((val) => val.id != id)
-    setTarefas(deletarTarefa);
-    localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
-
+  const excluirTarefas = (id: number | null) => {
+    if (id) {
+      const deletarTarefa = tarefas.filter((val) => val.id != id)
+      setTarefas(deletarTarefa);
+      localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
+      
+    }else if(null){
+      
+      const deletarTarefa = tarefas.filter((val) => val.completed === false)
+      setTarefas(deletarTarefa);
+      localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
+    }
+    
   }
   const excluirTarefasFavorita = (id: number) => {
-    const deletarTarefa = tarefasFavoritas.filter((val) => val.id != id)
-    setTarefasFavoritas(deletarTarefa);
-    localStorage.setItem('tarefasFavoritas', JSON.stringify(deletarTarefa));
-
+      const deletarTarefa = tarefasFavoritas.filter((val) => val.id != id)
+      setTarefasFavoritas(deletarTarefa);
+      localStorage.setItem('tarefasFavoritas', JSON.stringify(deletarTarefa));
   }
 
   const MacarTarefavoritaComoConcluida = (id : number) => {

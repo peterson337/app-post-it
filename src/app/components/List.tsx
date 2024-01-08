@@ -83,7 +83,7 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
     
       return (
         <main className=''>
-            <section className='bg-white p-3   m-3 h-96 overflow-auto  rounded-xl'>
+            <section className=''>
 
             { Filtro === 2 && ListaDeCompra.length != 0?
           <div className='flex justify-center items-center'>
@@ -117,7 +117,7 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
                   onDragEnd={handlerSort}
                   className={`  p-3 border m-3 border-b-[#ccc] 
                   flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
-                  `}
+                 border-0 rounded-lg `}
                 >
                   {  tarefaEmEdicaoId != item.id?
                     <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</p>

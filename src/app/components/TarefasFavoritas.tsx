@@ -10,6 +10,8 @@ import { FaTrash } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { BsBookmarkStar } from "react-icons/bs";
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
+import Button from '@mui/material/Button';
+
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
 
 export const TarefasFavoritas = () => {
@@ -53,16 +55,34 @@ export const TarefasFavoritas = () => {
         
               }
             };
-        
+            
+            const apagarTodasAsTarefasConcluidas = () => {
+              const temTarefaconcluida = tarefasFavoritas.some((tarefa) => tarefa.completed);
+
+              if (!temTarefaconcluida) {
+                alert('Deixe uma ou mais tarefa como concluida para usar este botão ');
+                return;
+              }
+
+              const deletarTarefa = tarefasFavoritas.filter((val) => val.completed === false)
+              setTarefasFavoritas(deletarTarefa);
+              localStorage.setItem('tarefasFavoritas', JSON.stringify(deletarTarefa));
+  
+      }
 
   return (
     <main>
      { Filtro === 1 && tarefasFavoritas.length != 0?
-          <div className='flex justify-center items-center'>
+          <div className='flex justify-center items-center flex-col gap-3'>
         <input type="text" className='text-black p-2 rounded-full mt-3 outline-none' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'
          />
+
+              <Button variant="contained" onClick={apagarTodasAsTarefasConcluidas}
+              className='bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96
+               md:text-[20px] font-bold'
+                >Apagar tarefas concluidas</Button>
 
         </div>
 

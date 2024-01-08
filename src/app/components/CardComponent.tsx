@@ -16,6 +16,8 @@ import { ListaDeCompra } from "./ListaDeCompra"
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
+import Button from '@mui/material/Button';
+
 
 export const CardComponent = () => {
   
@@ -37,6 +39,8 @@ export const CardComponent = () => {
 const [iSOpenModalEditarTarefas, setISOpenModalEditarTarefas] = useState(false);
 
 const [Searchtarefas, setSearchtarefas] = useState('');
+
+const [MensaagesseErroPesquisa, setMensaagesseErroPesquisa] = useState<null | number>(null);
 
 const closeModalEditarTarefas = () => setISOpenModalEditarTarefas(false);
 
@@ -70,7 +74,21 @@ const dragOverListaDeCompra = useRef<number | null>(null);
         localStorage.setItem('tarefas', JSON.stringify(ListaDeCompraClone));
 
       }
-    };    
+    };
+    
+    const apagarTodasAsTarefasConcluidas = () => {
+            const temTarefaconcluida = tarefas.some((tarefa) => tarefa.completed);
+
+            if (!temTarefaconcluida) {
+              alert('Deixe uma ou mais tarefa como concluida para usar este botão ');
+              return;
+            }
+
+            const deletarTarefa = tarefas.filter((val) => val.completed === false)
+            setTarefas(deletarTarefa);
+            localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
+
+    }
     
     return (
       <main className='flex justify-center  items-center'>
@@ -103,13 +121,18 @@ const dragOverListaDeCompra = useRef<number | null>(null);
         </Tabs>
 
 
+
         { Filtro === 0 && tarefas.length != 0?
-          <div className='flex justify-center items-center'>
+          <div className='flex justify-center items-center flex-col gap-3'>
         <input type="text" className='text-black p-2 rounded-full mt-3 outline-none' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'
          />
 
+              <Button variant="contained" onClick={apagarTodasAsTarefasConcluidas}
+              className='bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96
+               md:text-[20px] font-bold'
+              >Apagar tarefas concluidas</Button>
         </div>
 
         :
@@ -161,6 +184,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
             {tarefas.map((val, index) => {
                 const TarefaConcluida = val.completed;
                 const isMatchingSearch = val.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
+                const id = val.id;
 
                 
                 return(
@@ -180,7 +204,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
                      onDragStart={(e : any) => handleDragStart(e, index)}
                      onDragEnter={(e : any) => handleDragEnter(e, index)}
                      onDragEnd={handlerSort}
-                     className='cursor-grab w-24'
+                     className='cursor-grab w-24 active:cursor-grabbing  '
                    >
                      <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
                      `}
@@ -212,8 +236,8 @@ const dragOverListaDeCompra = useRef<number | null>(null);
                    </Box>
 
                    :
-
-                   null
+                      
+                   id === val.id? 'Nenhuma tarefa encontrada.' : null
                    }
 
                   </section>

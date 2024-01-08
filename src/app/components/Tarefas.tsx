@@ -1,5 +1,5 @@
 'use client'
-import React,{useState,useEffect, useContext} from 'react'
+import React,{useState,useEffect, useContext, useRef} from 'react'
 import  {GlobalContext}  from "./context/Store";
 import { Modal } from "../components/Modal";
 import { CardComponent } from "../components/CardComponent";
@@ -13,14 +13,32 @@ import { FaCartPlus } from "react-icons/fa";
 export const Tarefas = () => {
 
 
-    const {Filtro,    isOpenModal, 
-      setIsOpenModal,} = useContext(GlobalContext);
+    const {Filtro, isOpenModal, setIsOpenModal,} = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true)
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false)
 
   const [iSOpenModalCreateTareas, setISOpenModalCreateTareas] = useState(false);
 
+  useEffect(() => {
+    
+    document.addEventListener('keydown', handleKeyPress);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+  
+  const handleKeyPress = (event: any) => {
+    if (event.ctrlKey && event.key === 'm') {
+      setISOpenModalCreateTareas(true);
+      
+    }else if(event.ctrlKey && event.key === ','){
+      setIsOpenModal(true);
+
+    }
+  };
+  
   return (
     <main className='flex flex-col h-[100vh] justify-between '>
 
@@ -49,6 +67,9 @@ export const Tarefas = () => {
     md:mb-24 md:mr-10   
     mb-32 mr-5`}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
+    onKeyPress={handleKeyPress}
+    //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
+
   >
  {  Filtro === 0? <FaPlus /> : <FaCartPlus />  }
   </Fab>
