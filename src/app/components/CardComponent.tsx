@@ -237,7 +237,9 @@ const dragOverListaDeCompra = useRef<number | null>(null);
 
                    :
                       
-                   id === val.id? 'Nenhuma tarefa encontrada.' : null
+                   /* id === val.id? 'Nenhuma tarefa encontrada.' : */ 
+                   
+                   null
                    }
 
                   </section>
