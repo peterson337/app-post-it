@@ -73,7 +73,7 @@ export const TarefasFavoritas = () => {
   return (
     <main>
      { Filtro === 1 && tarefasFavoritas.length != 0?
-          <div className='flex justify-center items-center flex-col gap-3'>
+          <div className='flex justify-center items-center flex-row gap-3'>
         <input type="text" className='text-black p-2 rounded-full mt-3 outline-none' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'

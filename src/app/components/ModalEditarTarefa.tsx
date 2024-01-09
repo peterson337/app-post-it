@@ -62,11 +62,13 @@ const atualizarTarefa = (  ArmazenarTarefa : number  ) => {
      <DialogTitle className='mb-2 font-bangers text-2xl md:text-3xl'>
       Editar Tarefa</DialogTitle>
 
-     <TextField id="standard-basic" label="Standard" variant="standard"
+     <TextField id="standard-basic" label="Editar tarefa" variant="standard"
       fullWidth 
       onChange={(e :  React.ChangeEvent<HTMLInputElement>) => setTeste(e.target.value)}
       value={teste}
       onKeyPress={handleKeyPress}
+      autoFocus
+
       />
 
      <div className='flex flex-row m-3 gap-3 items-center'>
