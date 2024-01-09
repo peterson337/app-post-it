@@ -21,7 +21,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className=' scrollbar-thin		scrollbar-thumb-sky-500 
+    scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full '>
        <meta name="theme-color" content="#000000" />
       <body className={inter.className}>
       <GlobalContextProvider>

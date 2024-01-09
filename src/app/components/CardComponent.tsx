@@ -103,7 +103,10 @@ const dragOverListaDeCompra = useRef<number | null>(null);
  
     <section className={` bg-[#373737]  md:p-10 
      md:w-[90rem] md:h-[30rem] h-80 m-5 overflow-auto 
-     w-96 rounded-xl`}>
+     w-96 rounded-xl
+     scrollbar-thin scrollbar-thumb-sky-500 
+     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
+     `}>
 
       <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example"
       className='mt-3'
