@@ -41,7 +41,7 @@ export const Tarefas = () => {
   
   return (
     <main className='flex flex-col
-      h-[450px] lg:h-screen  justify-between  '>
+      h-[480px] lg:h-screen  justify-between  '>
 
 
 
