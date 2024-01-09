@@ -1,11 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
 
 export type Types = {
-    IsThemeDark?: boolean;
     IsModalEditarTarefa?: boolean
     setTarefas: (() => void) | ((atualizarTarefa: Tarefas[]) => void);
     setTarefasFavoritas: Dispatch<SetStateAction<Tarefas[]>>;
-    setIsThemeDark: (value: boolean) => void;
     setIsModalEditarTarefa?: (value: boolean) => void;
     tarefas: Tarefas[];
     tarefasFavoritas: Tarefas[];

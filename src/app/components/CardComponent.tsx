@@ -32,7 +32,6 @@ export const CardComponent = () => {
     handleChandeTab,
     setTarefasFavoritas,
     favoritarTarefa,
-    IsThemeDark,
     setTarefas,
 } = useContext(GlobalContext);
 
@@ -102,7 +101,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
       null 
     }
  
-    <section className={`${IsThemeDark? 'bg-[#373737]' : 'bg-[#edf2fc]'}  md:p-10 
+    <section className={` bg-[#373737]  md:p-10 
      md:w-[90rem] md:h-[30rem] h-80 m-5 overflow-auto 
      w-96 rounded-xl`}>
 
@@ -110,13 +109,13 @@ const dragOverListaDeCompra = useRef<number | null>(null);
       className='mt-3'
       >
           <Tab label="Todas as tarefas" className={`font-bangers md:text-2xl 
-          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+          text-white`} />
 
           <Tab label="favoritos"  className={`font-bangers md:text-2xl 
-          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+          text-white`} />
 
           <Tab label="Lista de compras"  className={`font-bangers md:text-2xl 
-          ${IsThemeDark? 'text-white' : 'text-black'}`} />
+          text-white`} />
           
         </Tabs>
 
@@ -206,8 +205,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
                      onDragEnd={handlerSort}
                      className='cursor-grab w-24 active:cursor-grabbing  '
                    >
-                     <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl ${IsThemeDark? 'bg-[#fef08a]' : 'bg-[#fef08a]'}
-                     `}
+                     <Card className={`md:w-[25rem] w-80  h-60 p-5 text-2xl bg-[#fef08a] `}
                       >
      
                  <Typography

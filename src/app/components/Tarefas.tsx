@@ -40,7 +40,8 @@ export const Tarefas = () => {
   };
   
   return (
-    <main className='flex flex-col h-[100vh] justify-between '>
+    <main className='flex flex-col 
+      h-[450px] xl:h-[780px] justify-between  '>
 
 
 
@@ -57,15 +58,14 @@ export const Tarefas = () => {
 
 {   Filtro === 0 || Filtro === 2? 
   <div className='w-full flex justify-end 
-                mb-10
                 '>
 <Fab 
     className={`${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
      ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
      text-white 
      text-2xl
-    md:mb-24 md:mr-10   
-    mb-32 mr-5`}
+    xl:mb-3 md:mr-10   
+     mr-5`}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
     //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}

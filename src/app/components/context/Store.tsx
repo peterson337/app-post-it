@@ -4,11 +4,9 @@ import { Children, createContext, useState, useEffect } from "react";
 import { Types, Tarefas } from "./ts/types";
 
 export const GlobalContext = createContext<Types>({
-  IsThemeDark: false,
   IsModalEditarTarefa: false,
   setTarefas: () => {},
   setTarefasFavoritas: () => {},
-  setIsThemeDark: () => {},
   setIsModalEditarTarefa: () => {},
   tarefas: [],
   tarefasFavoritas: [],
@@ -45,7 +43,6 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
   const [tarefas, setTarefas] = useState<Tarefas[]>([]);
   const [tarefasFavoritas, setTarefasFavoritas] = useState<Tarefas[]>([]);
 
-  const [IsThemeDark, setIsThemeDark] = useState(false);
   const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
   const [Filtro, setFiltro] = useState<number>(0);
@@ -65,10 +62,6 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
      if (dataFavoritas){
       setTarefasFavoritas(JSON.parse(dataFavoritas));
 
-    }
-
-    if (IsThemeDarkLocalStorage) {
-      setIsThemeDark(JSON.parse(IsThemeDarkLocalStorage));
     }
     
   }, []);
@@ -170,7 +163,6 @@ const MacarTarefaComoConcluida = (id: number) => {
   return (
     <GlobalContext.Provider value={{
       tarefas,
-      IsThemeDark,
       anotarTarefasEditada,
       ArmazenarTarefa,
       tarefasFavoritas,
@@ -182,7 +174,6 @@ const MacarTarefaComoConcluida = (id: number) => {
 
       setTarefasFavoritas,
       setTarefas,
-      setIsThemeDark,
       setAnotarTarefasEditada,
       setArmazenarTarefa,
 
