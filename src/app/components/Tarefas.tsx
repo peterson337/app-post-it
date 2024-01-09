@@ -40,8 +40,8 @@ export const Tarefas = () => {
   };
   
   return (
-    <main className='flex flex-col 
-      h-[450px] xl:h-[780px] justify-between  '>
+    <main className='flex flex-col
+      h-[450px] lg:h-screen  justify-between  '>
 
 
 
@@ -64,7 +64,7 @@ export const Tarefas = () => {
      ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
      text-white 
      text-2xl
-    xl:mb-3 md:mr-10   
+    xl:mb-28 md:mr-10   
      mr-5`}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
