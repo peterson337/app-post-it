@@ -65,7 +65,7 @@ export const Tarefas = () => {
      text-white 
      text-2xl
     md:mb-24 md:mr-10   
-    mb-32 mr-5`}
+    mb-24 mr-5`}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
     //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
