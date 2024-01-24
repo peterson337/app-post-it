@@ -90,7 +90,12 @@ export const TarefasFavoritas = () => {
         null
 }    
 
-          <div className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2'> 
+          <div
+           className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 
+            overflow-auto h-72 mt-3
+            scrollbar-thin scrollbar-thumb-sky-500 
+     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
+            '> 
         {/* {
             iSOpenModalEditarTarefas?
             <ModalEditarTarefa/>

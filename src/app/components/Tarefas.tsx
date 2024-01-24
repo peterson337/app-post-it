@@ -7,6 +7,7 @@ import Fab from '@mui/material/Fab';
 
 import { FaPlus } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa";
+import Button from '@mui/material/Button';
 
 
 
@@ -40,9 +41,9 @@ export const Tarefas = () => {
   };
   
   return (
-    <main className='flex flex-col h-[100vh] justify-between '>
+    <main className='md:flex md:flex-col md:h-[100vh] md:justify-between '>
 
-
+      {/* Tamanho do mnitor gande 1920 */}
 
   {iSOpenModalCreateTareas?
    <Modal
@@ -56,16 +57,16 @@ export const Tarefas = () => {
       
 
 {   Filtro === 0 || Filtro === 2? 
-  <div className='w-full flex justify-end 
-                mb-10
-                '>
-<Fab 
+  <div className='w-full flex justify-end  relative bottom-2 '>
+{
+  window.innerWidth > 768?
+  <Fab 
     className={`${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
      ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
      text-white 
      text-2xl
-    md:mb-24 md:mr-10   
-    mb-24 mr-5`}
+    md:mb-5 md:mr-10    
+    `}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
     //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
@@ -74,6 +75,16 @@ export const Tarefas = () => {
  {  Filtro === 0? <FaPlus /> : <FaCartPlus />  }
   </Fab>
 
+  :
+
+    <Button variant="contained" className={`mb-5 mr-3
+    ${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
+    ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
+    
+    `}
+    onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
+
+    >Abrir modal</Button>}
 </div>
 
 :

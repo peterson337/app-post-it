@@ -1,5 +1,5 @@
 'use client';
-import React, {useRef, useState, useEffect, useContext} from 'react'
+import React, {useRef, useState, useEffect, useContext, Fragment} from 'react'
 import { ListaDeCompra, Tarefas} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
@@ -103,12 +103,17 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
             ListaDeCompra.length === 0 ?
             <h1 className='text-center text-red-500 font-bold text-2xl'>Nenhuma tarefa de compra adicionada</h1> 
             :
-          ListaDeCompra.map((item, index) => {
+
+            <div className=' h-72 overflow-auto 
+            scrollbar-thin scrollbar-thumb-sky-500 
+     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
+            '>
+          {ListaDeCompra.map((item, index) => {
             const tarefaSalva = item.completed;
             const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
 
             return(
-              <section key={item.id} >
+              <section key={item.id}>
                {  isMatchingSearch ?
                <div
                   draggable
@@ -149,7 +154,9 @@ export const List = ({ListaDeCompra, setListaDeCompra} : {ListaDeCompra: Tarefas
               </section>
 
             )
-          })}   
+          })}
+            </div>
+          }   
             </section>
         </main>
       );
