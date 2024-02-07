@@ -1,5 +1,5 @@
 'use client';
-import React, {useState, useContext, useEffect} from 'react'
+import React, {useState, useContext, useEffect, useRef} from 'react'
 import { Types, Tarefas } from "./context/ts/types";
 import { List } from "./List";
 import  {GlobalContext}  from "./context/Store";
@@ -10,6 +10,8 @@ export const ListaDeCompra = () => {
 
         const [adiconarTarefaDeCompra, setAdiconarTarefaDeCompra,] = useState('');
 
+        const [precoTotal, setPrecoTotal,] = useState(0);
+
         const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { adcionarTarefa()}};
 
 
@@ -18,27 +20,53 @@ export const ListaDeCompra = () => {
           const {Filtro,    isOpenModal, 
             setIsOpenModal,} = useContext(GlobalContext);
 
-            const adcionarTarefa = () => {
-              if ( adiconarTarefaDeCompra.length === 0) {
-                alert('Escreva uma tarefa')                 
-                return
-              }
+            const refInputNumber = useRef<HTMLInputElement | null>(null);
 
+            const precoTotalRef = useRef<number>(0); 
+
+            const adcionarTarefa = () => {
+              // if ( adiconarTarefaDeCompra.length === 0) {
+              //   alert('Escreva uma tarefa')                 
+              //   return
+              // }
+              
+              const preco = refInputNumber.current; 
+
+              setPrecoTotal((prev) => prev + preco);
+
+              const novoPrecoTotal = precoTotal + preco;
+
+              //const novoPrecoTotal = ListaDeCompra.reduce((total, item) => total + preco, preco);
+
+              //setPrecoTotal(novoPrecoTotal);
 
                 const obj = {
                     tarefa: adiconarTarefaDeCompra,
                     id: new Date().getTime(),
-                    completed: false
+                    completed: false,
+                    preco: preco,
+                    precoTotal: novoPrecoTotal,
+
                 }
+
+                console.log(obj);
+
                 setListaDeCompra([...ListaDeCompra, obj]);
 
-                setAdiconarTarefaDeCompra('');
+                //setAdiconarTarefaDeCompra('');
 
                 localStorage.setItem('listaDeCompra', JSON.stringify([...ListaDeCompra, obj]));
 
+                // console.log(ListaDeCompra, 'Lista de compra');
 
+                // console.log(obj, 'obj');
 
-            }
+                
+              }
+
+            
+              
+            const valorInput = (e: number) => refInputNumber.current = e;
 
             useEffect(() => {
               if (typeof window !== 'undefined') {
@@ -47,7 +75,15 @@ export const ListaDeCompra = () => {
                 } else {
                   document.body.style.overflow = 'auto';
                 }
+
+              // const preco = refInputNumber.current; 
+
+              //     if (preco != null) {
+              //       setPrecoTotal((prev) => prev + preco); 
+              //     }
+                
               }
+
             }, [isOpenModal]);
 
   return (
@@ -70,7 +106,11 @@ export const ListaDeCompra = () => {
               onKeyDown={handleKeyPress}
               />
 
-
+                <input type="number" ref={refInputNumber} 
+                 onChange={(e) => valorInput(e.target.valueAsNumber as unknown as number)}
+                 onKeyDown={handleKeyPress}
+                />    
+               
           <div className='flex flex-row gap-3'>
 
 
@@ -91,7 +131,8 @@ export const ListaDeCompra = () => {
         null
         }
 
-        <List ListaDeCompra={ListaDeCompra} setListaDeCompra={setListaDeCompra}/>
+        <List ListaDeCompra={ListaDeCompra} setListaDeCompra={setListaDeCompra} 
+        precoTotal={precoTotal} setPrecoTotal={setPrecoTotal}/>
     </main>
   )
 }
