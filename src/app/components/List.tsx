@@ -98,9 +98,18 @@ if (itemEncontrado) {
         
         if (ListaDeCompraLocalStorage) {
           setListaDeCompra(JSON.parse(ListaDeCompraLocalStorage));
+          const teste = JSON.parse(ListaDeCompraLocalStorage);
+          //setPrecoTotal(teste[2].precoTotal);
+
+           teste.find((val : number) => { 
+            const teste2 = val.precoTotal; 
+            setPrecoTotal(teste2);
+          })
+          
+          
         }
       }, [])
-      
+
       const handleDragStart = (e: DragEvent<HTMLElement>, index: number) => {
         dragListaDeCompra.current = index;
         e.dataTransfer.setData('text/plain', String(index));
@@ -140,7 +149,7 @@ if (itemEncontrado) {
 
             { Filtro === 2 && ListaDeCompra.length != 0?
           <div className='flex justify-center items-center'>
-            <p>Preço total da compra {precoTotal}</p>
+            <p>Preço total da compra R${precoTotal}</p>
         <input type="text" className='text-black p-2 rounded-full border border-black
           mt-3 outline-none bg-[#edf2fc]' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
