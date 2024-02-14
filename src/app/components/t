@@ -1,124 +1,5 @@
-import React, { useReducer, useContext, useEffect } from 'react';
-import { Types, Tarefas } from './context/ts/types';
-import { List } from './List';
-import { GlobalContext } from './context/Store';
-
-const initialState = {
-  adiconarTarefaDeCompra: '',
-  preco: 0,
-  precoTotal: 0,
-  ListaDeCompra: [],
-  isOpenModal: false,
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'SET_ADICIONAR_TAREFA':
-      return { ...state, adiconarTarefaDeCompra: action.payload };
-    case 'SET_PRECO':
-      return { ...state, preco: action.payload };
-    case 'ADD_TAREFA':
-      return {
-        ...state,
-        ListaDeCompra: [...state.ListaDeCompra, action.payload],
-        precoTotal: state.precoTotal + action.payload.preco, // Somando o preço da nova tarefa ao precoTotal atual
-      };
-    default:
-      return state;
-  }
-};
-
-
-export const ListaDeCompra = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { adiconarTarefaDeCompra, precoTotal, ListaDeCompra,  } = state;
-  const { setIsOpenModal, isOpenModal } = useContext(GlobalContext);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (isOpenModal) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = 'auto';
-      }
-
-      
-    }
-  }, [isOpenModal]);
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      adcionarTarefa();
-    }
-  };
-
-  const adcionarTarefa = () => {
-    const obj = {
-      tarefa: state.adiconarTarefaDeCompra,
-      id: new Date().getTime(),
-      completed: false,
-      preco: state.preco,
-      precoTotal:state.precoTotal,
-    };
-
-    dispatch({ type: 'ADD_TAREFA', payload: obj });
-
-    console.log(obj.precoTotal)
-
-   // localStorage.setItem('listaDeCompra', JSON.stringify([...obj]));
-
-  };
-  
-  return (
-    <main className='p-3'>
-      {isOpenModal ? (
-        <section
-          className={`fixed z-10 inset-0 flex justify-center items-center transition-colors visible bg-black/50`}
-        >
-          <div
-            className={`bg-white rounded-lg flex flex-col gap-3 justify-center items-center text-center shadow p-6 transition-all max-w-md fixed z-50 text-black ${
-              isOpenModal ? ' scale-100 opacity-100' : ' scale-1100 opacity-0'
-            } `}
-          >
-            <h2 className='md:text-3xl text-2xl font-bangers '>Criar lista de compra</h2>
-            <input
-              type='text'
-              value={state.adiconarTarefaDeCompra}
-              className='text-black border-[#ccc] border p-2 rounded-full'
-              placeholder='Escreva uma tarefa'
-              onChange={(e) => dispatch({ type: 'SET_ADICIONAR_TAREFA', payload: e.target.value })}
-              onKeyDown={handleKeyPress}
-            />
-            <input
-              type='number'
-              onChange={(e) => dispatch({ type: 'SET_PRECO', payload: e.target.valueAsNumber  })}
-              value={state.preco}
-
-            />
-            <div className='flex flex-row gap-3'>
-              <button className='bg-red-500 hover:bg-red-700 text-white p-2 rounded-full'
-               onClick={() => setIsOpenModal(false)}>
-                Fechar modal
-              </button>
-              <button className='bg-sky-500 hover:bg-sky-700 text-white p-2 rounded-full' 
-              onClick={adcionarTarefa}>
-                Adcionar tarefa
-              </button>
-            </div>
-          </div>
-        </section>
-      ) : null}
-      <List ListaDeCompra={state.ListaDeCompra} precoTotal={state.precoTotal} dispatch={dispatch}/> 
-    </main>
-  );
-};
-//!
-//!
-//!
-//!
-//!
 'use client';
-import React, {useRef, useState, useEffect, useContext, Fragment} from 'react'
+import React, {useRef, useState, useEffect, useContext} from 'react'
 import { ListaDeCompra, Tarefas} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
@@ -127,13 +8,20 @@ import { FaTrash } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosSave } from "react-icons/io";
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
-export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tarefas[], precoTotal: number,
-  }) => {
+import { validateHeaderName } from 'http';
+export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: Tarefas[], setListaDeCompra: React.Dispatch<React.SetStateAction<Tarefas[]>>
+  , precoTotal: number, setPrecoTotal: React.Dispatch<React.SetStateAction<number>>}) => {
   const dragListaDeCompra = useRef<number | null>(null);
     const dragOverListaDeCompra = useRef<number | null>(null);    
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
     const [tarefaEmEdicaoId, setTarefaEmEdicaoId] = useState<number | null>(null); 
     const [SearchTarefas, setSearchTarefas] = useState('');
+    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<Number | null>(null);
+  
+    const refUpdateInputNumber = useRef<HTMLInputElement>(null);
+
+
+    
 
 
     const {Filtro} = useContext(GlobalContext);
@@ -144,7 +32,7 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
           const temp = ListaDeCompraClone[dragListaDeCompra.current];
           ListaDeCompraClone[dragListaDeCompra.current] = ListaDeCompraClone[dragOverListaDeCompra.current];
           ListaDeCompraClone[dragOverListaDeCompra.current] = temp;
-          dispatch({ type: 'ADD_TAREFA', payload: ListaDeCompraClone });
+          setListaDeCompra(ListaDeCompraClone);
         }
       };
 
@@ -156,30 +44,62 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
             }   
             return val;
         });
-        dispatch({ type: 'ADD_TAREFA', payload: atualizarTarefa });
-
-        //localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefa));
+        setListaDeCompra(atualizarTarefa);
+        localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefa));
         
     }
     const excluirTarefas = (id: number) => {
-        const deletarTarefa = ListaDeCompra.filter((val) => val.id != id)
-        dispatch({ type: 'ADD_TAREFA', payload: deletarTarefa });
 
-        //localStorage.setItem('listaDeCompra', JSON.stringify(deletarTarefa));
+
+const itemEncontrado = ListaDeCompra.find((val) => val.id === id);
+
+if (itemEncontrado) {
+    if (precoTotal < 0) {
+        setPrecoTotal(0);
+    } else if (precoTotal > 0) {
+
+      const precoItemEncontrado = parseFloat(itemEncontrado.preco.toFixed(2));
+      
+      console.log(precoItemEncontrado);
+        setPrecoTotal((prev) => prev - precoItemEncontrado);
+    }
+}
+
+
+        const deletarTarefa = ListaDeCompra.filter((val) => val.id != id)
+        setListaDeCompra(deletarTarefa);
+        localStorage.setItem('listaDeCompra', JSON.stringify(deletarTarefa));
         
       }
 
       const atualizarTarefaFavorita = (id: number) => {
         setAtualizarTarefaDeCompra('');
-        const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
-        { ...val, tarefa: atualizarTarefaDeCompra } : val)
 
-        dispatch({ type: 'ADD_TAREFA', payload: atualizarTarefaFavorita});
+          if (precoTotal < 0) {
+            setPrecoTotal(0);
+        } else if (precoTotal > 0) {
+          
+          
+          ListaDeCompra.find((val) => { 
+            if (val.id === id) {
 
+            const novoPrecoTotal = (val.preco - precoTotal )+ ArmazenarValueNUmber;
+            setPrecoTotal(novoPrecoTotal)
+          } });
+            
+        }       
+
+        // const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
+        // { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: precoTotal} : val)
         
+        // setListaDeCompra(atualizarTarefaFavorita);
+        
+        
+        // localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
+
         setTarefaEmEdicaoId(null); 
 
-        //localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
+        setArmazenarValueNUmber(null);
         
       }
       
@@ -187,11 +107,19 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
         const ListaDeCompraLocalStorage = localStorage.getItem('listaDeCompra');
         
         if (ListaDeCompraLocalStorage) {
-        dispatch({ type: 'ADD_TAREFA', payload: ListaDeCompraLocalStorage});
+          setListaDeCompra(JSON.parse(ListaDeCompraLocalStorage));
+          const teste = JSON.parse(ListaDeCompraLocalStorage);
+          //setPrecoTotal(teste[2].precoTotal);
 
+           teste.find((val : number) => { 
+            const teste2 = val.precoTotal; 
+            setPrecoTotal(teste2);
+          })
+          
+          
         }
       }, [])
-      
+
       const handleDragStart = (e: DragEvent<HTMLElement>, index: number) => {
         dragListaDeCompra.current = index;
         e.dataTransfer.setData('text/plain', String(index));
@@ -202,16 +130,18 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
         e.preventDefault();
       };
 
+
+
         const [Searchtarefas, setSearchtarefas] = useState('');
 
-        console.log(ListaDeCompra)
-    
+          const teste = precoTotal.toFixed(2);
       return (
         <main className=''>
             <section className=''>
 
             { Filtro === 2 && ListaDeCompra.length != 0?
           <div className='flex justify-center items-center'>
+            <p>Preço total da compra R${teste}</p>
         <input type="text" className='text-black p-2 rounded-full border border-black
           mt-3 outline-none bg-[#edf2fc]' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
@@ -229,10 +159,6 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
             <h1 className='text-center text-red-500 font-bold text-2xl'>Nenhuma tarefa de compra adicionada</h1> 
             :
 
-            <div>
-
-              <p>Preço total da compra {precoTotal}</p>
-
             <div className=' h-72 overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
@@ -240,6 +166,8 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
           {ListaDeCompra.map((item, index) => {
             const tarefaSalva = item.completed;
             const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
+          const teste = item.preco.toFixed(2);
+
 
             return(
               <section key={item.id}>
@@ -254,15 +182,32 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
                  border-0 rounded-lg `}
                 >
                   {  tarefaEmEdicaoId != item.id?
+                  <>
                     <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</p>
-                    :
+
+                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{teste}</p>
+
+                  </>
+                      :
+
+                    <>
                     <input type="text" className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
                     value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
+                    
+
+                      
+                    <input type="number" 
+                     value={ArmazenarValueNUmber != null ? ArmazenarValueNUmber : item.preco }
+                     onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
+                      className='text-black p-2 rounded-full border border-black'
+                       />
+                    </>
+
                   } 
 
                   <div className='flex  flex-row gap-4'>
-                    <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id)  :
+                    <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id) :
                     atualizarTarefaDeCompra.length === 0? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
                     () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
                     }>
@@ -285,8 +230,6 @@ export const List = ({ListaDeCompra, precoTotal, dispatch} : {ListaDeCompra: Tar
             )
           })}
             </div>
-            </div>
-
           }   
             </section>
         </main>

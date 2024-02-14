@@ -32,7 +32,9 @@ export type Types = {
 export type Tarefas = {
     id: number;
     tarefa: string;
-     completed: boolean;
+    completed: boolean;
+    preco: number;
+    precoTotal: number;
 }
 
 export type TarefasDeCompra = {

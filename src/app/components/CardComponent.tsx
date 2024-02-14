@@ -103,7 +103,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
     }
  
     <section className={` bg-[#373737]  md:p-10 
-     md:w-[90rem] md:h-[32rem] h-[30rem] m-5
+     md:w-[90rem] md:h-[35rem] h-[30rem] m-5
      w-96 rounded-xl
      scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 

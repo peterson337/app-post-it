@@ -1,5 +1,5 @@
 'use client';
-import React, {useRef, useState, useEffect, useContext} from 'react'
+import React, {useRef, useState, useEffect, useContext, Dispatch, SetStateAction} from 'react'
 import { ListaDeCompra, Tarefas} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
@@ -8,19 +8,16 @@ import { FaTrash } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { IoIosSave } from "react-icons/io";
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
+import { validateHeaderName } from 'http';
 export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: Tarefas[], setListaDeCompra: React.Dispatch<React.SetStateAction<Tarefas[]>>
-  , precoTotal: number, setPrecoTotal: React.Dispatch<React.SetStateAction<number>>}) => {
+  , precoTotal: Number, setPrecoTotal: Dispatch<SetStateAction<Number>>}) => {
   const dragListaDeCompra = useRef<number | null>(null);
     const dragOverListaDeCompra = useRef<number | null>(null);    
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
     const [tarefaEmEdicaoId, setTarefaEmEdicaoId] = useState<number | null>(null); 
     const [SearchTarefas, setSearchTarefas] = useState('');
-    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState('');
-    const refUpdateInputNumber = useRef<HTMLInputElement | null>(null);
-
-    
-
-
+    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<number | null>(null);
+  
     const {Filtro} = useContext(GlobalContext);
 
     const handlerSort = () => {
@@ -54,7 +51,11 @@ if (itemEncontrado) {
     if (precoTotal < 0) {
         setPrecoTotal(0);
     } else if (precoTotal > 0) {
-        setPrecoTotal((prev) => prev - itemEncontrado.preco);
+
+      const precoItemEncontrado = parseFloat(itemEncontrado.preco.toFixed(2));
+      
+      console.log(precoItemEncontrado);
+        setPrecoTotal((prev : SetStateAction<Number>) => prev as number - precoItemEncontrado);
     }
 }
 
@@ -66,31 +67,33 @@ if (itemEncontrado) {
       }
 
       const atualizarTarefaFavorita = (id: number) => {
-        setAtualizarTarefaDeCompra('');
+           if (precoTotal < 0) {
+             setPrecoTotal(0);
+         } else if (precoTotal > 0) {
 
-        const preco = refUpdateInputNumber.current
-
-        const itemEncontrado = ListaDeCompra.find((val) => val.id === id);
-
-          if (precoTotal < 0) {
-            setPrecoTotal(0);
-        } else if (precoTotal > 0) {
-          ListaDeCompra.find((val) => val.id === id ? setPrecoTotal((prev) => prev - val.preco + preco) : null);
-        }
-        
-        console.log(precoTotal);
-
-        //ListaDeCompra.find((val) => val.id === id ? setPrecoTotal((prev) => (prev - val.preco) + preco) : null);
-
-        const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
-        { ...val, tarefa: atualizarTarefaDeCompra, preco: refUpdateInputNumber.current } : val)
-        
-        setListaDeCompra(atualizarTarefaFavorita);
-        
-        setTarefaEmEdicaoId(null); 
-
-        localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
-        
+          ListaDeCompra.find((item) => {
+            if (item.id === id) {
+              const diferençaDePreço =  precoTotal as number - item.preco ;
+              
+              if (precoTotal !== null && ArmazenarValueNUmber !== null) {
+                const resultadoFinal =  ArmazenarValueNUmber +  diferençaDePreço;
+                const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
+                { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: resultadoFinal} : val)
+               
+                setListaDeCompra(atualizarTarefaFavorita);
+  
+                setPrecoTotal(resultadoFinal);
+               
+                setTarefaEmEdicaoId(null); 
+       
+                setArmazenarValueNUmber(null);
+             
+                setAtualizarTarefaDeCompra('');
+                localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
+            }
+            }
+        })
+         }
       }
       
       useEffect(() => {
@@ -101,7 +104,7 @@ if (itemEncontrado) {
           const teste = JSON.parse(ListaDeCompraLocalStorage);
           //setPrecoTotal(teste[2].precoTotal);
 
-           teste.find((val : number) => { 
+           teste.find((val : Tarefas) => { 
             const teste2 = val.precoTotal; 
             setPrecoTotal(teste2);
           })
@@ -121,40 +124,23 @@ if (itemEncontrado) {
       };
 
 
-        const armzenarInputNumber = ((e : number) => refUpdateInputNumber.current = e);
 
         const [Searchtarefas, setSearchtarefas] = useState('');
 
-    const salveState = (id : number) => {
-
-      ListaDeCompra.find((val) => {
-        if (id === val.id) {
-          
-          setTarefaEmEdicaoId(id); 
-
-          setArmazenarValueNUmber(val.preco)
-  
-          refUpdateInputNumber.current = val.preco;
-
-          console.log(refUpdateInputNumber);
-  
-        }
-
-      });
-
-    }
+          const teste = precoTotal.toFixed(2);
       return (
         <main className=''>
             <section className=''>
 
             { Filtro === 2 && ListaDeCompra.length != 0?
-          <div className='flex justify-center items-center'>
-            <p>Preço total da compra R${precoTotal}</p>
+          <div className='flex justify-center items-center mb-4'>
         <input type="text" className='text-black p-2 rounded-full border border-black
           mt-3 outline-none bg-[#edf2fc]' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'
          />
+
+
 
         </div>
 
@@ -167,6 +153,7 @@ if (itemEncontrado) {
             <h1 className='text-center text-red-500 font-bold text-2xl'>Nenhuma tarefa de compra adicionada</h1> 
             :
 
+           <>
             <div className=' h-72 overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
@@ -174,6 +161,8 @@ if (itemEncontrado) {
           {ListaDeCompra.map((item, index) => {
             const tarefaSalva = item.completed;
             const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
+          const teste = item.preco.toFixed(2);
+
 
             return(
               <section key={item.id}>
@@ -191,7 +180,7 @@ if (itemEncontrado) {
                   <>
                     <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</p>
 
-                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.preco}</p>
+                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{teste}</p>
 
                   </>
                       :
@@ -202,16 +191,19 @@ if (itemEncontrado) {
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
                     
 
-                    <input type="number" ref={refUpdateInputNumber}  onChange={(e) => armzenarInputNumber(e.target.valueAsNumber as unknown as number)}
-                      className='text-black p-2 rounded-full border border-black'
+                      
+                    <input type="number" 
+                     value={ArmazenarValueNUmber != null ? ArmazenarValueNUmber : item.preco }
+                     onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
+                      className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
                        />
                     </>
 
                   } 
 
                   <div className='flex  flex-row gap-4'>
-                    <button  onClick={ tarefaEmEdicaoId === null?   () => salveState(item.id) :
-                    atualizarTarefaDeCompra.length === 0? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
+                    <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id) :
+                    atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
                     () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
                     }>
                         { tarefaEmEdicaoId === item.id? <IoIosSave /> :  <FaPen/>  }
@@ -233,7 +225,11 @@ if (itemEncontrado) {
             )
           })}
             </div>
+            <p className=' m-5 text-end'>Preço total da compra R${teste}</p>
+           </>
           }   
+   
+
             </section>
         </main>
       );

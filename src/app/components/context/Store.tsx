@@ -45,7 +45,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
 
   const [ArmazenarTarefa, setArmazenarTarefa] = useState<number>(0);
   const [anotarTarefasEditada, setAnotarTarefasEditada] = useState(''); 
-  const [Filtro, setFiltro] = useState<number>(2);
+  const [Filtro, setFiltro] = useState<number>(0);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
 

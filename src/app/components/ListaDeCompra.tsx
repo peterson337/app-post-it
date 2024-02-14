@@ -4,13 +4,13 @@ import { Types, Tarefas } from "./context/ts/types";
 import { List } from "./List";
 import  {GlobalContext}  from "./context/Store";
 
-
+type T = number;
 
 export const ListaDeCompra = () => {
 
         const [adiconarTarefaDeCompra, setAdiconarTarefaDeCompra,] = useState('');
 
-        const [precoTotal, setPrecoTotal,] = useState(0);
+        const [precoTotal, setPrecoTotal,] = useState<Number>(0);
 
         const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { adcionarTarefa()}};
 
@@ -22,23 +22,20 @@ export const ListaDeCompra = () => {
 
             const refInputNumber = useRef<HTMLInputElement | null>(null);
 
-            const precoTotalRef = useRef<number>(0); 
-
             const adcionarTarefa = () => {
-              // if ( adiconarTarefaDeCompra.length === 0) {
-              //   alert('Escreva uma tarefa')                 
-              //   return
-              // }
+              const preco : any = refInputNumber.current; 
+
+               if ( adiconarTarefaDeCompra.length === 0) {
+                 alert('Escreva uma tarefa para salvar.');                 
+                 return
+               } else if (isNaN(preco as unknown as T)) {
+                alert('Por favor, insira um valor válido para o produto.');
+                return;
+              }
               
-              const preco = refInputNumber.current; 
+              const novoPrecoTotal = precoTotal + preco; 
 
-              setPrecoTotal((prev) => prev + preco);
-
-              const novoPrecoTotal = precoTotal + preco;
-
-              //const novoPrecoTotal = ListaDeCompra.reduce((total, item) => total + preco, preco);
-
-              //setPrecoTotal(novoPrecoTotal);
+              setPrecoTotal(novoPrecoTotal);
 
                 const obj = {
                     tarefa: adiconarTarefaDeCompra,
@@ -49,24 +46,17 @@ export const ListaDeCompra = () => {
 
                 }
 
-                console.log(obj);
 
                 setListaDeCompra([...ListaDeCompra, obj]);
 
-                //setAdiconarTarefaDeCompra('');
+                setAdiconarTarefaDeCompra('');
 
                 localStorage.setItem('listaDeCompra', JSON.stringify([...ListaDeCompra, obj]));
 
-                // console.log(ListaDeCompra, 'Lista de compra');
-
-                // console.log(obj, 'obj');
-
                 
               }
-
-            
               
-            const valorInput = (e: number) => refInputNumber.current = e;
+            const valorInput = (e: HTMLInputElement) => refInputNumber.current = e;
 
             useEffect(() => {
               if (typeof window !== 'undefined') {
@@ -75,12 +65,6 @@ export const ListaDeCompra = () => {
                 } else {
                   document.body.style.overflow = 'auto';
                 }
-
-              // const preco = refInputNumber.current; 
-
-              //     if (preco != null) {
-              //       setPrecoTotal((prev) => prev + preco); 
-              //     }
                 
               }
 
@@ -107,7 +91,7 @@ export const ListaDeCompra = () => {
               />
 
                 <input type="number" ref={refInputNumber} 
-                 onChange={(e) => valorInput(e.target.valueAsNumber as unknown as number)}
+                 onChange={(e) => valorInput(e.target.valueAsNumber as unknown as HTMLInputElement)}
                  onKeyDown={handleKeyPress}
                 />    
                
