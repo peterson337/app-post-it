@@ -41,7 +41,7 @@ export const Tarefas = () => {
   };
   
   return (
-    <main className='md:flex md:flex-col md:h-[100vh] md:justify-between '>
+    <main className='md:flex md:flex-col md:h-[100vh] md:justify-between  '>
 
       {/* Tamanho do mnitor gande 1920 */}
 
@@ -57,15 +57,15 @@ export const Tarefas = () => {
       
 
 {   Filtro === 0 || Filtro === 2? 
-  <div className='w-full flex justify-end  relative bottom-2 '>
-{
-  window.innerWidth > 768?
+  <div className='w-full flex justify-end  bottom-2  md:mb-5 md:md:pr-10 
+  pr-5 absolute md:relative'>
+
   <Fab 
     className={`${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
      ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
      text-white 
      text-2xl
-    md:mb-5 md:mr-10    
+    
     `}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
@@ -75,16 +75,7 @@ export const Tarefas = () => {
  {  Filtro === 0? <FaPlus /> : <FaCartPlus />  }
   </Fab>
 
-  :
 
-    <Button variant="contained" className={`mb-5 mr-3
-    ${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
-    ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
-    
-    `}
-    onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
-
-    >Abrir modal</Button>}
 </div>
 
 :
