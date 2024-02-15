@@ -6,7 +6,6 @@ import { Tarefas } from "../components/Tarefas";
 export const Principal = () => {
   return (
     <main className='text-white'>
-      <Header/>
       <Tarefas/>
     </main>
   )

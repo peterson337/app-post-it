@@ -1,44 +1,62 @@
 'use client';
-import React, {useState, useContext, useEffect} from 'react'
-import { Types, Tarefas } from "./context/ts/types";
+import React, {useState, useContext, useEffect, useRef} from 'react'
+import { Types, TarefasDeCompra } from "./context/ts/types";
 import { List } from "./List";
 import  {GlobalContext}  from "./context/Store";
 
-
+type T = number;
 
 export const ListaDeCompra = () => {
 
         const [adiconarTarefaDeCompra, setAdiconarTarefaDeCompra,] = useState('');
 
+        const [precoTotal, setPrecoTotal,] = useState<number>(0);
+
         const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { adcionarTarefa()}};
 
 
-          const [ListaDeCompra, setListaDeCompra] = useState<Tarefas[]>([]);
+          const [ListaDeCompra, setListaDeCompra] = useState<TarefasDeCompra[]>([]);
 
           const {Filtro,    isOpenModal, 
             setIsOpenModal,} = useContext(GlobalContext);
 
-            const adcionarTarefa = () => {
-              if ( adiconarTarefaDeCompra.length === 0) {
-                alert('Escreva uma tarefa')                 
-                return
-              }
+            const refInputNumber = useRef<HTMLInputElement | null>(null);
 
+            const adcionarTarefa = () => {
+              const preco : any = refInputNumber.current; 
+
+               if ( adiconarTarefaDeCompra.length === 0) {
+                 alert('Escreva uma tarefa para salvar.');                 
+                 return
+               } else if (isNaN(preco as unknown as T)) {
+                alert('Por favor, insira um valor válido para o produto.');
+                return;
+              }
+              
+              const novoPrecoTotal = precoTotal + preco; 
+
+              setPrecoTotal(novoPrecoTotal);
 
                 const obj = {
                     tarefa: adiconarTarefaDeCompra,
                     id: new Date().getTime(),
-                    completed: false
+                    completed: false,
+                    preco: preco,
+                    precoTotal: novoPrecoTotal,
+
                 }
+
+
                 setListaDeCompra([...ListaDeCompra, obj]);
 
                 setAdiconarTarefaDeCompra('');
 
                 localStorage.setItem('listaDeCompra', JSON.stringify([...ListaDeCompra, obj]));
 
-
-
-            }
+                
+              }
+              
+            const valorInput = (e: HTMLInputElement) => refInputNumber.current = e;
 
             useEffect(() => {
               if (typeof window !== 'undefined') {
@@ -47,7 +65,9 @@ export const ListaDeCompra = () => {
                 } else {
                   document.body.style.overflow = 'auto';
                 }
+                
               }
+
             }, [isOpenModal]);
 
   return (
@@ -64,13 +84,19 @@ export const ListaDeCompra = () => {
                <h2 className='md:text-3xl text-2xl font-bangers '>
                 Criar lista de compra</h2>
               <input type="text" value={adiconarTarefaDeCompra}
-              className='text-black border-[#ccc] border p-2 rounded-full'
-              placeholder='Escreva uma tarefa' 
+              className='text-black border-[#ccc] border p-2 rounded-full outline-none'
+              placeholder='Escreva o nome do produto' 
               onChange={(e) => setAdiconarTarefaDeCompra(e.target.value)} 
               onKeyDown={handleKeyPress}
               />
 
-
+                <input type="number" ref={refInputNumber} 
+                 onChange={(e) => valorInput(e.target.valueAsNumber as unknown as HTMLInputElement)}
+                 onKeyDown={handleKeyPress}
+                 className='text-black border-[#ccc] border p-2 rounded-full outline-none'
+                 placeholder='Insira o preço do produto'
+                />    
+               
           <div className='flex flex-row gap-3'>
 
 
@@ -91,7 +117,8 @@ export const ListaDeCompra = () => {
         null
         }
 
-        <List ListaDeCompra={ListaDeCompra} setListaDeCompra={setListaDeCompra}/>
+        <List ListaDeCompra={ListaDeCompra} setListaDeCompra={setListaDeCompra} 
+        precoTotal={precoTotal} setPrecoTotal={setPrecoTotal}/>
     </main>
   )
 }

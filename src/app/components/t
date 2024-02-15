@@ -1,6 +1,6 @@
 'use client';
-import React, {useRef, useState, useEffect, useContext, Dispatch, SetStateAction} from 'react'
-import { TarefasDeCompra} from "./context/ts/types";
+import React, {useRef, useState, useEffect, useContext} from 'react'
+import { ListaDeCompra, Tarefas} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
 import { FaPen } from "react-icons/fa";
@@ -9,15 +9,21 @@ import { FaCheck } from "react-icons/fa6";
 import { IoIosSave } from "react-icons/io";
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
 import { validateHeaderName } from 'http';
-export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: TarefasDeCompra[], setListaDeCompra: React.Dispatch<React.SetStateAction<TarefasDeCompra[]>>
-  , precoTotal: number, setPrecoTotal: Dispatch<SetStateAction<number>>}) => {
+export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: Tarefas[], setListaDeCompra: React.Dispatch<React.SetStateAction<Tarefas[]>>
+  , precoTotal: number, setPrecoTotal: React.Dispatch<React.SetStateAction<number>>}) => {
   const dragListaDeCompra = useRef<number | null>(null);
     const dragOverListaDeCompra = useRef<number | null>(null);    
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
     const [tarefaEmEdicaoId, setTarefaEmEdicaoId] = useState<number | null>(null); 
     const [SearchTarefas, setSearchTarefas] = useState('');
-    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<number | null>(null);
+    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<Number | null>(null);
   
+    const refUpdateInputNumber = useRef<HTMLInputElement>(null);
+
+
+    
+
+
     const {Filtro} = useContext(GlobalContext);
 
     const handlerSort = () => {
@@ -55,7 +61,7 @@ if (itemEncontrado) {
       const precoItemEncontrado = parseFloat(itemEncontrado.preco.toFixed(2));
       
       console.log(precoItemEncontrado);
-        setPrecoTotal((prev : SetStateAction<number>) => prev as number - precoItemEncontrado);
+        setPrecoTotal((prev) => prev - precoItemEncontrado);
     }
 }
 
@@ -67,33 +73,34 @@ if (itemEncontrado) {
       }
 
       const atualizarTarefaFavorita = (id: number) => {
-           if (precoTotal < 0) {
-             setPrecoTotal(0);
-         } else if (precoTotal > 0) {
+        setAtualizarTarefaDeCompra('');
 
-          ListaDeCompra.find((item) => {
-            if (item.id === id) {
-              const diferençaDePreço =  precoTotal as number - item.preco ;
-              
-              if (precoTotal !== null && ArmazenarValueNUmber !== null) {
-                const resultadoFinal =  ArmazenarValueNUmber +  diferençaDePreço;
-                const atualizarTarefaFavorita = ListaDeCompra.map((val : TarefasDeCompra) => val.id === id? 
-                { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: resultadoFinal} : val)
-               
-                setListaDeCompra(atualizarTarefaFavorita);
-  
-                setPrecoTotal(resultadoFinal);
-               
-                setTarefaEmEdicaoId(null); 
-       
-                setArmazenarValueNUmber(null);
-             
-                setAtualizarTarefaDeCompra('');
-                localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
-            }
-            }
-        })
-         }
+          if (precoTotal < 0) {
+            setPrecoTotal(0);
+        } else if (precoTotal > 0) {
+          
+          
+          ListaDeCompra.find((val) => { 
+            if (val.id === id) {
+
+            const novoPrecoTotal = (val.preco - precoTotal )+ ArmazenarValueNUmber;
+            setPrecoTotal(novoPrecoTotal)
+          } });
+            
+        }       
+
+        // const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
+        // { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: precoTotal} : val)
+        
+        // setListaDeCompra(atualizarTarefaFavorita);
+        
+        
+        // localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
+
+        setTarefaEmEdicaoId(null); 
+
+        setArmazenarValueNUmber(null);
+        
       }
       
       useEffect(() => {
@@ -104,7 +111,7 @@ if (itemEncontrado) {
           const teste = JSON.parse(ListaDeCompraLocalStorage);
           //setPrecoTotal(teste[2].precoTotal);
 
-           teste.find((val : TarefasDeCompra) => { 
+           teste.find((val : number) => { 
             const teste2 = val.precoTotal; 
             setPrecoTotal(teste2);
           })
@@ -133,14 +140,13 @@ if (itemEncontrado) {
             <section className=''>
 
             { Filtro === 2 && ListaDeCompra.length != 0?
-          <div className='flex justify-center items-center mb-4'>
+          <div className='flex justify-center items-center'>
+            <p>Preço total da compra R${teste}</p>
         <input type="text" className='text-black p-2 rounded-full border border-black
           mt-3 outline-none bg-[#edf2fc]' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'
          />
-
-
 
         </div>
 
@@ -153,7 +159,6 @@ if (itemEncontrado) {
             <h1 className='text-center text-red-500 font-bold text-2xl'>Nenhuma tarefa de compra adicionada</h1> 
             :
 
-           <>
             <div className=' h-72 overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
@@ -174,7 +179,7 @@ if (itemEncontrado) {
                   onDragEnd={handlerSort}
                   className={`  p-3 border m-3 border-b-[#ccc] 
                   flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
-                 border-0 rounded-lg  `}
+                 border-0 rounded-lg `}
                 >
                   {  tarefaEmEdicaoId != item.id?
                   <>
@@ -186,7 +191,7 @@ if (itemEncontrado) {
                       :
 
                     <>
-                    <input type="text" className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
+                    <input type="text" className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
                     value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
                     
@@ -195,15 +200,15 @@ if (itemEncontrado) {
                     <input type="number" 
                      value={ArmazenarValueNUmber != null ? ArmazenarValueNUmber : item.preco }
                      onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
-                      className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
+                      className='text-black p-2 rounded-full border border-black'
                        />
                     </>
 
                   } 
 
-                  <div className='flex  flex-row md:gap-4 gap-6'>
+                  <div className='flex  flex-row gap-4'>
                     <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id) :
-                    atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
+                    atualizarTarefaDeCompra.length === 0? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
                     () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
                     }>
                         { tarefaEmEdicaoId === item.id? <IoIosSave /> :  <FaPen/>  }
@@ -225,11 +230,7 @@ if (itemEncontrado) {
             )
           })}
             </div>
-            <p className=' m-5 text-end'>Preço total da compra R${teste}</p>
-           </>
           }   
-   
-
             </section>
         </main>
       );

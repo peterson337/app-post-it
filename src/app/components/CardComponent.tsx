@@ -88,6 +88,7 @@ const dragOverListaDeCompra = useRef<number | null>(null);
             localStorage.setItem('tarefas', JSON.stringify(deletarTarefa));
 
     }
+
     
     return (
       <main className='flex justify-center  items-center'>
@@ -102,11 +103,15 @@ const dragOverListaDeCompra = useRef<number | null>(null);
     }
  
     <section className={` bg-[#373737]  md:p-10 
-     md:w-[90rem] md:h-[30rem] h-80 m-5 overflow-auto 
+     md:w-[90rem] md:h-[35rem] h-[30rem] m-5
      w-96 rounded-xl
      scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
      `}>
+
+      <h1 className=' text-2xl font-bangers text-center mt-5 md:mt-0 hidden md:block'>
+       {Filtro === 0? 'App post it 😎' : Filtro === 2? 'Lista de compra 🛒' : 'App post it 😎'}
+      </h1>      
 
       <Tabs value={Filtro} onChange={handleChandeTab} aria-label="basic tabs example"
       className='mt-3'
@@ -179,7 +184,12 @@ const dragOverListaDeCompra = useRef<number | null>(null);
 
           <section  
         
-              className='grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 '
+              className={`grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 
+              overflow-auto   h-72 mt-3
+              scrollbar-thin scrollbar-thumb-sky-500 
+    scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
+    
+    `}
           >
 
             

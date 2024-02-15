@@ -7,6 +7,7 @@ import Fab from '@mui/material/Fab';
 
 import { FaPlus } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa";
+import Button from '@mui/material/Button';
 
 
 
@@ -40,9 +41,9 @@ export const Tarefas = () => {
   };
   
   return (
-    <main className='flex flex-col h-[100vh] justify-between '>
+    <main className='md:flex md:flex-col md:h-[100vh] md:justify-between  '>
 
-
+      {/* Tamanho do mnitor gande 1920 */}
 
   {iSOpenModalCreateTareas?
    <Modal
@@ -56,16 +57,16 @@ export const Tarefas = () => {
       
 
 {   Filtro === 0 || Filtro === 2? 
-  <div className='w-full flex justify-end 
-                mb-10
-                '>
-<Fab 
+  <div className='w-full flex justify-end  bottom-2  md:mb-5 md:md:pr-10 
+  pr-5 absolute md:relative'>
+
+  <Fab 
     className={`${Filtro === 0 ? 'bg-sky-500' : 'bg-green-500'}
      ${Filtro === 0 ? 'hover:bg-sky-700' : 'hover:bg-green-700'}
      text-white 
      text-2xl
-    md:mb-24 md:mr-10   
-    mb-24 mr-5`}
+    
+    `}
     onClick={Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)}
     onKeyPress={handleKeyPress}
     //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
@@ -73,6 +74,7 @@ export const Tarefas = () => {
   >
  {  Filtro === 0? <FaPlus /> : <FaCartPlus />  }
   </Fab>
+
 
 </div>
 
