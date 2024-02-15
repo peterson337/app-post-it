@@ -1,6 +1,6 @@
 'use client';
 import React, {useRef, useState, useEffect, useContext, Dispatch, SetStateAction} from 'react'
-import { ListaDeCompra, Tarefas} from "./context/ts/types";
+import { TarefasDeCompra} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
 import { FaPen } from "react-icons/fa";
@@ -9,8 +9,8 @@ import { FaCheck } from "react-icons/fa6";
 import { IoIosSave } from "react-icons/io";
 import { DragEvent } from 'react'; // Importe o tipo DragEvent
 import { validateHeaderName } from 'http';
-export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: Tarefas[], setListaDeCompra: React.Dispatch<React.SetStateAction<Tarefas[]>>
-  , precoTotal: Number, setPrecoTotal: Dispatch<SetStateAction<Number>>}) => {
+export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal} : {ListaDeCompra: TarefasDeCompra[], setListaDeCompra: React.Dispatch<React.SetStateAction<TarefasDeCompra[]>>
+  , precoTotal: number, setPrecoTotal: Dispatch<SetStateAction<number>>}) => {
   const dragListaDeCompra = useRef<number | null>(null);
     const dragOverListaDeCompra = useRef<number | null>(null);    
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
@@ -55,7 +55,7 @@ if (itemEncontrado) {
       const precoItemEncontrado = parseFloat(itemEncontrado.preco.toFixed(2));
       
       console.log(precoItemEncontrado);
-        setPrecoTotal((prev : SetStateAction<Number>) => prev as number - precoItemEncontrado);
+        setPrecoTotal((prev : SetStateAction<number>) => prev as number - precoItemEncontrado);
     }
 }
 
@@ -77,7 +77,7 @@ if (itemEncontrado) {
               
               if (precoTotal !== null && ArmazenarValueNUmber !== null) {
                 const resultadoFinal =  ArmazenarValueNUmber +  diferençaDePreço;
-                const atualizarTarefaFavorita = ListaDeCompra.map((val : Tarefas) => val.id === id? 
+                const atualizarTarefaFavorita = ListaDeCompra.map((val : TarefasDeCompra) => val.id === id? 
                 { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: resultadoFinal} : val)
                
                 setListaDeCompra(atualizarTarefaFavorita);
@@ -104,7 +104,7 @@ if (itemEncontrado) {
           const teste = JSON.parse(ListaDeCompraLocalStorage);
           //setPrecoTotal(teste[2].precoTotal);
 
-           teste.find((val : Tarefas) => { 
+           teste.find((val : TarefasDeCompra) => { 
             const teste2 = val.precoTotal; 
             setPrecoTotal(teste2);
           })

@@ -1,6 +1,6 @@
 'use client';
 import React, {useState, useContext, useEffect, useRef} from 'react'
-import { Types, Tarefas } from "./context/ts/types";
+import { Types, TarefasDeCompra } from "./context/ts/types";
 import { List } from "./List";
 import  {GlobalContext}  from "./context/Store";
 
@@ -10,12 +10,12 @@ export const ListaDeCompra = () => {
 
         const [adiconarTarefaDeCompra, setAdiconarTarefaDeCompra,] = useState('');
 
-        const [precoTotal, setPrecoTotal,] = useState<Number>(0);
+        const [precoTotal, setPrecoTotal,] = useState<number>(0);
 
         const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {if (e.key === 'Enter') { adcionarTarefa()}};
 
 
-          const [ListaDeCompra, setListaDeCompra] = useState<Tarefas[]>([]);
+          const [ListaDeCompra, setListaDeCompra] = useState<TarefasDeCompra[]>([]);
 
           const {Filtro,    isOpenModal, 
             setIsOpenModal,} = useContext(GlobalContext);
