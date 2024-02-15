@@ -174,7 +174,7 @@ if (itemEncontrado) {
                   onDragEnd={handlerSort}
                   className={`  p-3 border m-3 border-b-[#ccc] 
                   flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
-                 border-0 rounded-lg `}
+                 border-0 rounded-lg  `}
                 >
                   {  tarefaEmEdicaoId != item.id?
                   <>
@@ -186,7 +186,7 @@ if (itemEncontrado) {
                       :
 
                     <>
-                    <input type="text" className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
+                    <input type="text" className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
                     value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
                     
@@ -195,13 +195,13 @@ if (itemEncontrado) {
                     <input type="number" 
                      value={ArmazenarValueNUmber != null ? ArmazenarValueNUmber : item.preco }
                      onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
-                      className='text-black  w-28 md:w-96 p-1 rounded-full pl-3 outline-none'
+                      className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
                        />
                     </>
 
                   } 
 
-                  <div className='flex  flex-row gap-4'>
+                  <div className='flex  flex-row md:gap-4 gap-6'>
                     <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id) :
                     atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
                     () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)

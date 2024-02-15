@@ -84,8 +84,8 @@ export const ListaDeCompra = () => {
                <h2 className='md:text-3xl text-2xl font-bangers '>
                 Criar lista de compra</h2>
               <input type="text" value={adiconarTarefaDeCompra}
-              className='text-black border-[#ccc] border p-2 rounded-full'
-              placeholder='Escreva uma tarefa' 
+              className='text-black border-[#ccc] border p-2 rounded-full outline-none'
+              placeholder='Escreva o nome do produto' 
               onChange={(e) => setAdiconarTarefaDeCompra(e.target.value)} 
               onKeyDown={handleKeyPress}
               />
@@ -93,6 +93,8 @@ export const ListaDeCompra = () => {
                 <input type="number" ref={refInputNumber} 
                  onChange={(e) => valorInput(e.target.valueAsNumber as unknown as HTMLInputElement)}
                  onKeyDown={handleKeyPress}
+                 className='text-black border-[#ccc] border p-2 rounded-full outline-none'
+                 placeholder='Insira o preço do produto'
                 />    
                
           <div className='flex flex-row gap-3'>

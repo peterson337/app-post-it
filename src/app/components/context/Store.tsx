@@ -127,7 +127,7 @@ const MacarTarefaComoConcluida = (id: number) => {
 
           }
 
-          setTarefasFavoritas([...tarefasFavoritas, favoritarTarefas]);
+          setTarefasFavoritas([...tarefasFavoritas, favoritarTarefas] );
         
            localStorage.setItem('tarefasFavoritas', JSON.stringify([...tarefasFavoritas, favoritarTarefas]));
 
@@ -143,7 +143,7 @@ const MacarTarefaComoConcluida = (id: number) => {
 
           }
 
-          setTarefas([...tarefas, desfavoritarTarefas]);
+          setTarefas([...tarefas, desfavoritarTarefas] );
 
         localStorage.setItem('tarefas', JSON.stringify([...tarefas, desfavoritarTarefas]));
 

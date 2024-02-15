@@ -33,8 +33,7 @@ export type Tarefas = {
     id: number;
     tarefa: string;
     completed: boolean;
-    preco: number;
-    precoTotal: number;
+
 }
 
 export type TarefasDeCompra = {
@@ -46,21 +45,8 @@ export type TarefasDeCompra = {
 
 }
 
-
-export type ListaDeCompra = {
-    ListaDeCompra: Tarefas[], 
-    setListaDeCompra: Dispatch<SetStateAction<Tarefas[]>>,
-    adiconarTarefaDeCompra: string,
-    setAdiconarTarefaDeCompra: (value: string) => void,
-    precoTotal: number;
-
-}
-
 export interface State {
     adiconarTarefaDeCompra: string;
-    precoDoProduto: number;
-    precoTotal: number;
-    ListaDeCompra: TarefasDeCompra[];
     isOpenModal: boolean;
   }
   
