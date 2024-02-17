@@ -16,7 +16,7 @@ export const List = ({ListaDeCompra, setListaDeCompra, precoTotal, setPrecoTotal
     const [atualizarTarefaDeCompra, setAtualizarTarefaDeCompra,] = useState('');
     const [tarefaEmEdicaoId, setTarefaEmEdicaoId] = useState<number | null>(null); 
     const [SearchTarefas, setSearchTarefas] = useState('');
-    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<number | null>(null);
+    const [ArmazenarValueNUmber, setArmazenarValueNUmber] = useState<number>(0);
   
     const {Filtro} = useContext(GlobalContext);
 
@@ -69,10 +69,9 @@ if (itemEncontrado) {
       const atualizarTarefaFavorita = (id: number) => {
            if (precoTotal < 0) {
              setPrecoTotal(0);
-         } else if (precoTotal > 0) {
+         } else if (precoTotal > 0 || precoTotal === 0) {
 
           ListaDeCompra.find((item) => {
-            if (item.id === id) {
               const diferençaDePreço =  precoTotal as number - item.preco ;
               
               if (precoTotal !== null && ArmazenarValueNUmber !== null) {
@@ -86,12 +85,12 @@ if (itemEncontrado) {
                
                 setTarefaEmEdicaoId(null); 
        
-                setArmazenarValueNUmber(null);
+                setArmazenarValueNUmber(0);
              
                 setAtualizarTarefaDeCompra('');
                 localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
             }
-            }
+            
         })
          }
       }
@@ -128,6 +127,17 @@ if (itemEncontrado) {
         const [Searchtarefas, setSearchtarefas] = useState('');
 
           const teste = precoTotal.toFixed(2);
+
+          const editInputTeactAndInputNumber = (id : number) => {
+            setTarefaEmEdicaoId(id);
+             ListaDeCompra.find((val) => {
+              if (val.id === id) {
+                setAtualizarTarefaDeCompra(val.tarefa);
+                setArmazenarValueNUmber(val.preco);
+              }
+             })            
+          }
+
       return (
         <main className=''>
             <section className=''>
@@ -178,7 +188,9 @@ if (itemEncontrado) {
                 >
                   {  tarefaEmEdicaoId != item.id?
                   <>
-                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{item.tarefa}</p>
+                  <div className=' w-28 md:w-96 overflow-x-auto md:overflow-x-hidden scrollbar-thin  '>
+                    <p className={`${tarefaSalva ? 'line-through' : ''} flex whitespace-nowrap`}>{item.tarefa}</p>
+                  </div>
 
                     <p className={`${tarefaSalva ? 'line-through' : ''}`}>{teste}</p>
 
@@ -187,13 +199,13 @@ if (itemEncontrado) {
 
                     <>
                     <input type="text" className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
-                    value={atualizarTarefaDeCompra.length === 0 ? item.tarefa : atualizarTarefaDeCompra} 
+                    value={atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
                     
 
                       
                     <input type="number" 
-                     value={ArmazenarValueNUmber != null ? ArmazenarValueNUmber : item.preco }
+                     value={ArmazenarValueNUmber}
                      onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
                       className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
                        />
@@ -201,9 +213,10 @@ if (itemEncontrado) {
 
                   } 
 
-                  <div className='flex  flex-row md:gap-4 gap-6'>
-                    <button  onClick={ tarefaEmEdicaoId === null?   () => setTarefaEmEdicaoId(item.id) :
-                    atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) : tarefaEmEdicaoId === item.id?
+                  <div className='flex  flex-row md:gap-4 gap-4 '>
+                    <button  onClick={ tarefaEmEdicaoId === null?   () => editInputTeactAndInputNumber(item.id) :
+                    atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) 
+                    : tarefaEmEdicaoId === item.id?
                     () => atualizarTarefaFavorita(item.id) : () => setTarefaEmEdicaoId(null)
                     }>
                         { tarefaEmEdicaoId === item.id? <IoIosSave /> :  <FaPen/>  }
