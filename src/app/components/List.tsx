@@ -52,17 +52,20 @@ if (itemEncontrado) {
         setPrecoTotal(0);
     } else if (precoTotal > 0) {
 
-      const precoItemEncontrado = parseFloat(itemEncontrado.preco.toFixed(2));
+      const precoItemEncontrado = itemEncontrado.preco;
       
-      console.log(precoItemEncontrado);
-        setPrecoTotal((prev : SetStateAction<number>) => prev as number - precoItemEncontrado);
+      const resultadoFinal =  precoTotal - precoItemEncontrado ;
+
+        setPrecoTotal(resultadoFinal);
+     localStorage.setItem('precoTotal', JSON.stringify(resultadoFinal));
+
     }
 }
 
 
-        const deletarTarefa = ListaDeCompra.filter((val) => val.id != id)
-        setListaDeCompra(deletarTarefa);
-        localStorage.setItem('listaDeCompra', JSON.stringify(deletarTarefa));
+         const deletarTarefa = ListaDeCompra.filter((val) => val.id != id)
+         setListaDeCompra(deletarTarefa);
+         localStorage.setItem('listaDeCompra', JSON.stringify(deletarTarefa));
         
       }
 
@@ -72,14 +75,17 @@ if (itemEncontrado) {
          } else if (precoTotal > 0 || precoTotal === 0) {
 
           ListaDeCompra.find((item) => {
-              const diferençaDePreço =  precoTotal as number - item.preco ;
+            if (item.id === id) {
               
+              
+              const diferençaDePreço =  precoTotal as number - item.preco ;
               if (precoTotal !== null && ArmazenarValueNUmber !== null) {
                 const resultadoFinal =  ArmazenarValueNUmber +  diferençaDePreço;
+                
                 const atualizarTarefaFavorita = ListaDeCompra.map((val : TarefasDeCompra) => val.id === id? 
                 { ...val, tarefa: atualizarTarefaDeCompra, preco: ArmazenarValueNUmber, precoTotal: resultadoFinal} : val)
                
-                setListaDeCompra(atualizarTarefaFavorita);
+                setListaDeCompra(atualizarTarefaFavorita as unknown as TarefasDeCompra[]);
   
                 setPrecoTotal(resultadoFinal);
                
@@ -89,7 +95,12 @@ if (itemEncontrado) {
              
                 setAtualizarTarefaDeCompra('');
                 localStorage.setItem('listaDeCompra', JSON.stringify(atualizarTarefaFavorita));
+  
+                localStorage.setItem('precoTotal', JSON.stringify(resultadoFinal));
+  
             }
+            }
+              
             
         })
          }
@@ -97,18 +108,16 @@ if (itemEncontrado) {
       
       useEffect(() => {
         const ListaDeCompraLocalStorage = localStorage.getItem('listaDeCompra');
+        const precoTotalStorage = localStorage.getItem('precoTotal');
         
         if (ListaDeCompraLocalStorage) {
-          setListaDeCompra(JSON.parse(ListaDeCompraLocalStorage));
           const teste = JSON.parse(ListaDeCompraLocalStorage);
-          //setPrecoTotal(teste[2].precoTotal);
-
-           teste.find((val : TarefasDeCompra) => { 
-            const teste2 = val.precoTotal; 
-            setPrecoTotal(teste2);
-          })
-          
-          
+          setListaDeCompra(teste);
+        }
+        
+        if (precoTotalStorage) {
+          const formatNumber = JSON.parse(precoTotalStorage);
+          setPrecoTotal(formatNumber);
         }
       }, [])
 
@@ -160,7 +169,7 @@ if (itemEncontrado) {
 
           {
             ListaDeCompra.length === 0 ?
-            <h1 className='text-center text-red-500 font-bold text-2xl'>Nenhuma tarefa de compra adicionada</h1> 
+            <h2 className='text-center text-red-500 font-bold text-2xl'>Nenhum produto foi adicionado</h2> 
             :
 
            <>

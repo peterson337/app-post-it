@@ -53,6 +53,8 @@ export const ListaDeCompra = () => {
 
                 localStorage.setItem('listaDeCompra', JSON.stringify([...ListaDeCompra, obj]));
 
+                localStorage.setItem('precoTotal', JSON.stringify(novoPrecoTotal));
+
                 
               }
               
