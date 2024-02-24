@@ -24,6 +24,7 @@ export const Tarefas = () => {
   useEffect(() => {
     
     document.addEventListener('keydown', handleKeyPress);
+
     
     return () => {
       document.removeEventListener('keydown', handleKeyPress);
