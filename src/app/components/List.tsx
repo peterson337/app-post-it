@@ -212,7 +212,7 @@ if (itemEncontrado) {
                       :
 
                     <>
-                    <textarea  type="text" className='text-black  w-60 md:w-72 p-3 rounded-xl pl-3 
+                    <textarea  className='text-black  w-60 md:w-72 p-3 rounded-xl pl-3 
                     outline-none resize-none '
                     value={atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
