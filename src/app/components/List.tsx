@@ -1,5 +1,5 @@
 'use client';
-import React, {useRef, useState, useEffect, useContext, Dispatch, SetStateAction} from 'react'
+import React, {useRef, useState, useEffect, useContext, Dispatch, SetStateAction, Fragment} from 'react'
 import { TarefasDeCompra} from "./context/ts/types";
 import  {GlobalContext}  from "./context/Store";
 
@@ -148,13 +148,13 @@ if (itemEncontrado) {
           }
 
       return (
-        <main className=''>
+        <>
             <section className=''>
 
             { Filtro === 2 && ListaDeCompra.length != 0?
           <div className='flex justify-center items-center mb-4'>
         <input type="text" className='text-black p-2 rounded-full border border-black
-          mt-3 outline-none bg-[#edf2fc]' 
+           outline-none bg-[#edf2fc]' 
         onChange={(e) => setSearchtarefas(e.target.value)} value={Searchtarefas}
         placeholder='Pesquise por uma tarefa aqui...'
          />
@@ -177,37 +177,43 @@ if (itemEncontrado) {
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
             '>
-          {ListaDeCompra.map((item, index) => {
-            const tarefaSalva = item.completed;
+              <div 
+            className='grid  xl:grid-cols-3 lg:grid-cols-2 md:grid-rows-4 '
+            >
+              {ListaDeCompra.map((item : TarefasDeCompra, index : number) => {
+            const tarefaSalva : boolean = item.completed;
             const isMatchingSearch = item.tarefa.toLowerCase().includes(Searchtarefas.toLowerCase());
           const teste = item.preco.toFixed(2);
 
 
             return(
-              <section key={item.id}>
-               {  isMatchingSearch ?
+              <Fragment key={item.id}>
+
+                {  isMatchingSearch ?
                <div
                   draggable
                   onDragStart={(e) => handleDragStart(e, index)}
                   onDragEnter={(e) => handleDragEnter(e, index)}
                   onDragEnd={handlerSort}
-                  className={`  p-3 border m-3 border-b-[#ccc] 
-                  flex  flex-row justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
-                 border-0 rounded-lg  `}
+                  className={`p-3 border m-3 border-b-[#ccc] 
+                  flex  flex-col justify-between ${tarefaSalva ? 'bg-green-500' : 'bg-red-500'}
+                 border-0 rounded-lg w-[288px] gap-3 md:w-80  `}
                 >
                   {  tarefaEmEdicaoId != item.id?
                   <>
-                  <div className=' w-28 md:w-96 overflow-x-auto md:overflow-x-hidden scrollbar-thin  '>
-                    <p className={`${tarefaSalva ? 'line-through' : ''} flex whitespace-nowrap`}>{item.tarefa}</p>
+                  <div 
+                  className=' w-[270px] md:w-72 overflow-auto scrollbar-thin p-1 h-14 '>
+                    <p className={`${tarefaSalva ? 'line-through' : ''} `}>{item.tarefa}</p>
                   </div>
 
-                    <p className={`${tarefaSalva ? 'line-through' : ''}`}>{teste}</p>
+                    <p className={`${tarefaSalva ? 'line-through' : ''} mb-3`}>{teste}</p>
 
                   </>
                       :
 
                     <>
-                    <input type="text" className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
+                    <textarea  type="text" className='text-black  w-60 md:w-72 p-3 rounded-xl pl-3 
+                    outline-none resize-none '
                     value={atualizarTarefaDeCompra} 
                     onChange={(e) => setAtualizarTarefaDeCompra(e.target.value)} />
                     
@@ -216,13 +222,13 @@ if (itemEncontrado) {
                     <input type="number" 
                      value={ArmazenarValueNUmber}
                      onChange={(e) => setArmazenarValueNUmber(e.target.valueAsNumber as unknown as number)}
-                      className='text-black  w-16 md:w-96 p-1 rounded-full pl-3 outline-none'
+                      className='text-black  w-60 md:w-72 p-1 rounded-full pl-3 outline-none'
                        />
                     </>
 
                   } 
 
-                  <div className='flex  flex-row md:gap-4 gap-4 '>
+                  <div className='flex  flex-row justify-between	 '>
                     <button  onClick={ tarefaEmEdicaoId === null?   () => editInputTeactAndInputNumber(item.id) :
                     atualizarTarefaDeCompra.length === 0 || ArmazenarValueNUmber === null? () => setTarefaEmEdicaoId(null) 
                     : tarefaEmEdicaoId === item.id?
@@ -242,10 +248,14 @@ if (itemEncontrado) {
                :
                null
               }
-              </section>
+
+               
+              </Fragment>
 
             )
           })}
+              </div>
+         
             </div>
             <p className=' m-5 text-end'>Preço total da compra R${teste}</p>
            </>
@@ -253,6 +263,6 @@ if (itemEncontrado) {
    
 
             </section>
-        </main>
+        </>
       );
 }
