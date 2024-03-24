@@ -11,7 +11,7 @@ export const Calculadora = () => {
 
   return (
     <>
-      <section className="  justify-end items-end mb-3">
+      <section className="  justify-end items-end mb-3 cursor-pointer">
         <MdCalculate
           className=" text-5xl bg-sky-500 rounded-xl"
           onClick={() => setIsOpenModal(true)}
