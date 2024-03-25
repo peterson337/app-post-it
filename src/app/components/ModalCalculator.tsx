@@ -151,7 +151,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
   };
 
   const recuprarNumero = (item: Historico) => {
-    //setShowHistorico(!showHistorico);
+    setShowHistorico(!showHistorico);
     setSinal(item.sinal);
     setSecondNumber(item.segundoNumero);
     setFirstNumber(item.primeiroNumero);
@@ -241,13 +241,13 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                     Histórico
                   </h2>
 
-                  <section className="  h-80 md:h-96  overflow-auto mb-4">
+                  <section className="  h-80 md:h-96 w-64 overflow-auto mb-4">
                     {historicoDaCalculadora.map((item: Historico) => {
                       return (
                         <section key={item.id}>
                           <div>
                             <button
-                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-60 "
+                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-56 "
                               onClick={() => recuprarNumero(item)}
                             >
                               {item.primeiroNumero}
