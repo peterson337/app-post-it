@@ -272,5 +272,3 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
     </>
   );
 };
-
-// Fix Profile Page formatting
