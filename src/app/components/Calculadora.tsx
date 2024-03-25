@@ -5,7 +5,7 @@ import { MdCalculate } from "react-icons/md";
 import { ModalCalculator } from "./ModalCalculator";
 
 export const Calculadora = () => {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const closeModal = () => setIsOpenModal(false);
 

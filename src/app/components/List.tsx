@@ -17,7 +17,6 @@ import { FaCheck } from "react-icons/fa6";
 import { IoIosSave } from "react-icons/io";
 import { DragEvent } from "react"; // Importe o tipo DragEvent
 import { Calculadora } from "./Calculadora";
-import { Button } from "@mui/material/Button";
 export const List = ({
   ListaDeCompra,
   setListaDeCompra,

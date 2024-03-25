@@ -15,7 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { FaTrash } from "react-icons/fa";
 
 //!  Typescript
-type T = { isOpenModal: Boolean; closeModal: () => void };
+type T = { isOpenModal: boolean; closeModal: () => void };
 
 //!  Style
 const style = {
@@ -98,9 +98,6 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
         setFirstNumber((prev) => prev + item);
       }
     } else if (sinal) {
-      if (item === "session") {
-        alert("if");
-      }
       if (item === "+" || item === "-" || item === "*" || item === "/") {
         setSinal(item);
       } else if (item === "=") {
@@ -115,7 +112,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
           const num1 = parseFloat(firstNumber);
           const num2 = parseFloat(secondNumber);
 
-          const resultFinal: NumericOrStringArray<T> =
+          const resultFinal: any =
             sinal === "+"
               ? num1 + num2
               : sinal === "-"
@@ -135,7 +132,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
             primeiroNumero: firstNumber,
             sinal: sinal,
             segundoNumero: secondNumber,
-            resultadoFinal: resultFinal,
+            resultadoFinal: numberToString,
             id: new Date().getTime(),
           };
           setHistoricoDaCalculadora([
@@ -168,11 +165,11 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
 
   const apagarUmNumero = () => {
     secondNumber
-      ? setSecondNumber((prev) => prev - prev)
+      ? setSecondNumber(secondNumber.slice(0, -1))
       : sinal
       ? setSinal(null)
       : firstNumber
-      ? setFirstNumber((prev) => firstNumber - prev)
+      ? setFirstNumber(firstNumber.slice(0, -1))
       : null;
   };
 
@@ -180,7 +177,6 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
     setHistoricoDaCalculadora([]);
     sessionStorage.removeItem("caluladora");
   };
-  const item = "session";
   return (
     <>
       <Modal
@@ -200,7 +196,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                 id="modal-modal-title"
                 variant="h6"
                 component="h2"
-                className="text-center pb-3 mb-3 text-4xl border-b border-[#ccc]"
+                className="text-center pb-3 mb-3 text-4xl border-b border-[#ccc] w-60 overflow-auto"
               >
                 {firstNumber ? firstNumber : 0} {sinal ? sinal : null}{" "}
                 {secondNumber ? secondNumber : null}
@@ -215,7 +211,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                 </button>
                 <button
                   className="md:m-3 md:p-5 m-3 p-3 rounded-xl bg-red-600 hover:bg-red-700"
-                  onClick={() => calcular(item)}
+                  onClick={apagarUmNumero}
                 >
                   <FaDeleteLeft />
                 </button>
@@ -248,14 +244,15 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                   <section className="  h-80 md:h-96  overflow-auto mb-4">
                     {historicoDaCalculadora.map((item: Historico) => {
                       return (
-                        <section>
+                        <section key={item.id}>
                           <div>
                             <button
-                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-56"
+                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-60 "
                               onClick={() => recuprarNumero(item)}
                             >
-                              {item.primeiroNumero} {item.sinal}{" "}
-                              {item.segundoNumero} = {item.resultadoFinal}
+                              {item.primeiroNumero}
+                              {item.sinal} {item.segundoNumero} ={" "}
+                              {item.resultadoFinal}
                             </button>
                           </div>
                         </section>
@@ -275,3 +272,5 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
     </>
   );
 };
+
+// Fix Profile Page formatting
