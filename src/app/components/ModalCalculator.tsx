@@ -79,11 +79,9 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
       : null;
 
     if (recuperarHistorico) {
-      recuperarHistorico.find(
-        (item: Historico) => {
-          setFirstNumber(String(item.resultadoFinal));
-        }
-      );
+      recuperarHistorico.find((item: Historico) => {
+        setFirstNumber(String(item.resultadoFinal));
+      });
     }
   }, []);
 
@@ -255,7 +253,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                     <Fragment key={item}>
                       <button
                         className="md:m-3 md:p-5 m-3 p-3 rounded-xl  bg-slate-800 hover:bg-slate-900"
-                        onClick={() => calcular(item)}
+                        onClick={() => calcular(item as string)}
                       >
                         {item}
                       </button>
