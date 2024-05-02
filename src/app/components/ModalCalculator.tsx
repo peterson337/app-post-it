@@ -72,15 +72,22 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
       "=",
     ];
     setNumeros(numbers);
-
     const recuperarHistoricoString = sessionStorage.getItem("caluladora");
     const recuperarHistorico = JSON.parse(recuperarHistoricoString as string);
     recuperarHistoricoString
       ? setHistoricoDaCalculadora(recuperarHistorico)
       : null;
+
+    if (recuperarHistorico) {
+      recuperarHistorico.find(
+        (item: Historico) => {
+          setFirstNumber(String(item.resultadoFinal));
+        }
+      );
+    }
   }, []);
 
-  const calcular = (item: number | string) => {
+  const calcular = (item: string) => {
     if (!sinal) {
       if (
         item === "+" ||
@@ -135,14 +142,32 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
             resultadoFinal: numberToString,
             id: new Date().getTime(),
           };
-          setHistoricoDaCalculadora([
-            ...historicoDaCalculadora,
-            obj,
-          ] as Historico[]);
-          sessionStorage.setItem(
-            "caluladora",
-            JSON.stringify([...historicoDaCalculadora, obj])
+
+          const isEqual = (obj1: Historico, obj2: Historico) => {
+            return (
+              obj1.primeiroNumero === obj2.primeiroNumero &&
+              obj1.sinal === obj2.sinal &&
+              obj1.segundoNumero === obj2.segundoNumero &&
+              obj1.resultadoFinal === obj2.resultadoFinal
+            );
+          };
+
+          const isDuplicate = historicoDaCalculadora.some((item) =>
+            isEqual(item, obj)
           );
+
+          if (isDuplicate) {
+            return;
+          } else {
+            setHistoricoDaCalculadora([
+              ...historicoDaCalculadora,
+              obj,
+            ] as Historico[]);
+            sessionStorage.setItem(
+              "caluladora",
+              JSON.stringify([...historicoDaCalculadora, obj])
+            );
+          }
         }
       } else {
         setSecondNumber((prev) => prev + item);
@@ -177,6 +202,16 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
     setHistoricoDaCalculadora([]);
     sessionStorage.removeItem("caluladora");
   };
+
+  const formatarHistorico = (result: string) => {
+    String(result);
+    if (result.length > 13) {
+      return result.slice(20) + "...";
+    } else {
+      return result;
+    }
+  };
+
   return (
     <>
       <Modal
@@ -237,7 +272,7 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                 </div>
               ) : (
                 <Fragment>
-                  <h2 className=" text-4xl mb-3 pb-3 border-b border-[#ccc]">
+                  <h2 className=" text-4xl mb-3 pb-3 border-b border-[#ccc] text-center">
                     Histórico
                   </h2>
 
@@ -247,12 +282,15 @@ export const ModalCalculator = ({ isOpenModal, closeModal }: T) => {
                         <section key={item.id}>
                           <div>
                             <button
-                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-56 "
+                              className=" text-3xl mb-3 pb-3 border-b border-[#ccc] w-56"
                               onClick={() => recuprarNumero(item)}
                             >
-                              {item.primeiroNumero}
-                              {item.sinal} {item.segundoNumero} ={" "}
-                              {item.resultadoFinal}
+                              {formatarHistorico(item.primeiroNumero)}{" "}
+                              {item.sinal}{" "}
+                              {formatarHistorico(item.segundoNumero)} ={" "}
+                              {formatarHistorico(
+                                item.resultadoFinal as unknown as string
+                              )}
                             </button>
                           </div>
                         </section>
