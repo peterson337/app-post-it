@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { GlobalContext } from "./context/Store";
 import { Modal } from "../components/Modal";
 import { CardComponent } from "../components/CardComponent";
+import { ModalCreateTypeTask } from "../components/ModalCreateTypeTask";
 import Fab from "@mui/material/Fab";
 
 import { FaPlus } from "react-icons/fa";
@@ -23,12 +24,16 @@ export const Tarefas = () => {
     isSideBar,
     setIsSideBar,
     modoTarefas,
+    isOpenModalTarefaDinamica,
+    setIsOpenModalTarefaDinamica,
   } = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true);
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false);
 
   const [iSOpenModalCreateTareas, setISOpenModalCreateTareas] = useState(false);
+  const [iSOpenModalCreateTypeTask, setiSOpenModalCreateTypeTask] =
+    useState(false);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -77,6 +82,10 @@ export const Tarefas = () => {
                   </button>
                 </div>
 
+                <button onClick={() => setiSOpenModalCreateTypeTask(true)}>
+                  Criar mais um tipo de tarefa
+                </button>
+
                 {modoTarefas.map((item) => {
                   return (
                     <ListItem
@@ -101,26 +110,63 @@ export const Tarefas = () => {
         </Drawer>
       ) : null}
 
-      {Filtro === 0 || Filtro === 2 ? (
+      {iSOpenModalCreateTypeTask ? (
+        <ModalCreateTypeTask
+          setIsOpenModalCreateTypeTask={setiSOpenModalCreateTypeTask}
+          iSOpenModalCreateTypeTask={iSOpenModalCreateTypeTask}
+        />
+      ) : null}
+
+      {Filtro === 0 ||
+      Filtro === 2 ||
+      (Filtro !== 0 && Filtro !== 1 && Filtro !== 2) ? (
         <div
           className="w-full flex justify-end  bottom-2  md:mb-5 md:md:pr-10 
   pr-5 absolute md:relative"
         >
           <Fab
-            className={`${Filtro === 0 ? "bg-sky-500" : "bg-green-500"}
-     ${Filtro === 0 ? "hover:bg-sky-700" : "hover:bg-green-700"}
+            className={`${
+              Filtro === 0
+                ? "bg-sky-500"
+                : Filtro === 2
+                ? "bg-green-500"
+                : "bg-red-500"
+            }
+     ${
+       Filtro === 0
+         ? "hover:bg-sky-700"
+         : Filtro === 2
+         ? "hover:bg-green-700"
+         : "hover:bg-red-700"
+     }
      text-white 
      text-2xl
     
     `}
             onClick={
-              Filtro === 0 ? openModalCreateTarefas : () => setIsOpenModal(true)
+              Filtro === 0
+                ? openModalCreateTarefas
+                : Filtro === 2
+                ? () => setIsOpenModal(true)
+                : () => setIsOpenModalTarefaDinamica(true)
             }
             onKeyPress={handleKeyPress}
             //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
           >
-            {Filtro === 0 ? <FaPlus /> : <FaCartPlus />}
+            {Filtro === 0 ? (
+              <FaPlus />
+            ) : Filtro === 2 ? (
+              <FaCartPlus />
+            ) : (
+              <FaPlus />
+            )}
           </Fab>
+        </div>
+      ) : Filtro !== 0 && Filtro !== 1 && Filtro !== 2 ? (
+        <div>
+          <button onClick={() => setIsOpenModalTarefaDinamica(true)}>
+            <FaCartPlus />
+          </button>
         </div>
       ) : null}
     </main>

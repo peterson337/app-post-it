@@ -12,6 +12,7 @@ import { BsBookmarkStar } from "react-icons/bs";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { ListaDeCompra } from "./ListaDeCompra";
+import { TarefasDinamicas } from "./TarefasDinamicas";
 
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
@@ -122,6 +123,8 @@ export const CardComponent = () => {
             ? "Lista de compra 🛒"
             : Filtro === 1
             ? "tarefas favoritas"
+            : Filtro != 2 && Filtro != 0 && Filtro != 1
+            ? "null"
             : null}
         </h1>
 
@@ -259,6 +262,13 @@ export const CardComponent = () => {
 
         {Filtro === 2 ? (
           <ListaDeCompra></ListaDeCompra>
+        ) : (
+          // <p>Nenhuma lista de compra encontrada.</p>
+          <div></div>
+        )}
+
+        {Filtro != 2 && Filtro != 0 && Filtro != 1 ? (
+          <TarefasDinamicas />
         ) : (
           // <p>Nenhuma lista de compra encontrada.</p>
           <div></div>

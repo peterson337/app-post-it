@@ -30,11 +30,19 @@ export type Types = {
   setIsSideBar: Dispatch<SetStateAction<boolean>>;
   modoTarefas: ModoTarefa[];
   setModoTarefas: Dispatch<SetStateAction<ModoTarefa[]>>;
+  isOpenModalTarefaDinamica: boolean;
+  setIsOpenModalTarefaDinamica: Dispatch<SetStateAction<boolean>>;
 };
 
 export type ModoTarefa = {
   id: number;
   nomeGrupoTarefa: string;
+  tasks: Tasks[];
+};
+
+export type Tasks = {
+  id: number;
+  nomeTarefa: string;
 };
 
 export type Tarefas = {
