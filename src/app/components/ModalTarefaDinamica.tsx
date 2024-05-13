@@ -24,7 +24,8 @@ export const ModalTarefaDinamica = ({
   const salvarTarefa = () => {
     const obj = {
       nomeTarefa: taks,
-      id: Math.floor(Math.random() * 1000),
+      id: new Date().getTime(),
+      completed: false,
     };
     modoTarefas.map((item) => {
       if (item.id === Filtro) {

@@ -19,6 +19,7 @@ import { TarefasFavoritas } from "./TarefasFavoritas";
 import { DragEvent } from "react"; // Importe o tipo DragEvent
 import Button from "@mui/material/Button";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { validateHeaderName } from "http";
 export const CardComponent = () => {
   const {
     tarefas,
@@ -117,15 +118,11 @@ export const CardComponent = () => {
         </button>
 
         <h1 className=" text-2xl font-bangers text-center mt-5 md:mt-0  md:block">
-          {Filtro === 0
-            ? "Todas as tarefas"
-            : Filtro === 2
-            ? "Lista de compra 🛒"
-            : Filtro === 1
-            ? "tarefas favoritas"
-            : Filtro != 2 && Filtro != 0 && Filtro != 1
-            ? "null"
-            : null}
+          {modoTarefas.map((item) => {
+            return (
+              Filtro === item.id && <p key={item.id}>{item.nomeGrupoTarefa}</p>
+            );
+          })}
         </h1>
 
         {Filtro === 0 && tarefas.length != 0 ? (

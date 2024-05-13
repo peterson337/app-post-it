@@ -43,6 +43,7 @@ export type ModoTarefa = {
 export type Tasks = {
   id: number;
   nomeTarefa: string;
+  completed: boolean;
 };
 
 export type Tarefas = {

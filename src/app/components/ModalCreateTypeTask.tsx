@@ -36,7 +36,7 @@ export const ModalCreateTypeTask = ({
   const salvarNovoTipoDeTarefa = () => {
     const obj = {
       nomeGrupoTarefa: nomeDoNovoTipoDeTarefa,
-      id: Math.floor(Math.random() * 1000),
+      id: new Date().getTime(),
       tasks: [],
     };
 
