@@ -27,12 +27,11 @@ export const ModalTarefaDinamica = ({
       id: new Date().getTime(),
       completed: false,
     };
-    modoTarefas.map((item) => {
-      if (item.id === Filtro) {
-        item.tasks.push(obj);
-        setModoTarefas([...modoTarefas]);
-      }
-    });
+    modoTarefas.map((val) => val.id === Filtro && val.tasks.push(obj));
+    setModoTarefas([...modoTarefas]);
+    setIsOpenModalTarefaDinamica(false);
+    setTaks("");
+    localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
   };
 
   return (
@@ -42,29 +41,37 @@ export const ModalTarefaDinamica = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Tarefas
-        </Typography>
+      <Box sx={style} className="rounded-xl w-[22rem] md:w-96">
+        <div className="flex flex-col  justify-center">
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Tarefas
+          </Typography>
 
-        <TextField
-          value={taks}
-          id="outlined-basic"
-          label="Outlined"
-          variant="outlined"
-          onChange={(e) => setTaks(e.target.value)}
-        />
+          <TextField
+            value={taks}
+            id="outlined-basic"
+            label="Escreva o nome da tarefa"
+            variant="outlined"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setTaks(e.target.value)
+            }
+          />
+        </div>
 
-        <div>
+        <div className="mt-3 flex flex-row gap-3 justify-end">
           <Button
-            color="error"
+            className="bg-red-500 hover:bg-red-700 rounded-lg"
             variant="contained"
             onClick={() => setIsOpenModalTarefaDinamica(false)}
           >
             Cancelar
           </Button>
 
-          <Button variant="contained" onClick={salvarTarefa}>
+          <Button
+            variant="contained"
+            onClick={salvarTarefa}
+            className="bg-sky-500 hover:bg-sky-700 rounded-lg"
+          >
             Salvar tarefa
           </Button>
         </div>

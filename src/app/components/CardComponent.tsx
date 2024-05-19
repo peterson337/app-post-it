@@ -9,17 +9,13 @@ import { FaPen } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { BsBookmarkStar } from "react-icons/bs";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { ListaDeCompra } from "./ListaDeCompra";
 import { TarefasDinamicas } from "./TarefasDinamicas";
-
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
 import { DragEvent } from "react"; // Importe o tipo DragEvent
 import Button from "@mui/material/Button";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
-import { validateHeaderName } from "http";
 export const CardComponent = () => {
   const {
     tarefas,

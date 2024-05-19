@@ -41,6 +41,11 @@ export const ModalCreateTypeTask = ({
     };
 
     setModoTarefas([...modoTarefas, obj]);
+    setIsOpenModalCreateTypeTask(false);
+    localStorage.setItem(
+      "colecaoTarefas",
+      JSON.stringify([...modoTarefas, obj])
+    );
   };
 
   return (
@@ -50,30 +55,39 @@ export const ModalCreateTypeTask = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Criar um novo tipo de tarefa
-        </Typography>
+      <Box sx={style} className="rounded-xl w-[23rem] md:w-96">
+        <div className="flex flex-col  justify-center">
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Criar um novo tipo de tarefa
+          </Typography>
 
-        <TextField
-          value={nomeDoNovoTipoDeTarefa}
-          id="outlined-basic"
-          label="Outlined"
-          variant="outlined"
-          onChange={(e) => setNomeDoNovoTipoDeTarefa(e.target.value)}
-        />
+          <TextField
+            value={nomeDoNovoTipoDeTarefa}
+            id="outlined-basic"
+            label="Escreva o título do seu novo tipo de tarefa"
+            variant="outlined"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNomeDoNovoTipoDeTarefa(e.target.value)
+            }
+          />
+        </div>
 
-        <div>
+        <div className="mt-3 flex flex-row gap-3 justify-end">
           <Button
             color="error"
             variant="contained"
             onClick={() => setIsOpenModalCreateTypeTask(false)}
+            className="bg-red-500 hover:bg-red-700 rounded-lg"
           >
             Cancelar
           </Button>
 
-          <Button variant="contained" onClick={salvarNovoTipoDeTarefa}>
-            Criar novo tipo de tarefa
+          <Button
+            variant="contained"
+            onClick={salvarNovoTipoDeTarefa}
+            className="bg-sky-500 hover:bg-sky-700 rounded-lg"
+          >
+            Salvar
           </Button>
         </div>
       </Box>

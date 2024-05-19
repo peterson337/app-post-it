@@ -1,6 +1,7 @@
 "use client";
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { ModoTarefa } from "./context/ts/types";
+import { ModalEditTaksDinamica } from "./ModalEditTaksDinamica";
 import { GlobalContext } from "./context/Store";
 import { ModalTarefaDinamica } from "./ModalTarefaDinamica";
 import Box from "@mui/material/Box";
@@ -20,32 +21,49 @@ export const TarefasDinamicas = () => {
     setIsOpenModalTarefaDinamica,
   } = useContext(GlobalContext);
 
-  const excluirTarefas = (id: number, idTypetask: number) => {
+  let teste: string = "";
+
+  const [isOpenModalEditTasks, setIsOpenModalEditTasks] = useState(false);
+  const [test, setTest] = useState<number>();
+  const [newTask, setNewTask] = useState("");
+  const finishOrEditTasks = (id: number, idTypetask: number, teste: string) => {
     modoTarefas.map((val) => {
       if (val.id === idTypetask && val.tasks.length > 0) {
-        const teste = val.tasks.map(
-          (item) => item.id === id && val.tasks.splice(0, 1)
-        );
-        setModoTarefas([...modoTarefas, teste]); //
-      }
-    });
-  };
-
-  const MacarTarefaComoConcluida = (id: number, idTypetask: number) => {
-    modoTarefas.map((val) => {
-      if (val.id === idTypetask) {
-        if (val.tasks.length > 0) {
+        if (teste === "excluir") {
+          const teste = val.tasks.findIndex((item) => item.id === id);
+          val.tasks.splice(teste, 1);
+          setModoTarefas([...modoTarefas]);
+          localStorage.setItem(
+            "colecaoTarefas",
+            JSON.stringify([...modoTarefas])
+          );
+        } else if (teste === "concluida") {
           const atualizarTarefa = val.tasks.map(
             (item) => item.id === id && (item.completed = !item.completed)
           );
-          setModoTarefas([...modoTarefas, atualizarTarefa]); //
+          localStorage.setItem(
+            "colecaoTarefas",
+            JSON.stringify([...modoTarefas])
+          );
+          setModoTarefas([...modoTarefas]); //
+        } else if (teste === "editar") {
+          const editTask = val.tasks.map(
+            (item) => item.id === id && (item.nomeTarefa = newTask)
+          );
+          localStorage.setItem(
+            "colecaoTarefas",
+            JSON.stringify([...modoTarefas])
+          );
+          setModoTarefas([...modoTarefas]); //
+          setNewTask("");
+          setIsOpenModalEditTasks(false);
         }
-      }
-      //console.log(atualizarTarefa);
-    });
 
-    //  setTarefas(atualizarTarefa);
-    //  localStorage.setItem("tarefas", JSON.stringify(atualizarTarefa));
+        // 'editar'
+        //  setTarefas(atualizarTarefa);
+        //  localStorage.setItem("tarefas", JSON.stringify(atualizarTarefa));
+      }
+    });
   };
 
   return (
@@ -61,7 +79,11 @@ export const TarefasDinamicas = () => {
         return (
           <>
             {Filtro === val.id && (
-              <Fragment key={val.id}>
+              <section
+                className="md:grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto h-[23rem] md:h-[26rem]
+                flex flex-col ml-5"
+                key={val.id}
+              >
                 {val.tasks.map((item) => {
                   const TarefaConcluida = item.completed;
 
@@ -94,31 +116,48 @@ export const TarefasDinamicas = () => {
                           <CardActions className=" flex flex-row justify-between">
                             <button
                               className="hover:bg-gray-300 p-3 hover:rounded-full text-red-500"
-                              onClick={() => excluirTarefas(item.id, val.id)}
+                              onClick={() =>
+                                finishOrEditTasks(item.id, val.id, "excluir")
+                              }
                             >
                               <FaTrash />{" "}
                             </button>
                             <button
                               className="hover:bg-gray-300 p-3 hover:rounded-full text-green-500"
                               onClick={() =>
-                                MacarTarefaComoConcluida(item.id, val.id)
+                                finishOrEditTasks(item.id, val.id, "concluida")
                               }
                             >
                               <FaCheck />{" "}
                             </button>
-                            {/* <button
-                    className="hover:bg-gray-300 p-3 hover:rounded-full text-blue-500"
-                    onClick={() => openModalEditarTarefas(val.id)}
-                  >
-                    <FaPen />
-                  </button> */}
+                            <button
+                              className="hover:bg-gray-300 p-3 hover:rounded-full text-blue-500"
+                              onClick={() => (
+                                setIsOpenModalEditTasks(true),
+                                setTest(item.id),
+                                setNewTask(item.nomeTarefa)
+                              )}
+                            >
+                              <FaPen />
+                            </button>
                           </CardActions>
                         </Card>
                       </Box>
+                      {isOpenModalEditTasks && test === item.id ? (
+                        <ModalEditTaksDinamica
+                          isOpenModalEditTasks={isOpenModalEditTasks}
+                          setIsOpenModalEditTasks={setIsOpenModalEditTasks}
+                          setNewTask={setNewTask}
+                          newTask={newTask}
+                          finishOrEditTasks={finishOrEditTasks}
+                          item={item}
+                          val={val}
+                        />
+                      ) : null}
                     </section>
                   );
                 })}
-              </Fragment>
+              </section>
             )}
           </>
         );
@@ -126,8 +165,3 @@ export const TarefasDinamicas = () => {
     </>
   );
 };
-
-//! CÓDIGO PARA ARRUMAR DEPOIS
-{
-  /* */
-}

@@ -80,13 +80,16 @@ export const GlobalContextProvider = ({
   useEffect(() => {
     const data = localStorage.getItem("tarefas");
     const dataFavoritas = localStorage.getItem("tarefasFavoritas");
-    const IsThemeDarkLocalStorage = localStorage.getItem("IsThemeDark");
+    const recuperarColecaoTarefa = localStorage.getItem("colecaoTarefas");
 
     if (data) {
       setTarefas(JSON.parse(data));
     }
     if (dataFavoritas) {
       setTarefasFavoritas(JSON.parse(dataFavoritas));
+    }
+    if (recuperarColecaoTarefa) {
+      setModoTarefas(JSON.parse(recuperarColecaoTarefa));
     }
   }, []);
 
