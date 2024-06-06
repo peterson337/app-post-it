@@ -12,26 +12,37 @@ import { GlobalContext } from "./context/Store";
 type T = {
   isOpenModalTarefaDinamica: boolean;
   setIsOpenModalTarefaDinamica: Dispatch<SetStateAction<boolean>>;
+  setIsOpenSnacker: Dispatch<SetStateAction<boolean>>;
+  setAlert: Dispatch<SetStateAction<string>>;
 };
 export const ModalTarefaDinamica = ({
   isOpenModalTarefaDinamica,
   setIsOpenModalTarefaDinamica,
+  setIsOpenSnacker,
+  setAlert,
 }: T) => {
   const [taks, setTaks] = useState("");
 
   const { setModoTarefas, modoTarefas, Filtro } = useContext(GlobalContext);
 
   const salvarTarefa = () => {
-    const obj = {
-      nomeTarefa: taks,
-      id: new Date().getTime(),
-      completed: false,
-    };
-    modoTarefas.map((val) => val.id === Filtro && val.tasks.push(obj));
-    setModoTarefas([...modoTarefas]);
-    setIsOpenModalTarefaDinamica(false);
-    setTaks("");
-    localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
+    if (taks === "") {
+      setIsOpenSnacker(true);
+      setAlert("Sem tarefas concluidas");
+      return;
+    } else {
+      console.log(taks);
+      const obj = {
+        nomeTarefa: taks,
+        id: new Date().getTime(),
+        completed: false,
+      };
+      modoTarefas.map((val) => val.id === Filtro && val.tasks.push(obj));
+      setModoTarefas([...modoTarefas]);
+      setIsOpenModalTarefaDinamica(false);
+      setTaks("");
+      localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
+    }
   };
 
   return (
@@ -55,6 +66,9 @@ export const ModalTarefaDinamica = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setTaks(e.target.value)
             }
+            onKeyPress={(e: React.KeyboardEvent) =>
+              e.key === "Enter" && salvarTarefa()
+            }
           />
         </div>
 
@@ -69,6 +83,7 @@ export const ModalTarefaDinamica = ({
 
           <Button
             variant="contained"
+            autoFocus
             onClick={salvarTarefa}
             className="bg-sky-500 hover:bg-sky-700 rounded-lg"
           >

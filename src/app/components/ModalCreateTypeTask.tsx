@@ -34,18 +34,23 @@ export const ModalCreateTypeTask = ({
   const [nomeDoNovoTipoDeTarefa, setNomeDoNovoTipoDeTarefa] = useState("");
 
   const salvarNovoTipoDeTarefa = () => {
-    const obj = {
-      nomeGrupoTarefa: nomeDoNovoTipoDeTarefa,
-      id: new Date().getTime(),
-      tasks: [],
-    };
+    if (nomeDoNovoTipoDeTarefa.length === 0) {
+      alert("Escreva o título do seu novo tipo de tarefa");
+      return;
+    } else {
+      const obj = {
+        nomeGrupoTarefa: nomeDoNovoTipoDeTarefa,
+        id: new Date().getTime(),
+        tasks: [],
+      };
 
-    setModoTarefas([...modoTarefas, obj]);
-    setIsOpenModalCreateTypeTask(false);
-    localStorage.setItem(
-      "colecaoTarefas",
-      JSON.stringify([...modoTarefas, obj])
-    );
+      setModoTarefas([...modoTarefas, obj]);
+      setIsOpenModalCreateTypeTask(false);
+      localStorage.setItem(
+        "colecaoTarefas",
+        JSON.stringify([...modoTarefas, obj])
+      );
+    }
   };
 
   return (
@@ -66,8 +71,12 @@ export const ModalCreateTypeTask = ({
             id="outlined-basic"
             label="Escreva o título do seu novo tipo de tarefa"
             variant="outlined"
+            autoFocus
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setNomeDoNovoTipoDeTarefa(e.target.value)
+            }
+            onKeyPress={(e: React.KeyboardEvent) =>
+              e.key === "Enter" && salvarNovoTipoDeTarefa()
             }
           />
         </div>

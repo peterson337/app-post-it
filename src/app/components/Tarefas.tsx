@@ -42,9 +42,9 @@ export const Tarefas = () => {
 
   const [iSOpenModalCreateTareas, setISOpenModalCreateTareas] = useState(false);
   const [iSOpenModalCreateTypeTask, setiSOpenModalCreateTypeTask] =
-  useState(false);
+    useState(false);
   const [editTitleTask, setEditTitleTask] = useState<null | number>(null);
-  const [newTask, setNewTask] = useState('');
+  const [newTask, setNewTask] = useState("");
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -59,6 +59,8 @@ export const Tarefas = () => {
       setISOpenModalCreateTareas(true);
     } else if (event.ctrlKey && event.key === ",") {
       setIsOpenModal(true);
+    } else if (event.ctrlKey && event.key === ";") {
+      setIsOpenModalTarefaDinamica(true);
     }
   };
 
@@ -80,13 +82,22 @@ export const Tarefas = () => {
       setModoTarefas([...modoTarefas]);
       localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
       setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
-   
     } else if (result === "edit") {
-      modoTarefas.map(item => item.id === id && (item.nomeGrupoTarefa = newTask))
-      setModoTarefas([...modoTarefas]);
-      localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
-      setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
-      setEditTitleTask(null);
+      if (newTask.length === 0) {
+        alert("Escreva o título para editar o tipo de tarefa");
+        return;
+      } else {
+        modoTarefas.map(
+          (item) => item.id === id && (item.nomeGrupoTarefa = newTask)
+        );
+        setModoTarefas([...modoTarefas]);
+        localStorage.setItem(
+          "colecaoTarefas",
+          JSON.stringify([...modoTarefas])
+        );
+        setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
+        setEditTitleTask(null);
+      }
     }
   };
 
@@ -159,7 +170,9 @@ export const Tarefas = () => {
                               variant="outlined"
                               value={newTask}
                               className="ml-4 text-white h-12 rounded-xl border-white bg-white "
-                              onChange={(e) => setNewTask(e.target.value)}
+                              onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                              ) => setNewTask(e.target.value)}
                             />
                           </>
                         ) : (
@@ -213,17 +226,20 @@ export const Tarefas = () => {
                                       handleClose("excluir", item.id)
                                     }
                                   >
-                                    Excluir do grupo de tarefas 
+                                    Excluir do grupo de tarefas
                                   </MenuItem>
 
                                   <MenuItem
-                                    onClick={() => {setEditTitleTask(item.id),
-                                      setAnchorEls((prev) => ({ ...prev, [selectedId!]: null })),
-                                      setNewTask(item.nomeGrupoTarefa)
-                                    }
-                                    }
+                                    onClick={() => {
+                                      setEditTitleTask(item.id),
+                                        setAnchorEls((prev) => ({
+                                          ...prev,
+                                          [selectedId!]: null,
+                                        })),
+                                        setNewTask(item.nomeGrupoTarefa);
+                                    }}
                                   >
-                                    Editar do grupo de tarefas 
+                                    Editar do grupo de tarefas
                                   </MenuItem>
                                 </>
                               ) : (
@@ -232,14 +248,17 @@ export const Tarefas = () => {
                                     onClick={() => handleClose("edit", item.id)}
                                   >
                                     Salvar novo titulo do grupo de tarefa{" "}
-                                   
                                   </MenuItem>
                                   <MenuItem
-                                    onClick={() => {setEditTitleTask(null),
-                                      setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }))
+                                    onClick={() => {
+                                      setEditTitleTask(null),
+                                        setAnchorEls((prev) => ({
+                                          ...prev,
+                                          [selectedId!]: null,
+                                        }));
                                     }}
                                   >
-                                    Cancelar a edição 
+                                    Cancelar a edição
                                   </MenuItem>
                                 </>
                               )}
@@ -297,7 +316,6 @@ export const Tarefas = () => {
                 : () => setIsOpenModalTarefaDinamica(true)
             }
             onKeyPress={handleKeyPress}
-            //     onKeyPress={handleKeyPress  as unknown as KeyboardEvent}
           >
             {Filtro === 0 ? (
               <FaPlus />

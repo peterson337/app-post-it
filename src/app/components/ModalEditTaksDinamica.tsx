@@ -47,6 +47,9 @@ export const ModalEditTaksDinamica = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setNewTask(e.target.value)
             }
+            onKeyPress={(e: React.KeyboardEvent) =>
+              e.key === "Enter" && finishOrEditTasks(item.id, val.id, "editar")
+            }
           />
         </div>
 
