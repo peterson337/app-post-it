@@ -37,6 +37,8 @@ export const GlobalContext = createContext<Types>({
   setIsSideBar: () => {},
   modoTarefas: [],
   setModoTarefas: () => {},
+  isOpenModalTarefaDinamica: false,
+  setIsOpenModalTarefaDinamica: () => {},
 });
 
 export const GlobalContextProvider = ({
@@ -52,34 +54,42 @@ export const GlobalContextProvider = ({
   const [Filtro, setFiltro] = useState<number>(0);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [isOpenModalTarefaDinamica, setIsOpenModalTarefaDinamica] =
+    useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
   const [modoTarefas, setModoTarefas] = useState<ModoTarefa[]>([
     {
       id: 0,
       nomeGrupoTarefa: "Todas as tarefas",
+      tasks: [],
     },
 
     {
       id: 1,
       nomeGrupoTarefa: "Todas favoritas",
+      tasks: [],
     },
 
     {
       id: 2,
       nomeGrupoTarefa: "Lista de compra 🛒",
+      tasks: [],
     },
   ]);
 
   useEffect(() => {
     const data = localStorage.getItem("tarefas");
     const dataFavoritas = localStorage.getItem("tarefasFavoritas");
-    const IsThemeDarkLocalStorage = localStorage.getItem("IsThemeDark");
+    const recuperarColecaoTarefa = localStorage.getItem("colecaoTarefas");
 
     if (data) {
       setTarefas(JSON.parse(data));
     }
     if (dataFavoritas) {
       setTarefasFavoritas(JSON.parse(dataFavoritas));
+    }
+    if (recuperarColecaoTarefa) {
+      setModoTarefas(JSON.parse(recuperarColecaoTarefa));
     }
   }, []);
 
@@ -198,7 +208,8 @@ export const GlobalContextProvider = ({
         setTarefas,
         setAnotarTarefasEditada,
         setArmazenarTarefa,
-
+        isOpenModalTarefaDinamica,
+        setIsOpenModalTarefaDinamica,
         //? Funções
         excluirTarefas,
         MacarTarefaComoConcluida,

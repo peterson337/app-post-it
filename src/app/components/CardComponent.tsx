@@ -9,10 +9,8 @@ import { FaPen } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { BsBookmarkStar } from "react-icons/bs";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { ListaDeCompra } from "./ListaDeCompra";
-
+import { TarefasDinamicas } from "./TarefasDinamicas";
 import { ModalEditarTarefa } from "./ModalEditarTarefa";
 import { TarefasFavoritas } from "./TarefasFavoritas";
 import { DragEvent } from "react"; // Importe o tipo DragEvent
@@ -116,13 +114,11 @@ export const CardComponent = () => {
         </button>
 
         <h1 className=" text-2xl font-bangers text-center mt-5 md:mt-0  md:block">
-          {Filtro === 0
-            ? "Todas as tarefas"
-            : Filtro === 2
-            ? "Lista de compra 🛒"
-            : Filtro === 1
-            ? "tarefas favoritas"
-            : null}
+          {modoTarefas.map((item) => {
+            return (
+              Filtro === item.id && <p key={item.id}>{item.nomeGrupoTarefa}</p>
+            );
+          })}
         </h1>
 
         {Filtro === 0 && tarefas.length != 0 ? (
@@ -259,6 +255,13 @@ export const CardComponent = () => {
 
         {Filtro === 2 ? (
           <ListaDeCompra></ListaDeCompra>
+        ) : (
+          // <p>Nenhuma lista de compra encontrada.</p>
+          <div></div>
+        )}
+
+        {Filtro != 2 && Filtro != 0 && Filtro != 1 ? (
+          <TarefasDinamicas />
         ) : (
           // <p>Nenhuma lista de compra encontrada.</p>
           <div></div>
