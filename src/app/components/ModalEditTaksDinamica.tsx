@@ -40,6 +40,7 @@ export const ModalEditTaksDinamica = ({
           </Typography>
 
           <TextField
+            autoFocus
             value={newTask}
             id="outlined-basic"
             label="Escreva o nome para editar a sua tarefa"

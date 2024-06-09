@@ -36,11 +36,22 @@ import { CSS } from "@dnd-kit/utilities";
 import Snackbar from "@mui/material/Snackbar";
 import Tooltip from "@mui/material/Tooltip";
 import Alert from "@mui/material/Alert";
+import { RiDraggable } from "react-icons/ri";
+import { AiOutlineFontColors } from "react-icons/ai";
+//
+//! Três ponts vertical
+import { MdMoreVert } from "react-icons/md";
+//
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { style } from "./../style/style";
 
 export type Tasks = {
   id: number;
   nomeTarefa: string;
   completed: boolean;
+  color: string;
+  colorText: boolean;
 };
 
 interface TaskCardProps {
@@ -54,6 +65,8 @@ interface TaskCardProps {
   isOpenModalEditTasks: boolean;
   test: number | null;
   newTask: string;
+  setModoTarefas: Dispatch<SetStateAction<ModoTarefa[]>>;
+  modoTarefas: ModoTarefa[];
 }
 
 const TaskCard = ({
@@ -67,6 +80,8 @@ const TaskCard = ({
   isOpenModalEditTasks,
   test,
   newTask,
+  setModoTarefas,
+  modoTarefas,
 }: TaskCardProps) => {
   const TarefaConcluida = item.completed;
 
@@ -76,30 +91,62 @@ const TaskCard = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    backgroundColor: item.color || "#fef08a",
+    color: item.colorText ? "black" : "white",
   };
 
+  const styleP = {
+    color: item.completed ? "#22c55e" : item.colorText ? "black" : "white",
+  };
+
+  const styleI = {
+    color: item.colorText ? "black" : "white",
+  };
+
+  const changeColorPostIt = (
+    e: string,
+    postId: number,
+    grupTasksId: number,
+    colorText?: boolean
+  ) => {
+    modoTarefas.map((val) => {
+      if (val.id === grupTasksId)
+        val.tasks.map(
+          (item) =>
+            item.id === postId &&
+            (e === "" ? (item.colorText = colorText as any) : (item.color = e))
+        );
+      setModoTarefas([...modoTarefas]);
+    });
+
+    localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
+  };
+
+  const [anchorEls, setAnchorEls] = useState<{
+    [key: number]: HTMLElement | null;
+  }>({});
+
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   return (
-    <Box component="span" sx={{ mx: "2px", transform: "scale(0.9)" }}>
+    <Box component="span" sx={{ transform: "scale(0.9)" }}>
       <Card
-        className="md:w-[25rem] w-80 h-60 p-5 text-2xl bg-[#fef08a]"
+        className={`md:w-[25rem] w-80 h-60 p-5 text-2xl`}
         ref={setNodeRef}
         style={style}
       >
-        <div
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing"
+        <Typography
+          className={`text-3xl md:text-4xl ${
+            TarefaConcluida
+              ? "line-through text-green-500"
+              : `${item.colorText}`
+          } w-full break-words h-36 overflow-auto font-bangers`}
+          color="text.secondary"
+          gutterBottom
+          style={styleP}
         >
-          <Typography
-            className={`text-3xl md:text-4xl ${
-              TarefaConcluida ? "line-through text-green-500" : "text-black"
-            } w-full break-words h-36 overflow-auto font-bangers`}
-            color="text.secondary"
-            gutterBottom
-          >
-            {item.nomeTarefa}
-          </Typography>
-        </div>
+          {item.nomeTarefa}
+        </Typography>
         <CardActions className="flex flex-row justify-between">
           <Tooltip title="Deletar tarefa">
             <button
@@ -109,12 +156,13 @@ const TaskCard = ({
               <FaTrash />
             </button>
           </Tooltip>
-          <Tooltip title="Marca tarefa com concluída">
+          <Tooltip title="Marca tarefa como concluída">
             <Checkbox
               className="hover:bg-gray-300 p-3 hover:rounded-full text-black"
               defaultChecked={TarefaConcluida}
               onClick={() => finishOrEditTasks(item.id, val.id, "concluida")}
               sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+              style={styleP}
             ></Checkbox>
           </Tooltip>
 
@@ -130,6 +178,85 @@ const TaskCard = ({
               <FaPen />
             </button>
           </Tooltip>
+
+          <Tooltip title="Mudar o post it de lugar">
+            <button
+              {...attributes}
+              {...listeners}
+              className="cursor-grab active:cursor-grabbing"
+            >
+              <RiDraggable />
+            </button>
+          </Tooltip>
+
+          <div className="flex justify-end items-center ml-2 flex-row gap-3  mr-4">
+            <Tooltip title="Mais opções">
+              <Button
+                id="basic-button"
+                aria-controls={anchorEls[item.id] ? "basic-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={anchorEls[item.id] ? "true" : undefined}
+                onClick={(event: any) => {
+                  setAnchorEls((prev) => ({
+                    ...prev,
+                    [id]: event.currentTarget,
+                  })),
+                    setSelectedId(id);
+                }}
+                className="text-2xl"
+                style={styleI}
+              >
+                <MdMoreVert />
+              </Button>
+            </Tooltip>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEls[item.id]}
+              open={Boolean(anchorEls[item.id])}
+              onClose={() =>
+                setAnchorEls((prev) => ({
+                  ...prev,
+                  [selectedId!]: null,
+                }))
+              }
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <div className="flex flex-col p-2 gap-3">
+                <MenuItem className="">
+                    <input
+                      type="color"
+                      onChange={(e) =>
+                        changeColorPostIt(e.target.value, item.id, val.id)
+                      }
+                      className="border-none rounded-full"
+                    />
+                  <p>Mudar a cor do post it</p>
+                </MenuItem>
+
+                <MenuItem
+                  className=""
+                  onClick={() =>
+                    changeColorPostIt(
+                      "",
+                      item.id,
+                      val.id,
+                      !item.colorText
+                    ) as unknown as React.MouseEventHandler<HTMLButtonElement>
+                  }
+                >
+                  <button className="text-2xl">
+                    <AiOutlineFontColors />
+                  </button>
+                  <p>
+                    Mudar a cor do texto e dos iconis{" "}
+                    {item.colorText ? "branco" : "preto"}
+                  </p>
+                </MenuItem>
+              </div>
+            </Menu>
+          </div>
         </CardActions>
       </Card>
       {isOpenModalEditTasks && test === item.id ? (
@@ -245,7 +372,6 @@ export const TarefasDinamicas = () => {
 
     localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
   };
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -295,7 +421,7 @@ export const TarefasDinamicas = () => {
                   onDragEnd={handleDragEnd}
                 >
                   <SortableContext items={val.tasks.map((item) => item.id)}>
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto h-[16rem] md:h-[24rem] ml-5">
+                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto h-[16rem] md:h-[24rem]">
                       {val.tasks.map((item) => (
                         <TaskCard
                           key={item.id}
@@ -309,14 +435,16 @@ export const TarefasDinamicas = () => {
                           isOpenModalEditTasks={isOpenModalEditTasks}
                           test={test}
                           newTask={newTask}
+                          setModoTarefas={setModoTarefas}
+                          modoTarefas={modoTarefas}
                         />
                       ))}
                     </section>
                   </SortableContext>
                 </DndContext>
               ) : (
-                <div className="w-[80rem] md:flex md:justify-center">
-                  <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] m-3">
+                <div className="md:flex md:justify-center">
+                  <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
                     Não existem tarefas salvas 😞
                   </p>
                 </div>

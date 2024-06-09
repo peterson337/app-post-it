@@ -31,11 +31,12 @@ export const ModalTarefaDinamica = ({
       setAlert("Sem tarefas concluidas");
       return;
     } else {
-      console.log(taks);
       const obj = {
         nomeTarefa: taks,
         id: new Date().getTime(),
         completed: false,
+        color: "#fef08a",
+        colorText: true,
       };
       modoTarefas.map((val) => val.id === Filtro && val.tasks.push(obj));
       setModoTarefas([...modoTarefas]);
@@ -59,6 +60,7 @@ export const ModalTarefaDinamica = ({
           </Typography>
 
           <TextField
+            autoFocus
             value={taks}
             id="outlined-basic"
             label="Escreva o nome da tarefa"
