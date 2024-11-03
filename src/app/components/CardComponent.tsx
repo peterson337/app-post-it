@@ -18,7 +18,6 @@ import Button from "@mui/material/Button";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import Fab from "@mui/material/Fab";
 import { FaPlus } from "react-icons/fa";
-import { FaCartPlus } from "react-icons/fa";
 import { Modal } from "../components/Modal";
 
 export const CardComponent = (props: any) => {
