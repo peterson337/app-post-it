@@ -143,7 +143,7 @@ export const ListaDeCompra = () => {
         <Fab
           className={`bg-green-500 hover:bg-green-700  text-white relative  mr-3 md:mr-0 
               ${
-                ListaDeCompra.length === 0 ? "xl:top-[590px] top-[330px]" : ""
+                ListaDeCompra.length === 0 ? "xl:top-[590px] top-[250px]" : ""
               } `}
           onClick={() => setIsOpenModal(true)}
         >

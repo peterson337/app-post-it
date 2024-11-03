@@ -407,12 +407,15 @@ export const TarefasDinamicas = () => {
           setAlert("Sem tarefas concluidas"), setIsOpenSnacker(true);
         setModoTarefas((prev) =>
           prev.map((val) => {
-            const updatedTasks =
-              params === "desmarcar"
-                ? val.tasks.map((item) => ({ ...item, completed: false }))
-                : val.tasks.filter((item) => !item.completed);
+            if (val.id === Filtro) {
+              const updatedTasks =
+                params === "desmarcar"
+                  ? val.tasks.map((item) => ({ ...item, completed: false }))
+                  : val.tasks.filter((item) => !item.completed);
 
-            return { ...val, tasks: updatedTasks };
+              return { ...val, tasks: updatedTasks };
+            }
+            return val;
           })
         ),
           localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
@@ -525,7 +528,7 @@ export const TarefasDinamicas = () => {
                   <SortableContext
                     items={tasksFiltered.map((item: any) => item.id)}
                   >
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[23rem] ">
+                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[19rem] ">
                       {tasksFiltered.map((item: any) => (
                         <TaskCard
                           key={item.id}
@@ -564,7 +567,7 @@ export const TarefasDinamicas = () => {
         <Fab
           className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
               ${
-                tasksFiltered.length === 0 ? "xl:top-[520px] top-[330px]" : ""
+                tasksFiltered.length === 0 ? "xl:top-[520px] top-[250px]" : ""
               } `}
           onClick={() => setIsOpenModalTarefaDinamica(true)}
         >

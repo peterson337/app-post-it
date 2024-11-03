@@ -191,7 +191,7 @@ export const List = ({
             <Calculadora />
 
             <div
-              className=" md:h-[28rem]  h-[15rem]  overflow-auto 
+              className=" md:h-[28rem]  h-[10rem]  overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
             "
