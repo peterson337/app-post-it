@@ -1,0 +1,64 @@
+import * as React from "react";
+import { Theme, useTheme } from "@mui/material/styles";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+export const SelectFilterTasks = ({
+  fecharMenuSuspenso,
+  filterTasks,
+  setFilterTasks,
+}: any) => {
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("Todas as tarefas");
+
+  const handleChange = (event: SelectChangeEvent<typeof filterTasks>) => {
+    const result = event.target.value;
+    setValue(result);
+
+    setFilterTasks(
+      result === "Tarefas concluídas"
+        ? true
+        : result === "Tarefas não concluídas"
+        ? false
+        : result === "Todas as tarefas" && "null"
+    );
+    fecharMenuSuspenso && fecharMenuSuspenso();
+  };
+
+  const handleClose = () => setOpen(false);
+
+  const handleOpen = () => setOpen(true);
+
+  return (
+    <>
+      <FormControl sx={{ m: 1, minWidth: 120 }}>
+        {/* <InputLabel id="demo-controlled-open-select-label" 
+        className={` ${fecharMenuSuspenso? '' : ''}`}
+        >
+          Todas as tarefas
+        </InputLabel> */}
+        <Select
+          className={`bg-white w-64 ${
+            fecharMenuSuspenso ? "" : "relative bottom-2"
+          }`}
+          labelId="demo-controlled-open-select-label"
+          id="demo-controlled-open-select"
+          open={open}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          value={value}
+          label="Todas as tarefas"
+          onChange={handleChange}
+        >
+          <MenuItem value={"Todas as tarefas"}>Todas as tarefas</MenuItem>
+          <MenuItem value={"Tarefas concluídas"}>Tarefas concluídas</MenuItem>
+          <MenuItem value={"Tarefas não concluídas"}>
+            Tarefas não concluídas
+          </MenuItem>
+        </Select>
+      </FormControl>
+    </>
+  );
+};

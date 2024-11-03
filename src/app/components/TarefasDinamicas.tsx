@@ -45,6 +45,13 @@ import { MdMoreVert } from "react-icons/md";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { style } from "./../style/style";
+import { StyledMenu } from "./StyledMenu";
+import { SelectFilterTasks } from "./SelectFilterTasks";
+import { FaArrowDown } from "react-icons/fa";
+import { MaisOpcoes } from "./MaisOpcoes";
+import { FaPlus } from "react-icons/fa";
+
+import Fab from "@mui/material/Fab";
 
 export type Tasks = {
   id: number;
@@ -159,7 +166,7 @@ const TaskCard = ({
           <Tooltip title="Marca tarefa como concluída">
             <Checkbox
               className="hover:bg-gray-300 p-3 hover:rounded-full text-black"
-              defaultChecked={TarefaConcluida}
+              checked={TarefaConcluida}
               onClick={() => finishOrEditTasks(item.id, val.id, "concluida")}
               sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
               style={styleP}
@@ -225,13 +232,13 @@ const TaskCard = ({
             >
               <div className="flex flex-col p-2 gap-3">
                 <MenuItem className="">
-                    <input
-                      type="color"
-                      onChange={(e) =>
-                        changeColorPostIt(e.target.value, item.id, val.id)
-                      }
-                      className="border-none rounded-full"
-                    />
+                  <input
+                    type="color"
+                    onChange={(e) =>
+                      changeColorPostIt(e.target.value, item.id, val.id)
+                    }
+                    className="border-none rounded-full"
+                  />
                   <p>Mudar a cor do post it</p>
                 </MenuItem>
 
@@ -288,6 +295,10 @@ export const TarefasDinamicas = () => {
   const [newTask, setNewTask] = useState<string>("");
   const [alert, setAlert] = useState<string>("");
   const [isOpenSnacker, setIsOpenSnacker] = useState(false);
+  const [filterTasks, setFilterTasks] = React.useState<boolean | string>(
+    "null"
+  );
+  const [tasksFiltered, setTasksFiltered] = React.useState([]);
 
   const finishOrEditTasks = (
     id: number,
@@ -333,25 +344,6 @@ export const TarefasDinamicas = () => {
     });
   };
 
-  const apagarTodasAsTarefasConcluidas = () => {
-    modoTarefas.map((val) => {
-      if (val.id === Filtro) {
-        const temTarefaconcluida = val.tasks.some((item) => item.completed);
-
-        if (!temTarefaconcluida)
-          setAlert("Sem tarefas concluidas"), setIsOpenSnacker(true);
-
-        setModoTarefas((prev) =>
-          prev.map((val) => {
-            const newTasks = val.tasks.filter((item) => !item.completed);
-            return { ...val, tasks: newTasks };
-          })
-        ),
-          localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
-      }
-    });
-  };
-
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -379,6 +371,55 @@ export const TarefasDinamicas = () => {
     })
   );
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const filtrarTarefas = () => {
+    modoTarefas.filter((item) => {
+      if (item.id === Filtro) {
+        if (filterTasks !== "null") {
+          const tasksFiltered = item.tasks.filter(
+            (item) => item.completed === (filterTasks as unknown as boolean)
+          );
+          setTasksFiltered(tasksFiltered as any);
+        } else {
+          setTasksFiltered(item.tasks as any);
+        }
+      }
+    });
+  };
+  React.useEffect(() => {
+    filtrarTarefas();
+  }, [modoTarefas, filterTasks, Filtro]);
+
+  const apagarTodasAsTarefasConcluidas = (params?: string) => {
+    modoTarefas.map((val) => {
+      if (val.id === Filtro) {
+        const temTarefaconcluida = val.tasks.some((item) => item.completed);
+
+        if (!temTarefaconcluida)
+          setAlert("Sem tarefas concluidas"), setIsOpenSnacker(true);
+        setModoTarefas((prev) =>
+          prev.map((val) => {
+            const updatedTasks =
+              params === "desmarcar"
+                ? val.tasks.map((item) => ({ ...item, completed: false }))
+                : val.tasks.filter((item) => !item.completed);
+
+            return { ...val, tasks: updatedTasks };
+          })
+        ),
+          localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
+      }
+    });
+  };
+
   return (
     <>
       {isOpenModalTarefaDinamica && (
@@ -401,28 +442,91 @@ export const TarefasDinamicas = () => {
       </Snackbar>
 
       <section className="flex flex-col md:flex-row justify-center items-center gap-3 mb-2 md:mb-1">
-        <Button
-          variant="contained"
-          onClick={apagarTodasAsTarefasConcluidas}
-          className="bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
-        >
-          Apagar tarefas concluidas
-        </Button>
+        {/*  */}
+
+        <div className="lg:opacity-0">
+          <Button
+            variant="contained"
+            className="bg-sky-500"
+            id="demo-customized-button"
+            aria-controls={open ? "demo-customized-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            disableElevation
+            onClick={handleClick}
+            endIcon={<FaArrowDown />}
+          >
+            Mais opções
+          </Button>
+
+          <StyledMenu
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem disableRipple>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  apagarTodasAsTarefasConcluidas();
+                  handleClose(); // Fechar o menu após clicar
+                }}
+                className="bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+              >
+                Apagar tarefas concluidas
+              </Button>
+            </MenuItem>
+            <MenuItem disableRipple>
+              <SelectFilterTasks
+                fecharMenuSuspenso={handleClose}
+                filterTasks={filterTasks}
+                setFilterTasks={setFilterTasks}
+              />
+            </MenuItem>
+            <MenuItem disableRipple>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  apagarTodasAsTarefasConcluidas("desmarcar");
+                  handleClose(); // Fechar o menu após clicar
+                }}
+                className="bg-green-500 hover:bg-green-600 rounded-lg active:bg-green-600 w-72 p-1 md:w-96 md:text-[20px] font-bold"
+              >
+                Desmarcar as tarefas
+              </Button>
+            </MenuItem>
+          </StyledMenu>
+        </div>
+
+        <div className="hidden lg:block">
+          <MaisOpcoes
+            apagarTodasAsTarefasConcluidas={apagarTodasAsTarefasConcluidas}
+            fecharMenuSuspenso={handleClose}
+            filterTasks={filterTasks}
+            setFilterTasks={setFilterTasks}
+          />
+        </div>
       </section>
 
       {modoTarefas.map((val: ModoTarefa) => (
         <Fragment key={val.id}>
           {Filtro === val.id && (
             <section>
-              {val.tasks.length > 0 ? (
+              {tasksFiltered.length > 0 ? (
                 <DndContext
                   sensors={sensors}
                   collisionDetection={closestCenter}
                   onDragEnd={handleDragEnd}
                 >
-                  <SortableContext items={val.tasks.map((item) => item.id)}>
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto h-[16rem] md:h-[24rem]">
-                      {val.tasks.map((item) => (
+                  <SortableContext
+                    items={tasksFiltered.map((item: any) => item.id)}
+                  >
+                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[29rem] ">
+                      {tasksFiltered.map((item: any) => (
                         <TaskCard
                           key={item.id}
                           item={item}
@@ -445,7 +549,9 @@ export const TarefasDinamicas = () => {
               ) : (
                 <div className="md:flex md:justify-center">
                   <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
-                    Não existem tarefas salvas 😞
+                    {filterTasks === true
+                      ? " Nenhuma tarefa foi marcada como concluída 😞"
+                      : " Não existem tarefas salvas 😞"}
                   </p>
                 </div>
               )}
@@ -453,6 +559,18 @@ export const TarefasDinamicas = () => {
           )}
         </Fragment>
       ))}
+
+      <section className="w-[100%] flex justify-end mt-3">
+        <Fab
+          className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
+              ${
+                tasksFiltered.length === 0 ? "xl:top-[520px] top-[430px]" : ""
+              } `}
+          onClick={() => setIsOpenModalTarefaDinamica(true)}
+        >
+          <FaPlus />
+        </Fab>
+      </section>
     </>
   );
 };

@@ -103,7 +103,7 @@ export const TarefasFavoritas = () => {
 
       <div
         className="grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 
-            overflow-auto md:h-72 h-60 mt-3
+            overflow-auto  md:h-[38rem] h-[27rem] mt-3
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
             "

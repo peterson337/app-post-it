@@ -108,11 +108,10 @@ export const Tarefas = () => {
     <main className="md:flex md:flex-col md:h-[100vh] md:justify-between  ">
       {/* Tamanho do mnitor gande 1920 */}
 
-      {iSOpenModalCreateTareas ? (
-        <Modal setISOpenModalCreateTareas={setISOpenModalCreateTareas} />
-      ) : null}
-
-      <CardComponent />
+      <CardComponent 
+      iSOpenModalCreateTareas={iSOpenModalCreateTareas}
+      setISOpenModalCreateTareas={setISOpenModalCreateTareas}
+      />
 
       {isSideBar ? (
         <Drawer open={isSideBar} onClose={() => setIsSideBar(false)}>
@@ -282,7 +281,7 @@ export const Tarefas = () => {
         />
       ) : null}
 
-      {Filtro === 0 ||
+      {/* {Filtro === 0 ||
       Filtro === 2 ||
       (Filtro !== 0 && Filtro !== 1 && Filtro !== 2) ? (
         <div
@@ -326,13 +325,7 @@ export const Tarefas = () => {
             )}
           </Fab>
         </div>
-      ) : Filtro !== 0 && Filtro !== 1 && Filtro !== 2 ? (
-        <div>
-          <button onClick={() => setIsOpenModalTarefaDinamica(true)}>
-            <FaCartPlus />
-          </button>
-        </div>
-      ) : null}
+      ) : null} */}
     </main>
   );
 };

@@ -191,12 +191,12 @@ export const List = ({
             <Calculadora />
 
             <div
-              className=" h-60 overflow-auto 
+              className=" md:h-[28rem]  h-[21rem]  overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
             "
             >
-              <div className="grid  xl:grid-cols-3 lg:grid-cols-2 md:grid-rows-4 ">
+              <div className="grid  xl:grid-cols-3 lg:grid-cols-2 md:grid-rows-4">
                 {ListaDeCompra.map((item: TarefasDeCompra, index: number) => {
                   const tarefaSalva: boolean = item.completed;
                   const isMatchingSearch = item.tarefa

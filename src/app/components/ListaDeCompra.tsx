@@ -4,6 +4,8 @@ import { Types, TarefasDeCompra } from "./context/ts/types";
 import { List } from "./List";
 import { GlobalContext } from "./context/Store";
 import { Calculadora } from "./Calculadora";
+import Fab from "@mui/material/Fab";
+import { FaCartPlus } from "react-icons/fa";
 
 type T = number;
 
@@ -136,6 +138,18 @@ export const ListaDeCompra = () => {
         precoTotal={precoTotal}
         setPrecoTotal={setPrecoTotal}
       />
+
+      <section className="w-[100%] flex justify-end mt-3">
+        <Fab
+          className={`bg-green-500 hover:bg-green-700  text-white relative  mr-3 md:mr-0 
+              ${
+                ListaDeCompra.length === 0 ? "xl:top-[590px] top-[440px]" : ""
+              } `}
+          onClick={() => setIsOpenModal(true)}
+        >
+          <FaCartPlus />
+        </Fab>
+      </section>
     </main>
   );
 };
