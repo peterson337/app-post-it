@@ -525,7 +525,7 @@ export const TarefasDinamicas = () => {
                   <SortableContext
                     items={tasksFiltered.map((item: any) => item.id)}
                   >
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[29rem] ">
+                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[23rem] ">
                       {tasksFiltered.map((item: any) => (
                         <TaskCard
                           key={item.id}
@@ -564,7 +564,7 @@ export const TarefasDinamicas = () => {
         <Fab
           className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
               ${
-                tasksFiltered.length === 0 ? "xl:top-[520px] top-[430px]" : ""
+                tasksFiltered.length === 0 ? "xl:top-[520px] top-[330px]" : ""
               } `}
           onClick={() => setIsOpenModalTarefaDinamica(true)}
         >

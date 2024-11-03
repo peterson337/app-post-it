@@ -109,7 +109,7 @@ export const CardComponent = (props: any) => {
 
       <section
         className={` bg-[#373737]  md:p-10 
-     md:w-[90rem] md:h-[51rem] h-[44rem]   m-5
+     md:w-[90rem] md:h-[51rem] h-[38rem]   m-5
      w-96 rounded-xl
      scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
@@ -179,7 +179,7 @@ export const CardComponent = (props: any) => {
               ) : (
                 <section
                   className={`grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 
-              overflow-auto   md:h-[35rem]  h-[25rem] mt-3 
+              overflow-auto   md:h-[35rem]  h-[19rem] mt-3 
               scrollbar-thin scrollbar-thumb-sky-500 
     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
     
@@ -270,7 +270,7 @@ export const CardComponent = (props: any) => {
             >
               <Fab
                 className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
-              ${tarefas.length === 0 ? "xl:top-[580px] top-[470px]" : ""}`}
+              ${tarefas.length === 0 ? "xl:top-[580px] top-[370px]" : ""}`}
               >
                 <FaPlus />
               </Fab>
