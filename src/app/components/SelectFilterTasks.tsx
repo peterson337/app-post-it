@@ -12,7 +12,7 @@ export const SelectFilterTasks = ({
   defaultValue,
 }: any) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState("Todas as tarefas");
 
   const handleChange = (event: SelectChangeEvent<typeof filterTasks>) => {
     const result = event.target.value;
@@ -49,7 +49,9 @@ export const SelectFilterTasks = ({
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}
-          value={defaultValue === 'Selecione um opção'? 'Selecione um opção' : value}
+          value={
+            defaultValue === "Selecione um opção" ? "Selecione um opção" : value
+          }
           label="Todas as tarefas"
           onChange={handleChange}
         >
