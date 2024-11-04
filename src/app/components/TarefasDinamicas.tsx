@@ -488,6 +488,7 @@ export const TarefasDinamicas = () => {
                 fecharMenuSuspenso={handleClose}
                 filterTasks={filterTasks}
                 setFilterTasks={setFilterTasks}
+                defaultValue={"Selecione um opção"}
               />
             </MenuItem>
             <MenuItem disableRipple>
@@ -511,6 +512,7 @@ export const TarefasDinamicas = () => {
             fecharMenuSuspenso={handleClose}
             filterTasks={filterTasks}
             setFilterTasks={setFilterTasks}
+            defaultValue={"string"}
           />
         </div>
       </section>

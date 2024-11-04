@@ -9,9 +9,10 @@ export const SelectFilterTasks = ({
   fecharMenuSuspenso,
   filterTasks,
   setFilterTasks,
+  defaultValue,
 }: any) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("Todas as tarefas");
+  const [value, setValue] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent<typeof filterTasks>) => {
     const result = event.target.value;
@@ -48,14 +49,19 @@ export const SelectFilterTasks = ({
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}
-          value={value}
+          value={defaultValue === 'Selecione um opção'? 'Selecione um opção' : value}
           label="Todas as tarefas"
           onChange={handleChange}
         >
           <MenuItem value={"Todas as tarefas"}>Todas as tarefas</MenuItem>
           <MenuItem value={"Tarefas concluídas"}>Tarefas concluídas</MenuItem>
+          {/* props.defaultValue */}
           <MenuItem value={"Tarefas não concluídas"}>
             Tarefas não concluídas
+          </MenuItem>
+
+          <MenuItem value={"Selecione um opção"} className="hidden">
+            Selecione um opção
           </MenuItem>
         </Select>
       </FormControl>
