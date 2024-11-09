@@ -45,6 +45,7 @@ export const Tarefas = () => {
     useState(false);
   const [editTitleTask, setEditTitleTask] = useState<null | number>(null);
   const [newTask, setNewTask] = useState("");
+  const inputEditListName = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -84,7 +85,7 @@ export const Tarefas = () => {
       setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
     } else if (result === "edit") {
       if (newTask.length === 0) {
-        alert("Escreva o título para editar o tipo de tarefa");
+        alert("Escreva o nome da sua lista de tarefa para usar este botão");
         return;
       } else {
         modoTarefas.map(
@@ -101,6 +102,18 @@ export const Tarefas = () => {
     }
   };
 
+  // prettier-ignore
+  useEffect(() => {if (editTitleTask !== null && inputEditListName.current) inputEditListName.current.focus();}, [editTitleTask]);
+
+  const inputEditTaskNameList = (item: any) => {
+    setEditTitleTask(item.id),
+      setAnchorEls((prev) => ({
+        ...prev,
+        [selectedId!]: null,
+      })),
+      setNewTask(item.nomeGrupoTarefa);
+  };
+
   const formatNomeGrupoTarefa = (nome: string) =>
     nome.length > 20 ? nome.substring(0, 10) + "..." : nome;
 
@@ -108,9 +121,9 @@ export const Tarefas = () => {
     <main className="md:flex md:flex-col md:h-[100vh] md:justify-between  ">
       {/* Tamanho do mnitor gande 1920 */}
 
-      <CardComponent 
-      iSOpenModalCreateTareas={iSOpenModalCreateTareas}
-      setISOpenModalCreateTareas={setISOpenModalCreateTareas}
+      <CardComponent
+        iSOpenModalCreateTareas={iSOpenModalCreateTareas}
+        setISOpenModalCreateTareas={setISOpenModalCreateTareas}
       />
 
       {isSideBar ? (
@@ -139,7 +152,7 @@ export const Tarefas = () => {
                     onClick={() => setiSOpenModalCreateTypeTask(true)}
                     className="bg-sky-500 hover:bg-sky-700 rounded-lg p-3 font-bangers text-[1.3rem]"
                   >
-                    Criar mais um tipo de tarefa
+                    Criar uma lista de tarefa
                   </button>
                 </div>
 
@@ -162,13 +175,12 @@ export const Tarefas = () => {
                       >
                         {editTitleTask === item.id ? (
                           <>
-                            <TextField
-                              required
-                              autoFocus
-                              id="outlined-basic"
-                              variant="outlined"
+                            <input
+                              ref={inputEditListName}
+                              type="text"
                               value={newTask}
-                              className="ml-4 text-white h-12 rounded-xl border-white bg-white "
+                              className="ml-4 h-12 rounded-xl text-black pl-3  border-white bg-white  outline-none border-none w-[11rem]"
+                              required
                               onChange={(
                                 e: React.ChangeEvent<HTMLInputElement>
                               ) => setNewTask(e.target.value)}
@@ -229,16 +241,9 @@ export const Tarefas = () => {
                                   </MenuItem>
 
                                   <MenuItem
-                                    onClick={() => {
-                                      setEditTitleTask(item.id),
-                                        setAnchorEls((prev) => ({
-                                          ...prev,
-                                          [selectedId!]: null,
-                                        })),
-                                        setNewTask(item.nomeGrupoTarefa);
-                                    }}
+                                    onClick={() => inputEditTaskNameList(item)}
                                   >
-                                    Editar do grupo de tarefas
+                                    Editar o nome da lista de tarefas
                                   </MenuItem>
                                 </>
                               ) : (
@@ -246,7 +251,7 @@ export const Tarefas = () => {
                                   <MenuItem
                                     onClick={() => handleClose("edit", item.id)}
                                   >
-                                    Salvar novo titulo do grupo de tarefa{" "}
+                                    Salvar o novo nome da lista de tarefa{" "}
                                   </MenuItem>
                                   <MenuItem
                                     onClick={() => {
@@ -280,52 +285,6 @@ export const Tarefas = () => {
           iSOpenModalCreateTypeTask={iSOpenModalCreateTypeTask}
         />
       ) : null}
-
-      {/* {Filtro === 0 ||
-      Filtro === 2 ||
-      (Filtro !== 0 && Filtro !== 1 && Filtro !== 2) ? (
-        <div
-          className="w-full flex justify-end  bottom-2  md:mb-5 md:md:pr-10 
-  pr-5 absolute md:relative"
-        >
-          <Fab
-            className={`${
-              Filtro === 0
-                ? "bg-sky-500"
-                : Filtro === 2
-                ? "bg-green-500"
-                : "bg-red-500"
-            }
-     ${
-       Filtro === 0
-         ? "hover:bg-sky-700"
-         : Filtro === 2
-         ? "hover:bg-green-700"
-         : "hover:bg-red-700"
-     }
-     text-white 
-     text-2xl
-    
-    `}
-            onClick={
-              Filtro === 0
-                ? openModalCreateTarefas
-                : Filtro === 2
-                ? () => setIsOpenModal(true)
-                : () => setIsOpenModalTarefaDinamica(true)
-            }
-            onKeyPress={handleKeyPress}
-          >
-            {Filtro === 0 ? (
-              <FaPlus />
-            ) : Filtro === 2 ? (
-              <FaCartPlus />
-            ) : (
-              <FaPlus />
-            )}
-          </Fab>
-        </div>
-      ) : null} */}
     </main>
   );
 };

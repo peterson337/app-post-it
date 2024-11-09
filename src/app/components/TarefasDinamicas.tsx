@@ -95,6 +95,9 @@ const TaskCard = ({
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
+  const inputColorRef = React.useRef("");
+  const inputColorValue = inputColorRef.current;
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -121,7 +124,9 @@ const TaskCard = ({
         val.tasks.map(
           (item) =>
             item.id === postId &&
-            (e === "" ? (item.colorText = colorText as any) : (item.color = e))
+            (e === ""
+              ? (item.colorText = colorText as any)
+              : ((item.color = e), (inputColorRef.current = e)))
         );
       setModoTarefas([...modoTarefas]);
     });
@@ -236,6 +241,9 @@ const TaskCard = ({
                     type="color"
                     onChange={(e) =>
                       changeColorPostIt(e.target.value, item.id, val.id)
+                    }
+                    value={
+                      inputColorValue === "" ? item.color : inputColorValue
                     }
                     className="border-none rounded-full"
                   />
