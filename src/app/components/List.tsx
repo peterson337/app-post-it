@@ -170,15 +170,16 @@ export const List = ({
     <>
       <section className="">
         {Filtro === 2 && ListaDeCompra.length != 0 ? (
-          <div className="flex justify-center items-center mb-4">
-            <input
+          <div className="flex flex-row gap-5 justify-center items-center mb-4">
+            {/* <input
               type="text"
               className="text-black p-2 rounded-full border border-black
            outline-none bg-[#edf2fc]"
               onChange={(e) => setSearchtarefas(e.target.value)}
               value={Searchtarefas}
               placeholder="Pesquise por uma tarefa aqui..."
-            />
+            /> */}
+            <Calculadora />
           </div>
         ) : null}
 
@@ -188,10 +189,8 @@ export const List = ({
           </h2>
         ) : (
           <>
-            <Calculadora />
-
             <div
-              className=" md:h-[28rem]  h-[10rem]  overflow-auto 
+              className=" md:h-[28rem]  h-[16.5rem] flex-1  overflow-auto 
             scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
             "

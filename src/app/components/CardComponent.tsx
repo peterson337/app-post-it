@@ -109,7 +109,7 @@ export const CardComponent = (props: any) => {
 
       <section
         className={` bg-[#373737]  md:p-10 
-     md:w-[90rem] md:h-[51rem] h-[auto]   m-5
+     md:w-[90rem] md:h-[51rem] h-[calc(100vh-6rem)]   m-5
      w-96 rounded-xl
      scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
@@ -132,13 +132,13 @@ export const CardComponent = (props: any) => {
 
         {Filtro === 0 && tarefas.length != 0 ? (
           <div className="flex justify-center items-center flex-col md:flex-row gap-3">
-            <input
+            {/* <input
               type="text"
               className="text-black p-2 rounded-full mt-3 outline-none"
               onChange={(e) => setSearchtarefas(e.target.value)}
               value={Searchtarefas}
               placeholder="Pesquise por uma tarefa aqui..."
-            />
+            /> */}
 
             <Button
               variant="contained"
@@ -149,21 +149,6 @@ export const CardComponent = (props: any) => {
               Apagar tarefas concluidas
             </Button>
           </div>
-        ) : null}
-
-        {Filtro === 1 ? (
-          <section className="flex flex-col ">
-            {tarefasFavoritas.length === 0 ? (
-              <p
-                className=" text-red-500 text-[22px] md:text-2xl font-bold m-3 md:text-center
-          "
-              >
-                Não existem tarefas favoritas 😞
-              </p>
-            ) : (
-              <TarefasFavoritas></TarefasFavoritas>
-            )}
-          </section>
         ) : null}
 
         {Filtro === 0 ? (
@@ -179,7 +164,7 @@ export const CardComponent = (props: any) => {
               ) : (
                 <section
                   className={`grid  grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 p-2 
-              overflow-auto   md:h-[35rem]  h-[15rem] mt-3 
+              overflow-auto   md:h-[35rem]  h-[16rem] mt-3 
               scrollbar-thin scrollbar-thumb-sky-500 
     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
     

@@ -538,7 +538,7 @@ export const TarefasDinamicas = () => {
                   <SortableContext
                     items={tasksFiltered.map((item: any) => item.id)}
                   >
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[19rem] ">
+                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[22rem] ">
                       {tasksFiltered.map((item: any) => (
                         <TaskCard
                           key={item.id}

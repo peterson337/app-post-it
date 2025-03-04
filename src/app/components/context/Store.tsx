@@ -65,12 +65,6 @@ export const GlobalContextProvider = ({
     },
 
     {
-      id: 1,
-      nomeGrupoTarefa: "Todas favoritas",
-      tasks: [],
-    },
-
-    {
       id: 2,
       nomeGrupoTarefa: "Lista de compra 🛒",
       tasks: [],
@@ -98,15 +92,9 @@ export const GlobalContextProvider = ({
   };
 
   const excluirTarefas = (id: number | null) => {
-    if (id) {
-      const deletarTarefa = tarefas.filter((val) => val.id != id);
+      const deletarTarefa = tarefas.filter((val) => id? val.id != id : val.completed === false);
       setTarefas(deletarTarefa);
       localStorage.setItem("tarefas", JSON.stringify(deletarTarefa));
-    } else if (null) {
-      const deletarTarefa = tarefas.filter((val) => val.completed === false);
-      setTarefas(deletarTarefa);
-      localStorage.setItem("tarefas", JSON.stringify(deletarTarefa));
-    }
   };
   const excluirTarefasFavorita = (id: number) => {
     const deletarTarefa = tarefasFavoritas.filter((val) => val.id != id);
