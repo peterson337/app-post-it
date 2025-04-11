@@ -21,6 +21,29 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { IoIosSave } from "react-icons/io";
 import { IoMdCloseCircle } from "react-icons/io";
+import api from "../../service/api";
+import { style } from "../style/style";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+
+type Backup = {
+  id: number;
+  nomeGrupoTarefa: string;
+  tasks: [
+    {
+      color: string;
+      colorText: boolean;
+      completed: boolean;
+      id: number;
+      nomeTarefa: string;
+    }
+  ];
+};
 
 export const Tarefas = () => {
   const {
@@ -35,6 +58,7 @@ export const Tarefas = () => {
     isOpenModalTarefaDinamica,
     setIsOpenModalTarefaDinamica,
     setModoTarefas,
+    useId,
   } = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true);
@@ -45,6 +69,12 @@ export const Tarefas = () => {
     useState(false);
   const [editTitleTask, setEditTitleTask] = useState<null | number>(null);
   const [newTask, setNewTask] = useState("");
+  const [modalBackup, setModalBackup] = useState(false);
+
+  const [backupData, setBackupData] = useState<Backup[]>([]);
+
+  const [textDropdown, setTextDropdown] = useState("");
+
   const inputEditListName = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -117,6 +147,36 @@ export const Tarefas = () => {
   const formatNomeGrupoTarefa = (nome: string) =>
     nome.length > 20 ? nome.substring(0, 10) + "..." : nome;
 
+  const backup = async (backupData: Backup) => {
+    const res = await api.post(`/backup/${useId}`, backupData);
+    alert(res.data.message);
+  };
+
+  useEffect(() => {}, []);
+
+  const abrirModalBackup = async () => {
+    if (useId) {
+      const res = await api.get(`/carregar-backup/${useId}`);
+      setBackupData(res.data.tasks);
+
+      setModalBackup(true);
+    }
+  };
+
+  const carregarBackup = (listaTarefasEscolhida: Backup) => {
+    if (useId) {
+      //prettier-ignore
+      if (modoTarefas.filter((item) => item.id === listaTarefasEscolhida.id).length === 0) {
+       modoTarefas.push(listaTarefasEscolhida);
+       setModalBackup(false);
+     } else {
+       //prettier-ignore
+       alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup")
+       return;
+     }
+    }
+  };
+
   return (
     <main className="md:flex md:flex-col md:h-[100vh] md:justify-between  ">
       {/* Tamanho do mnitor gande 1920 */}
@@ -125,6 +185,40 @@ export const Tarefas = () => {
         iSOpenModalCreateTareas={iSOpenModalCreateTareas}
         setISOpenModalCreateTareas={setISOpenModalCreateTareas}
       />
+
+      <Dialog
+        open={modalBackup}
+        // TransitionComponent={Transition}
+        keepMounted
+        onClose={() => setModalBackup(false)}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Carrgar backup</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Escolha o nome da tarefa no dropdown abaixo.
+          </DialogContentText>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            value={textDropdown}
+            onChange={(e) => setTextDropdown(e.target.value)}
+            input={<OutlinedInput label="Name" />}
+            label="Selecione o nome de uma lista de tarefa"
+            // MenuProps={MenuProps}
+          >
+            {backupData.map((item) => (
+              <MenuItem
+                key={item.id}
+                value={item.nomeGrupoTarefa}
+                onClick={() => carregarBackup(item)}
+              >
+                {item.nomeGrupoTarefa}
+              </MenuItem>
+            ))}
+          </Select>
+        </DialogContent>
+      </Dialog>
 
       {isSideBar ? (
         <Drawer open={isSideBar} onClose={() => setIsSideBar(false)}>
@@ -147,13 +241,23 @@ export const Tarefas = () => {
                   </button>
                 </div>
 
-                <div className="mb-3 flex justify-center w-full">
+                <div className="mb-3 flex flex-col gap-5 justify-center w-full">
                   <button
                     onClick={() => setiSOpenModalCreateTypeTask(true)}
-                    className="bg-sky-500 hover:bg-sky-700 rounded-lg p-3 font-bangers text-[1.3rem]"
+                    className="bg-sky-500 hover:bg-sky-700 rounded-lg p-3 font-bangers text-[1.3rem] w-56 ml-5"
                   >
                     Criar uma lista de tarefa
                   </button>
+                  {useId && (
+                    <Button
+                      className="bg-green-600 w-56 ml-5"
+                      variant="contained"
+                      color="success"
+                      onClick={abrirModalBackup}
+                    >
+                      Carregar Backup
+                    </Button>
+                  )}
                 </div>
 
                 <div className="bg-[#373737] h-[33rem] md:h-[47rem] overflow-auto">
@@ -245,6 +349,20 @@ export const Tarefas = () => {
                                   >
                                     Editar o nome da lista de tarefas
                                   </MenuItem>
+
+                                  {useId && (
+                                    <MenuItem
+                                      onClick={() => {
+                                        setAnchorEls((prev) => ({
+                                          ...prev,
+                                          [selectedId!]: null,
+                                        }));
+                                        backup(item as Backup);
+                                      }}
+                                    >
+                                      Realizar backup da lista de tarefa
+                                    </MenuItem>
+                                  )}
                                 </>
                               ) : (
                                 <>

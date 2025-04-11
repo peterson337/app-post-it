@@ -5,18 +5,21 @@ import axios from "axios";
 import api from "../../service/api";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa6";
+import { GlobalContext } from "./context/Store";
 
 export default function Login({
   setIsCloseTelaLogin,
 }: {
   setIsCloseTelaLogin: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { setUserId } = React.useContext(GlobalContext);
+
   const obj = React.useRef({
     userName: "",
     senha: "",
   });
 
-  const [isLogin, setIsLogin] = React.useState(false);
+  const [isLogin, setIsLogin] = React.useState(true);
   const [isSenhaVisivel, setIsSenhaVisivel] = React.useState(false);
 
   const criarConta = async () => {
@@ -24,11 +27,6 @@ export default function Login({
       const res = await api.post("/createUser", obj.current);
 
       if ((res.status = 200)) alert("Conta criada com sucesso!");
-
-      setIsCloseTelaLogin(true);
-
-      // obj.current.userName = "";
-      // obj.current.senha = "";
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         alert(error.response.data.error);
@@ -42,6 +40,7 @@ export default function Login({
     try {
       const res = await api.post("/login", obj.current);
       alert(res.data.message);
+      setUserId(res.data.id);
       setIsCloseTelaLogin(true);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
