@@ -30,6 +30,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { useRouter } from "next/navigation";
 
 type Backup = {
   id: number;
@@ -46,6 +47,7 @@ type Backup = {
 };
 
 export const Tarefas = () => {
+  const router = useRouter();
   const {
     Filtro,
     isOpenModal,
@@ -59,6 +61,7 @@ export const Tarefas = () => {
     setIsOpenModalTarefaDinamica,
     setModoTarefas,
     useId,
+    setUserId,
   } = useContext(GlobalContext);
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true);
@@ -73,7 +76,7 @@ export const Tarefas = () => {
 
   const [backupData, setBackupData] = useState<Backup[]>([]);
 
-  const [textDropdown, setTextDropdown] = useState("");
+  const [textDropdown, setTextDropdown] = useState("Selecione algo");
 
   const inputEditListName = useRef<HTMLInputElement>(null);
 
@@ -248,7 +251,7 @@ export const Tarefas = () => {
                   >
                     Criar uma lista de tarefa
                   </button>
-                  {useId && (
+                  {useId ? (
                     <Button
                       className="bg-green-600 w-56 ml-5"
                       variant="contained"
@@ -257,10 +260,33 @@ export const Tarefas = () => {
                     >
                       Carregar Backup
                     </Button>
+                  ) : (
+                    <Button
+                      className="bg-red-600 w-56 ml-5"
+                      variant="contained"
+                      color="error"
+                      onClick={() => router.push("/pages/criarUsuario")}
+                    >
+                      Criar um usuário
+                    </Button>
+                  )}
+
+                  {useId && (
+                    <Button
+                      className="bg-red-600 w-56 ml-5"
+                      variant="contained"
+                      color="error"
+                      onClick={() => {
+                        localStorage.removeItem("userId");
+                        setUserId(null);
+                      }}
+                    >
+                      Deslogar
+                    </Button>
                   )}
                 </div>
 
-                <div className="bg-[#373737] h-[33rem] md:h-[47rem] overflow-auto">
+                <div className="bg-[#373737] ">
                   {modoTarefas.map((item) => {
                     const validation =
                       item.nomeGrupoTarefa !== "Todas as tarefas" &&

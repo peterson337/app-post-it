@@ -83,34 +83,14 @@ export const GlobalContextProvider = ({
     },
   ]);
 
-  const [useId, setUserId] = useState(null);
+  const [useId, setUserId] = useState<null | string>(null);
   const [reRender, setReRender] = useState(false);
-
-  // const recoverTasksDataBase = async () => {
-  //   console.log("Inívio da função");
-  //   const res = await api.get(`/recover-tasks/${useId}`);
-  //   //? res.data.message - MENSDAGE PARA SER EXIBIDA NO TOAST
-
-  //   //prettier-ignore
-  //   const findArrayTasksById = res.data.tasks.filter((item: Tasks) => item.idListTask === Filtro);
-
-  //   for (const items of findArrayTasksById) {
-  //     const listTasks = modoTarefas.filter((item) => item.id === Filtro)[0];
-  //     listTasks.tasks.push(items);
-  //     setReRender((prev) => !prev);
-  //     console.log("For");
-  //   }
-  //   console.log("Final da função");
-  // };
-
-  // useEffect(() => {
-  //   if (useId) recoverTasksDataBase();
-  // }, [modoTarefas]);
 
   useEffect(() => {
     const data = localStorage.getItem("tarefas");
     const dataFavoritas = localStorage.getItem("tarefasFavoritas");
     const recuperarColecaoTarefa = localStorage.getItem("colecaoTarefas");
+    const userId = localStorage.getItem("userId");
 
     if (data) {
       setTarefas(JSON.parse(data));
@@ -120,6 +100,10 @@ export const GlobalContextProvider = ({
     }
     if (recuperarColecaoTarefa) {
       setModoTarefas(JSON.parse(recuperarColecaoTarefa));
+    }
+
+    if (userId) {
+      setUserId(userId as string);
     }
   }, []);
 
