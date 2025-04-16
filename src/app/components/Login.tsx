@@ -17,6 +17,12 @@ export default function Login() {
   const [isLogin, setIsLogin] = React.useState(true);
 
   const criarConta = async () => {
+     //prettier-ignore
+    if (obj.current.userName !== "pessoal" && obj.current.userName !== "trabalho") {
+      alert("Você não está autorizado para criar um usuário.");
+      return;
+    }
+
     try {
       const res = await api.post("/createUser", obj.current);
 
