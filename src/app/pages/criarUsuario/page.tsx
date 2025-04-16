@@ -2,11 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import { Principal } from "./components/Principal";
-export default function Home() {
+import Login from "../../components/Login";
+export default function Page() {
   return (
     <main>
-      <Principal />
+      <Login />
     </main>
   );
 }

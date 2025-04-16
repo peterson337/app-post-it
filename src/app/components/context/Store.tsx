@@ -2,6 +2,16 @@
 
 import { Children, createContext, useState, useEffect } from "react";
 import { Types, Tarefas, ModoTarefa } from "./ts/types";
+import api from "../../../service/api";
+
+export type Tasks = {
+  id: number;
+  nomeTarefa: string;
+  completed: boolean;
+  color: string;
+  colorText: boolean;
+  idListTask?: number;
+};
 
 export const GlobalContext = createContext<Types>({
   IsModalEditarTarefa: false,
@@ -39,6 +49,8 @@ export const GlobalContext = createContext<Types>({
   setModoTarefas: () => {},
   isOpenModalTarefaDinamica: false,
   setIsOpenModalTarefaDinamica: () => {},
+  useId: null,
+  setUserId: () => {},
 });
 
 export const GlobalContextProvider = ({
@@ -71,10 +83,14 @@ export const GlobalContextProvider = ({
     },
   ]);
 
+  const [useId, setUserId] = useState<null | string>(null);
+  const [reRender, setReRender] = useState(false);
+
   useEffect(() => {
     const data = localStorage.getItem("tarefas");
     const dataFavoritas = localStorage.getItem("tarefasFavoritas");
     const recuperarColecaoTarefa = localStorage.getItem("colecaoTarefas");
+    const userId = localStorage.getItem("userId");
 
     if (data) {
       setTarefas(JSON.parse(data));
@@ -85,6 +101,10 @@ export const GlobalContextProvider = ({
     if (recuperarColecaoTarefa) {
       setModoTarefas(JSON.parse(recuperarColecaoTarefa));
     }
+
+    if (userId) {
+      setUserId(userId as string);
+    }
   }, []);
 
   const handleChandeTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -92,9 +112,11 @@ export const GlobalContextProvider = ({
   };
 
   const excluirTarefas = (id: number | null) => {
-      const deletarTarefa = tarefas.filter((val) => id? val.id != id : val.completed === false);
-      setTarefas(deletarTarefa);
-      localStorage.setItem("tarefas", JSON.stringify(deletarTarefa));
+    const deletarTarefa = tarefas.filter((val) =>
+      id ? val.id != id : val.completed === false
+    );
+    setTarefas(deletarTarefa);
+    localStorage.setItem("tarefas", JSON.stringify(deletarTarefa));
   };
   const excluirTarefasFavorita = (id: number) => {
     const deletarTarefa = tarefasFavoritas.filter((val) => val.id != id);
@@ -208,6 +230,8 @@ export const GlobalContextProvider = ({
         excluirTarefasFavorita,
         desfavoritarTarefa,
         handleChandeTab,
+        useId,
+        setUserId,
       }}
     >
       {children}
