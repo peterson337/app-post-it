@@ -247,7 +247,6 @@ const TaskCard = ({
                     }
                     className="border-none rounded-full"
                   />
-                  <p>Mudar a cor do post it</p>
                 </MenuItem>
 
                 <MenuItem
@@ -264,10 +263,6 @@ const TaskCard = ({
                   <button className="text-2xl">
                     <AiOutlineFontColors />
                   </button>
-                  <p>
-                    Mudar a cor do texto e dos iconis{" "}
-                    {item.colorText ? "branco" : "preto"}
-                  </p>
                 </MenuItem>
               </div>
             </Menu>

@@ -14,7 +14,7 @@ import ListItem from "@mui/material/ListItem";
 import { TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import { FaPen } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { IoArrowDown } from "react-icons/io5";
+import { IoMdMore } from "react-icons/io";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -111,6 +111,8 @@ export const Tarefas = () => {
   };
   const handleClose = (result: String, id: number) => {
     if (result === "excluir") {
+      if (id === Filtro) setFiltro(0);
+
       const findFilter = modoTarefas.findIndex((item) => item.id === id);
       modoTarefas.splice(findFilter, 1);
       setModoTarefas([...modoTarefas]);
@@ -148,7 +150,9 @@ export const Tarefas = () => {
   };
 
   const formatNomeGrupoTarefa = (nome: string) =>
-    nome.length > 20 ? nome.substring(0, 10) + "..." : nome;
+    nome.length > 17 && nome !== "Lista de compra 🛒"
+      ? nome.substring(0, 15) + "..."
+      : nome;
 
   const backup = async (backupData: Backup) => {
     const res = await api.post(`/backup/${useId}`, backupData);
@@ -172,6 +176,7 @@ export const Tarefas = () => {
       if (modoTarefas.filter((item) => item.id === listaTarefasEscolhida.id).length === 0) {
        modoTarefas.push(listaTarefasEscolhida);
        setModalBackup(false);
+       localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
      } else {
        //prettier-ignore
        alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup")
@@ -203,12 +208,12 @@ export const Tarefas = () => {
           </DialogContentText>
           <Select
             labelId="demo-simple-select-standard-label"
+            className="w-[100%]"
             id="demo-simple-select-standard"
             value={textDropdown}
             onChange={(e) => setTextDropdown(e.target.value)}
             input={<OutlinedInput label="Name" />}
             label="Selecione o nome de uma lista de tarefa"
-            // MenuProps={MenuProps}
           >
             {backupData.map((item) => (
               <MenuItem
@@ -300,7 +305,7 @@ export const Tarefas = () => {
                             : editTitleTask === item.id
                             ? "justify-center items-center gap-2"
                             : "hover:bg-white/20"
-                        } cursor-pointer  mb-3 rounded-lg`}
+                        } mx-2 cursor-pointer  mb-3 rounded-lg`}
                         key={item.id}
                       >
                         {editTitleTask === item.id ? (
@@ -330,22 +335,15 @@ export const Tarefas = () => {
                         <></>
                         {validation && (
                           <div className="flex justify-end items-center ml-2 flex-row gap-3 text-2xl mr-4">
-                            <Button
-                              id="basic-button"
-                              aria-controls={
-                                anchorEls[item.id] ? "basic-menu" : undefined
-                              }
-                              aria-haspopup="true"
-                              aria-expanded={
-                                anchorEls[item.id] ? "true" : undefined
-                              }
+                            <div
+                              className="bg-black hover:bg-slate-700  rounded-full p-1"
                               onClick={(event: any) =>
                                 handleClick(event, item.id)
                               }
-                              className="bg-black hover:bg-slate-700"
                             >
-                              <IoArrowDown className={` text-white`} />
-                            </Button>
+                              <IoMdMore className={`text-white text-[20px] `} />
+                            </div>
+
                             <Menu
                               id="basic-menu"
                               anchorEl={anchorEls[item.id]}
