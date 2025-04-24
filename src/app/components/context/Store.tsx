@@ -72,7 +72,7 @@ export const GlobalContextProvider = ({
   const [modoTarefas, setModoTarefas] = useState<ModoTarefa[]>([
     {
       id: 0,
-      nomeGrupoTarefa: "Todas as tarefas",
+      nomeGrupoTarefa: "Tarefas de Trabalho",
       tasks: [],
     },
 

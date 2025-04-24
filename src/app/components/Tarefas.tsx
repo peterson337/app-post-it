@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { GlobalContext } from "./context/Store";
-import { Modal } from "../components/Modal";
 import { CardComponent } from "../components/CardComponent";
 import { ModalCreateTypeTask } from "../components/ModalCreateTypeTask";
 import Fab from "@mui/material/Fab";
@@ -90,11 +89,9 @@ export const Tarefas = () => {
 
   const handleKeyPress = (event: any) => {
     if (event.ctrlKey && event.key === "m") {
-      setISOpenModalCreateTareas(true);
+      setIsOpenModalTarefaDinamica(true);
     } else if (event.ctrlKey && event.key === ",") {
       setIsOpenModal(true);
-    } else if (event.ctrlKey && event.key === ";") {
-      setIsOpenModalTarefaDinamica(true);
     }
   };
 
@@ -293,10 +290,9 @@ export const Tarefas = () => {
 
                 <div className="bg-[#373737] ">
                   {modoTarefas.map((item) => {
-                    const validation =
-                      item.nomeGrupoTarefa !== "Todas as tarefas" &&
-                      item.nomeGrupoTarefa !== "Todas favoritas" &&
-                      item.nomeGrupoTarefa !== "Lista de compra 🛒";
+                    //prettier-ignore
+                    const validation = item.id !== 2;
+
                     return (
                       <div
                         className={`flex flex-row ${

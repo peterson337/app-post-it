@@ -23,7 +23,17 @@ export const ModalTarefaDinamica = ({
 }: T) => {
   const [taks, setTaks] = useState("");
 
+  const [reRender, setReRender] = useState(false);
+
   const { setModoTarefas, modoTarefas, Filtro } = useContext(GlobalContext);
+
+  document.getElementById("outlined-basic")?.focus();
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setReRender(!reRender);
+    }, 300);
+  }, []);
 
   const salvarTarefa = () => {
     if (taks === "") {
@@ -53,14 +63,13 @@ export const ModalTarefaDinamica = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style} className="rounded-xl w-[22rem] md:w-96">
+      <Box sx={style} className="rounded-xl w-[22rem] md:w-96 outline-none">
         <div className="flex flex-col  justify-center">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Tarefas
+            Criar Tarefas
           </Typography>
 
           <TextField
-            autoFocus
             value={taks}
             id="outlined-basic"
             label="Escreva o nome da tarefa"
