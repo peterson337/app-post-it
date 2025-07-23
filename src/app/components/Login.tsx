@@ -1,55 +1,67 @@
-"use client";
 import React from "react";
 import Button from "@mui/material/Button";
-import axios from "axios";
-import api from "../../service/api";
-import { GlobalContext } from "./context/Store";
-import { useRouter } from "next/navigation";
+import { Params } from "../components/ts/loginTypes";
+import Link from "next/link";
+import { cookies } from "next/headers";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
-export default function Login() {
-  const { setUserId } = React.useContext(GlobalContext);
-  const router = useRouter();
+export default async function Login(props: Params) {
+  "use server";
+  const { params } = props;
 
-  const obj = React.useRef({
-    userName: "",
-  });
+  const criarConta = async () => {};
 
-  const [isLogin, setIsLogin] = React.useState(true);
+  const login = async (formData: FormData) => {
+    "use server";
+    const cookieStore = await cookies();
+    const obj = {
+      nome: formData.get("nome"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      validation: formData.get("validation"),
+    };
 
-  const criarConta = async () => {
-     //prettier-ignore
-    if (obj.current.userName !== "pessoal" && obj.current.userName !== "trabalho") {
-      alert("Você não está autorizado para criar um usuário.");
-      return;
-    }
+    console.log(obj.validation);
 
-    try {
-      const res = await api.post("/createUser", obj.current);
+    const validation =
+      obj.validation === "login"
+        ? signInWithEmailAndPassword(auth, obj.email, obj.password)
+        : createUserWithEmailAndPassword(auth, obj.email, obj.password);
+    //prettier-ignore
+    validation.then((userCredential) => {
+        const user = userCredential.user;
+        console.log("ID: ", user.uid);
 
-      if ((res.status = 200)) alert("Conta criada com sucesso!");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        alert(error.response.data.error);
-      } else {
-        console.error("An unexpected error occurred:", error);
-      }
-    }
-  };
+        cookieStore.set({
+          name: "userId",
+          value: JSON.stringify(user.uid),
+          httpOnly: true,
+          path: "/",
+        });
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // ..
+      });
 
-  const login = async () => {
-    try {
-      const res = await api.post("/login", obj.current);
-      alert(res.data.message);
-      setUserId(res.data.id);
-      localStorage.setItem("userId", res.data.id);
-      router.push("/");
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        alert(error.response.data.error);
-      } else {
-        console.error("An unexpected error occurred:", error);
-      }
-    }
+    // try {
+    //   const res = await api.post("/login", obj.current);
+    //   alert(res.data.message);
+    //   setUserId(res.data.id);
+    //   localStorage.setItem("userId", res.data.id);
+    //   router.push("/");
+    // } catch (error) {
+    //   if (axios.isAxiosError(error) && error.response) {
+    //     alert(error.response.data.error);
+    //   } else {
+    //     console.error("An unexpected error occurred:", error);
+    //   }
+    // }
   };
 
   return (
@@ -65,34 +77,50 @@ export default function Login() {
           <h2 className="text-center text-2xl">App post it 😎</h2>
 
           <h2 className="text-center text-2xl">
-            {isLogin ? "Login" : "Crie a sua conta"}
+            {params.slug === "login" ? "Login" : "Crie a sua conta"}
           </h2>
 
           <div className="flex flex-col gap-2">
-            <h3>Digite seu nome</h3>
-            <input
-              type="text"
-              placeholder="seu nome"
-              className="p-3 bg-black rounded-full outline-none"
-              onChange={(e) => (obj.current.userName = e.target.value)}
-            />
+            <form action={login}>
+              <h3>Digite seu email</h3>
+              <input
+                type="text"
+                placeholder="Email"
+                className="p-3 bg-black rounded-full outline-none"
+                name="email"
+              />
 
-            <Button
-              variant="contained"
-              className="bg-sky-500"
-              onClick={isLogin ? login : criarConta}
-            >
-              {isLogin ? "Logar" : "Crie o seu usuário"}
-            </Button>
+              <h3>Digite sua senha</h3>
+              <input
+                type="text"
+                placeholder="Senha"
+                className="p-3 bg-black rounded-full outline-none"
+                name="password"
+              />
 
-            <p
+              <input
+                type="text"
+                placeholder="Senha"
+                className="hidden"
+                name="validation"
+                value={params.slug === "login" ? "login" : "criarUsuario"}
+              />
+
+              <Button variant="contained" className="bg-sky-500" type="submit">
+                {params.slug === "login" ? "Logar" : "Crie o seu usuário"}
+              </Button>
+            </form>
+
+            <Link
               className="cursor-pointer text-center  hover:text-sky-700"
-              onClick={() => setIsLogin((prev) => !prev)}
+              href={
+                params.slug === "login" ? "/pages/criarUsuario" : "/pages/login"
+              }
             >
-              {!isLogin
+              {params.slug === "login"
                 ? "Ja possui um usuário? clique aqui"
                 : "Não possui um usuário? clique aqui"}
-            </p>
+            </Link>
           </div>
         </div>
       </section>
