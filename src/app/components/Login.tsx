@@ -8,16 +8,30 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { redirect } from "next/navigation";
 
 export default async function Login(props: Params) {
   "use server";
   const { params } = props;
 
-  const criarConta = async () => {};
+  if (params.slug === "logout") {
+    ("use server");
+    const cookieStore = cookies();
+    cookieStore.delete("userID");
+    // redirect("/");
+  }
+
+  const logout = async () => {
+    "use server";
+    const res = await fetch("http://localhost:3000/api/", {
+      method: "GET",
+    });
+    console.log(res);
+  };
 
   const login = async (formData: FormData) => {
     "use server";
-    const cookieStore = await cookies();
+    const cookieStore = cookies();
     const obj = {
       nome: formData.get("nome"),
       email: formData.get("email"),
@@ -25,45 +39,32 @@ export default async function Login(props: Params) {
       validation: formData.get("validation"),
     };
 
-    console.log(obj.validation);
-
     const validation =
       obj.validation === "login"
-        ? signInWithEmailAndPassword(auth, obj.email, obj.password)
-        : createUserWithEmailAndPassword(auth, obj.email, obj.password);
-    //prettier-ignore
-    validation.then((userCredential) => {
-        const user = userCredential.user;
-        console.log("ID: ", user.uid);
+        ? signInWithEmailAndPassword(
+            auth,
+            String(obj.email),
+            String(obj.password)
+          )
+        : createUserWithEmailAndPassword(
+            auth,
+            String(obj.email),
+            String(obj.password)
+          );
 
-        cookieStore.set({
-          name: "userId",
-          value: JSON.stringify(user.uid),
-          httpOnly: true,
-          path: "/",
-        });
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        // ..
+    try {
+      const userCredential = await validation;
+      cookieStore.set("userID", userCredential.user.uid, {
+        secure: true,
+        httpOnly: true,
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        sameSite: "strict",
       });
+    } catch (error) {}
 
-    // try {
-    //   const res = await api.post("/login", obj.current);
-    //   alert(res.data.message);
-    //   setUserId(res.data.id);
-    //   localStorage.setItem("userId", res.data.id);
-    //   router.push("/");
-    // } catch (error) {
-    //   if (axios.isAxiosError(error) && error.response) {
-    //     alert(error.response.data.error);
-    //   } else {
-    //     console.error("An unexpected error occurred:", error);
-    //   }
-    // }
+    if (cookieStore.get("userID")) redirect("/");
   };
-
   return (
     <>
       <section
@@ -74,20 +75,21 @@ export default async function Login(props: Params) {
           className="bg-[#373737] flex flex-col p-5 rounded-2xl"
           style={{ width: "20rem" }}
         >
-          <h2 className="text-center text-2xl">App post it 😎</h2>
+          {/* <h2 className="text-center text-2xl">App post it 😎</h2> */}
 
-          <h2 className="text-center text-2xl">
+          <h2 className="text-center text-2xl border-b-2 border-white mb-5 pb-5">
             {params.slug === "login" ? "Login" : "Crie a sua conta"}
           </h2>
 
-          <div className="flex flex-col gap-2">
-            <form action={login}>
+          <div>
+            <form action={login} className="flex flex-col gap-2">
               <h3>Digite seu email</h3>
               <input
                 type="text"
                 placeholder="Email"
                 className="p-3 bg-black rounded-full outline-none"
                 name="email"
+                required={true}
               />
 
               <h3>Digite sua senha</h3>
@@ -96,6 +98,7 @@ export default async function Login(props: Params) {
                 placeholder="Senha"
                 className="p-3 bg-black rounded-full outline-none"
                 name="password"
+                required={true}
               />
 
               <input
@@ -103,13 +106,17 @@ export default async function Login(props: Params) {
                 placeholder="Senha"
                 className="hidden"
                 name="validation"
+                required={true}
                 value={params.slug === "login" ? "login" : "criarUsuario"}
+                readOnly
               />
 
               <Button variant="contained" className="bg-sky-500" type="submit">
                 {params.slug === "login" ? "Logar" : "Crie o seu usuário"}
               </Button>
             </form>
+
+            <br />
 
             <Link
               className="cursor-pointer text-center  hover:text-sky-700"

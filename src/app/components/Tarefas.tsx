@@ -30,6 +30,7 @@ import DialogActions from "@mui/material/DialogActions";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useRouter } from "next/navigation";
+import { actions } from "../actions";
 
 type Backup = {
   id: number;
@@ -279,8 +280,8 @@ export const Tarefas = () => {
                       variant="contained"
                       color="error"
                       onClick={() => {
-                        localStorage.removeItem("userId");
                         setUserId(null);
+                        actions();
                       }}
                     >
                       Deslogar

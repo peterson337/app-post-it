@@ -83,7 +83,7 @@ export const GlobalContextProvider = ({
     },
   ]);
 
-  const [useId, setUserId] = useState<null | string>(null);
+  const [useId, setUserId] = useState<null | string | undefined>(null);
   const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
