@@ -14,21 +14,6 @@ export default async function Login(props: Params) {
   "use server";
   const { params } = props;
 
-  if (params.slug === "logout") {
-    ("use server");
-    const cookieStore = cookies();
-    cookieStore.delete("userID");
-    // redirect("/");
-  }
-
-  const logout = async () => {
-    "use server";
-    const res = await fetch("http://localhost:3000/api/", {
-      method: "GET",
-    });
-    console.log(res);
-  };
-
   const login = async (formData: FormData) => {
     "use server";
     const cookieStore = cookies();
