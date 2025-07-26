@@ -71,6 +71,8 @@ export const Tarefas = () => {
 
   const inputEditListName = useRef<HTMLInputElement>(null);
 
+  const [deleteBackupMode, setDeleteBackupMode] = useState(false);
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
 
@@ -153,7 +155,7 @@ export const Tarefas = () => {
       ? nome.substring(0, 15) + "..."
       : nome;
 
-  const saveInDatabase = async (listTaskSelected: any) => {
+  const saveInDatabase = async (listTaskSelected: any, type?: string) => {
     try {
       const idUser = await recuperarIdUser();
       //prettier-ignore
@@ -163,7 +165,7 @@ export const Tarefas = () => {
         listTasksTodo: listTaskSelected.length? listTaskSelected : [...backupData, listTaskSelected],
       });
       recuperarTasksBackUp();
-      alert("Backup criado com sucesso");
+      alert(type ? "Backup deletado com sucesso" : "Backup salvo com sucesso");
     } catch (error) {
       // console.error("Erro ao salvar no Firestore:", error);
     }
@@ -192,8 +194,17 @@ export const Tarefas = () => {
        
        //prettier-ignore
     } else {
-      alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup");
-      return;
+      const backupUpdate = backupData.map((item) => {
+        if(item.id === listTaskSelected.id){
+          item.tasks = listTaskSelected.tasks;
+        }
+        return item
+       })
+
+       saveInDatabase(backupUpdate);
+
+      // alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup");
+      // return;
     }
   };
 
@@ -221,6 +232,18 @@ export const Tarefas = () => {
     }
   };
 
+  const deletarBackup = (listaTarefasEscolhida: Backup) => {
+    if (useId) {
+      const confirm = window.confirm("Deseja realmente deletar esse backup?");
+
+      if (!confirm) return;
+      //prettier-ignore
+      const backupDeleted = backupData.filter((item) => item.id !== listaTarefasEscolhida.id);
+
+      saveInDatabase(backupDeleted, "deletar");
+    }
+  };
+
   return (
     <main className="md:flex md:flex-col md:h-[100vh] md:justify-between  ">
       {/* Tamanho do mnitor gande 1920 */}
@@ -237,10 +260,12 @@ export const Tarefas = () => {
         onClose={() => setModalBackup(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Carregar backup</DialogTitle>
+        <DialogTitle>
+          {deleteBackupMode ? "Deletar backup" : "Carregar backup"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Escolha o nome da tarefa no dropdown abaixo.
+            Escolha o nome da lista de tarefa no dropdown abaixo.
           </DialogContentText>
           <Select
             labelId="demo-simple-select-standard-label"
@@ -262,12 +287,23 @@ export const Tarefas = () => {
               <MenuItem
                 key={item.id}
                 value={item.nomeGrupoTarefa}
-                onClick={() => carregarBackup(item)}
+                onClick={() =>
+                  deleteBackupMode ? deletarBackup(item) : carregarBackup(item)
+                }
               >
                 {item.nomeGrupoTarefa}
               </MenuItem>
             ))}
           </Select>
+          <div className="mt-3 text-center">
+            <Button
+              variant="contained"
+              color={!deleteBackupMode ? "error" : "success"}
+              onClick={() => setDeleteBackupMode((prev) => !prev)}
+            >
+              {!deleteBackupMode ? "Deletar backup" : "Recuperar backup"}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
