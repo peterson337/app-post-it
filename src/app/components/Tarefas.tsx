@@ -112,14 +112,24 @@ export const Tarefas = () => {
         alert("Escreva o nome da sua lista de tarefa para usar este botão");
         return;
       } else {
-        modoTarefas.map(
-          (item) => item.id === id && (item.nomeGrupoTarefa = newTask)
-        );
+        //prettier-ignore
+        modoTarefas.map((item) => item.id === id && (item.nomeGrupoTarefa = newTask));
         setModoTarefas([...modoTarefas]);
-        localStorage.setItem(
-          "colecaoTarefas",
-          JSON.stringify([...modoTarefas])
-        );
+        //prettier-ignore
+        localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
+
+        //prettier-ignore
+
+        const test =   backupData.map((item) => {
+            if(item.id === id){
+               item.nomeGrupoTarefa = newTask;
+            }
+
+            return item
+            })
+
+        saveInDatabase(test);
+
         setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
         setEditTitleTask(null);
       }
@@ -143,23 +153,45 @@ export const Tarefas = () => {
       ? nome.substring(0, 15) + "..."
       : nome;
 
-  const backup = async (/*backupData: Backup*/) => {
-    //? const res = await api.post(`/backup/${useId}`, backupData);
-    //? alert(res.data.message);
-
+  const saveInDatabase = async (listTaskSelected: any) => {
     try {
       const idUser = await recuperarIdUser();
-      const docRef = doc(
-        db,
-        "listTasksTodo",
-        String(idUser),
-        "backup",
-        "dados"
-      );
-      await setDoc(docRef, { listTasksTodo: modoTarefas });
+      //prettier-ignore
+      const docRef = doc(db, "listTasksTodo", String(idUser), "backup", "dados");
+      await setDoc(docRef, {
+        //prettier-ignore
+        listTasksTodo: listTaskSelected.length? listTaskSelected : [...backupData, listTaskSelected],
+      });
+      recuperarTasksBackUp();
       alert("Backup criado com sucesso");
     } catch (error) {
       // console.error("Erro ao salvar no Firestore:", error);
+    }
+  };
+
+  const recuperarTasksBackUp = async () => {
+    const idUser = await recuperarIdUser();
+    //prettier-ignore
+    const querySnapshot = await getDocs(collection(db, "listTasksTodo", String(idUser),"backup"));
+    //prettier-ignore
+    querySnapshot.forEach((doc) => setBackupData(doc.data().listTasksTodo));
+  };
+
+  const backup = async (listTaskSelected: Backup) => {
+    //? const res = await api.post(`/backup/${useId}`, backupData);
+    //? alert(res.data.message);
+
+    //prettier-ignore
+    if (backupData.filter((item) => item.id === listTaskSelected.id).length === 0) {
+    
+      saveInDatabase(listTaskSelected);
+
+      recuperarTasksBackUp();
+       
+       //prettier-ignore
+    } else {
+      alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup");
+      return;
     }
   };
 
@@ -167,12 +199,7 @@ export const Tarefas = () => {
     //? const res = await api.get(`/carregar-backup/${useId}`);
     //? setBackupData(res.data.tasks);
     if (useId) {
-      const idUser = await recuperarIdUser();
-      //prettier-ignore
-      const querySnapshot = await getDocs(collection(db, "listTasksTodo", String(idUser),"backup"));
-      //prettier-ignore
-      querySnapshot.forEach((doc) => setBackupData(doc.data().listTasksTodo));
-
+      recuperarTasksBackUp();
       setModalBackup(true);
     }
   };
@@ -394,8 +421,8 @@ export const Tarefas = () => {
                                           ...prev,
                                           [selectedId!]: null,
                                         }));
-                                        backup();
-                                        //? backup(item as Backup);
+                                        // backup();
+                                        backup(item as Backup);
                                       }}
                                     >
                                       Realizar backup da lista de tarefa
