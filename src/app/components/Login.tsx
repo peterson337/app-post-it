@@ -9,6 +9,43 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { redirect } from "next/navigation";
+//? import { GlobalContext } from "./context/Store";
+
+  //? const criarConta = async () => {
+  //?    prettier-ignore
+  //?   if (obj.current.userName !== "pessoal" && obj.current.userName !== "trabalho") {
+  //?     alert("Você não está autorizado para criar um usuário.");
+  //?     return;
+  //?   }
+
+  //?   try {
+  //?     const res = await api.post("/createUser", obj.current);
+
+  //?     if ((res.status = 200)) alert("Conta criada com sucesso!");
+  //?   } catch (error) {
+  //?     if (axios.isAxiosError(error) && error.response) {
+  //?       alert(error.response.data.error);
+  //?     } else {
+  //?       console.error("An unexpected error occurred:", error);
+  //?     }
+  //?   }
+  //? };
+
+  //? const login = async () => {
+  //?   try {
+  //?     const res = await api.post("/login", obj.current);
+  //?     alert(res.data.message);
+  //?     setUserId(res.data.id);
+  //?     localStorage.setItem("userId", res.data.id);
+  //?     router.push("/");
+  //?   } catch (error) {
+  //?     if (axios.isAxiosError(error) && error.response) {
+  //?       alert(error.response.data.error);
+  //?     } else {
+  //?       console.error("An unexpected error occurred:", error);
+  //?     }
+  //?   }
+  //? };
 
 export default async function Login(props: Params) {
   "use server";

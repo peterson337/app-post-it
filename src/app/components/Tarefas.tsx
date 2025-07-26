@@ -79,7 +79,7 @@ export const Tarefas = () => {
     };
   }, []);
 
-  const handleKeyPress = (event: any) => {
+  const handleKeyPress = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === "m") {
       setIsOpenModalTarefaDinamica(true);
     } else if (event.ctrlKey && event.key === ",") {
@@ -208,7 +208,7 @@ export const Tarefas = () => {
         onClose={() => setModalBackup(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Carrgar backup</DialogTitle>
+        <DialogTitle>Carregar backup</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Escolha o nome da tarefa no dropdown abaixo.
@@ -222,6 +222,13 @@ export const Tarefas = () => {
             input={<OutlinedInput label="Name" />}
             label="Selecione o nome de uma lista de tarefa"
           >
+            <MenuItem
+              value={"Selecione algo"}
+              selected
+              style={{ display: "none" }}
+            >
+              Selecione algo
+            </MenuItem>
             {backupData.map((item) => (
               <MenuItem
                 key={item.id}
@@ -388,6 +395,7 @@ export const Tarefas = () => {
                                           [selectedId!]: null,
                                         }));
                                         backup();
+                                        //? backup(item as Backup);
                                       }}
                                     >
                                       Realizar backup da lista de tarefa
