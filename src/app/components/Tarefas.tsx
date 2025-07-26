@@ -177,6 +177,8 @@ export const Tarefas = () => {
     querySnapshot.forEach((doc) => setBackupData(doc.data().listTasksTodo));
   };
 
+  useEffect(() => void recuperarTasksBackUp(), []);
+
   const backup = async (listTaskSelected: Backup) => {
     //? const res = await api.post(`/backup/${useId}`, backupData);
     //? alert(res.data.message);
