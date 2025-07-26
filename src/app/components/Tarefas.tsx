@@ -3,34 +3,26 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { GlobalContext } from "./context/Store";
 import { CardComponent } from "../components/CardComponent";
 import { ModalCreateTypeTask } from "../components/ModalCreateTypeTask";
-import Fab from "@mui/material/Fab";
-import { FaPlus } from "react-icons/fa";
-import { FaCartPlus } from "react-icons/fa";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import { TbLayoutSidebarLeftExpand } from "react-icons/tb";
-import { FaPen } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
 import { IoMdMore } from "react-icons/io";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
-import { IoIosSave } from "react-icons/io";
-import { IoMdCloseCircle } from "react-icons/io";
 import api from "../../service/api";
-import { style } from "../style/style";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useRouter } from "next/navigation";
-
+import { logout, recuperarIdUser } from "../actions";
+import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 type Backup = {
   id: number;
   nomeGrupoTarefa: string;
@@ -87,7 +79,7 @@ export const Tarefas = () => {
     };
   }, []);
 
-  const handleKeyPress = (event: any) => {
+  const handleKeyPress = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === "m") {
       setIsOpenModalTarefaDinamica(true);
     } else if (event.ctrlKey && event.key === ",") {
@@ -151,17 +143,35 @@ export const Tarefas = () => {
       ? nome.substring(0, 15) + "..."
       : nome;
 
-  const backup = async (backupData: Backup) => {
-    const res = await api.post(`/backup/${useId}`, backupData);
-    alert(res.data.message);
+  const backup = async (/*backupData: Backup*/) => {
+    //? const res = await api.post(`/backup/${useId}`, backupData);
+    //? alert(res.data.message);
+
+    try {
+      const idUser = await recuperarIdUser();
+      const docRef = doc(
+        db,
+        "listTasksTodo",
+        String(idUser),
+        "backup",
+        "dados"
+      );
+      await setDoc(docRef, { listTasksTodo: modoTarefas });
+      alert("Backup criado com sucesso");
+    } catch (error) {
+      // console.error("Erro ao salvar no Firestore:", error);
+    }
   };
 
-  useEffect(() => {}, []);
-
   const abrirModalBackup = async () => {
+    //? const res = await api.get(`/carregar-backup/${useId}`);
+    //? setBackupData(res.data.tasks);
     if (useId) {
-      const res = await api.get(`/carregar-backup/${useId}`);
-      setBackupData(res.data.tasks);
+      const idUser = await recuperarIdUser();
+      //prettier-ignore
+      const querySnapshot = await getDocs(collection(db, "listTasksTodo", String(idUser),"backup"));
+      //prettier-ignore
+      querySnapshot.forEach((doc) => setBackupData(doc.data().listTasksTodo));
 
       setModalBackup(true);
     }
@@ -198,7 +208,7 @@ export const Tarefas = () => {
         onClose={() => setModalBackup(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Carrgar backup</DialogTitle>
+        <DialogTitle>Carregar backup</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Escolha o nome da tarefa no dropdown abaixo.
@@ -212,6 +222,13 @@ export const Tarefas = () => {
             input={<OutlinedInput label="Name" />}
             label="Selecione o nome de uma lista de tarefa"
           >
+            <MenuItem
+              value={"Selecione algo"}
+              selected
+              style={{ display: "none" }}
+            >
+              Selecione algo
+            </MenuItem>
             {backupData.map((item) => (
               <MenuItem
                 key={item.id}
@@ -279,8 +296,8 @@ export const Tarefas = () => {
                       variant="contained"
                       color="error"
                       onClick={() => {
-                        localStorage.removeItem("userId");
                         setUserId(null);
+                        logout();
                       }}
                     >
                       Deslogar
@@ -377,7 +394,8 @@ export const Tarefas = () => {
                                           ...prev,
                                           [selectedId!]: null,
                                         }));
-                                        backup(item as Backup);
+                                        backup();
+                                        //? backup(item as Backup);
                                       }}
                                     >
                                       Realizar backup da lista de tarefa

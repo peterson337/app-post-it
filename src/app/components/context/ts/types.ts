@@ -32,8 +32,8 @@ export type Types = {
   setModoTarefas: Dispatch<SetStateAction<ModoTarefa[]>>;
   isOpenModalTarefaDinamica: boolean;
   setIsOpenModalTarefaDinamica: Dispatch<SetStateAction<boolean>>;
-  useId: null | string;
-  setUserId: Dispatch<SetStateAction<null | string>>;
+  useId: null | string | undefined;
+  setUserId: Dispatch<SetStateAction<null | string | undefined>>;
 };
 
 export type ModoTarefa = {

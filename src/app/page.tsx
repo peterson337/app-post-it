@@ -1,23 +1,14 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { Principal } from "./components/Principal";
-export default function Home() {
-  React.useEffect(() => {
-    const excluirListaPadrao = localStorage.getItem("tarefas");
+import { cookies } from "next/headers";
 
-    if (excluirListaPadrao) {
-      localStorage.removeItem("tarefas");
-      
-    }
-
-  }, [])
-  
+export default async function Home() {
+  const cookieStore = cookies();
 
   return (
     <main>
-      <Principal />
+      <Principal userId={cookieStore.get("userID")?.value} />
     </main>
   );
 }
