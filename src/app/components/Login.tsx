@@ -116,7 +116,7 @@ export default async function Login(props: Params) {
 
               <h3>Digite sua senha</h3>
               <input
-                type="text"
+                type="password"
                 placeholder="Senha"
                 className="p-3 bg-black rounded-full outline-none"
                 name="password"
