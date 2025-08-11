@@ -52,6 +52,9 @@ import { MaisOpcoes } from "./MaisOpcoes";
 import { FaPlus } from "react-icons/fa";
 
 import Fab from "@mui/material/Fab";
+import { Tasks as Tarefas } from "../components/context/ts/types";
+import TextField from "@mui/material/TextField";
+import { formatString } from "../hook/customHooks";
 
 export type Tasks = {
   id: number;
@@ -141,9 +144,9 @@ const TaskCard = ({
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   return (
-    <Box component="span" sx={{ transform: "scale(0.9)" }}>
+    <Box sx={{ transform: "scale(0.9)" }}>
       <Card
-        className={`md:w-[25rem] w-80 h-60 p-5 text-2xl`}
+        className={`md:w-[25rem] w-80 h-60 p-5 text-2xl rounded-[20px]`}
         ref={setNodeRef}
         style={style}
       >
@@ -298,10 +301,10 @@ export const TarefasDinamicas = () => {
   const [newTask, setNewTask] = useState<string>("");
   const [alert, setAlert] = useState<string>("");
   const [isOpenSnacker, setIsOpenSnacker] = useState(false);
-  const [filterTasks, setFilterTasks] = React.useState<boolean | string>(
-    "null"
-  );
+  //prettier-ignore
+  const [filterTasks, setFilterTasks] = React.useState<boolean | string>("null");
   const [tasksFiltered, setTasksFiltered] = React.useState([]);
+  const [textFilter, setTextFilter] = React.useState("");
 
   const finishOrEditTasks = (
     id: number,
@@ -426,6 +429,10 @@ export const TarefasDinamicas = () => {
     });
   };
 
+  const tasksByTextFilter = tasksFiltered.filter((item: Tarefas) =>
+    formatString(item.nomeTarefa).includes(formatString(textFilter))
+  );
+
   return (
     <>
       {isOpenModalTarefaDinamica && (
@@ -448,8 +455,7 @@ export const TarefasDinamicas = () => {
       </Snackbar>
 
       <section className="flex flex-col md:flex-row justify-center items-center gap-3 mb-2 md:mb-1">
-        {/*  */}
-
+        {/* Mobile */}
         <div className="lg:opacity-0">
           <Button
             variant="contained"
@@ -506,16 +512,27 @@ export const TarefasDinamicas = () => {
                 Desmarcar as tarefas
               </Button>
             </MenuItem>
+
+            {/* <MenuItem>
+              <TextField
+                id="standard-basic"
+                label="Standard"
+                variant="standard"
+                onChange={(e) => (textFilterRef.current = e.target.value)}
+              />
+            </MenuItem> */}
           </StyledMenu>
         </div>
 
-        <div className="hidden lg:block">
+        {/* Desktop */}
+        <div className="hidden lg:flex w-full  justify-center items-center  flex-row gap-4 ">
           <MaisOpcoes
             apagarTodasAsTarefasConcluidas={apagarTodasAsTarefasConcluidas}
             fecharMenuSuspenso={handleClose}
             filterTasks={filterTasks}
             setFilterTasks={setFilterTasks}
             defaultValue={"string"}
+            setTextFilter={setTextFilter}
           />
         </div>
       </section>
@@ -533,24 +550,45 @@ export const TarefasDinamicas = () => {
                   <SortableContext
                     items={tasksFiltered.map((item: any) => item.id)}
                   >
-                    <section className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-2 overflow-auto  md:h-[35rem]  h-[22rem] ">
-                      {tasksFiltered.map((item: any) => (
-                        <TaskCard
-                          key={item.id}
-                          item={item}
-                          finishOrEditTasks={finishOrEditTasks}
-                          setNewTask={setNewTask}
-                          setIsOpenModalEditTasks={setIsOpenModalEditTasks}
-                          setTest={setTest}
-                          val={val}
-                          id={item.id}
-                          isOpenModalEditTasks={isOpenModalEditTasks}
-                          test={test}
-                          newTask={newTask}
-                          setModoTarefas={setModoTarefas}
-                          modoTarefas={modoTarefas}
-                        />
-                      ))}
+                    <section
+                      //   className="
+                      //
+                      // "
+                      className={
+                        tasksByTextFilter.length > 2
+                          ? `pt-14 md:pt-0 content-center md:content-start grid 
+                        grid-cols-[repeat(auto-fit,minmax(22rem,1fr))] w-full
+                        md:h-[35rem]  h-[22rem]  overflow-auto`
+                          : `
+                        flex flex-row flex-wrap justify-center items-center
+                        md:justify-start md:items-start
+                       md:h-[35rem]  h-[22rem] overflow-auto 
+                        `
+                      }
+                    >
+                      {tasksByTextFilter.length > 0 ? (
+                        tasksByTextFilter.map((item: any) => (
+                          <TaskCard
+                            key={item.id}
+                            item={item}
+                            finishOrEditTasks={finishOrEditTasks}
+                            setNewTask={setNewTask}
+                            setIsOpenModalEditTasks={setIsOpenModalEditTasks}
+                            setTest={setTest}
+                            val={val}
+                            id={item.id}
+                            isOpenModalEditTasks={isOpenModalEditTasks}
+                            test={test}
+                            newTask={newTask}
+                            setModoTarefas={setModoTarefas}
+                            modoTarefas={modoTarefas}
+                          />
+                        ))
+                      ) : (
+                        <h3 className="text-red-500 md:text-2xl mt-3 font-bold text-center h-[calc(100vh-30rem)] w-full">
+                          Nenhuma tarefa encontrada.
+                        </h3>
+                      )}
                     </section>
                   </SortableContext>
                 </DndContext>
@@ -568,7 +606,7 @@ export const TarefasDinamicas = () => {
         </Fragment>
       ))}
 
-      <section className="w-[100%] flex justify-end mt-3">
+      <section className="w-[100%] flex justify-end mt-3 ">
         <Fab
           className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
               ${
@@ -578,6 +616,16 @@ export const TarefasDinamicas = () => {
         >
           <FaPlus />
         </Fab>
+
+        {/* <Fab
+        className={`bg-sky-500 hover:bg-sky-600  text-white   absolute bottom-3 right-3 
+              ${
+                tasksFiltered.length === 0 ? "xl:top-[520px] top-[250px]" : ""
+              } `}
+        onClick={() => setIsOpenModalTarefaDinamica(true)}
+      >
+        <FaPlus />
+      </Fab> */}
       </section>
     </>
   );

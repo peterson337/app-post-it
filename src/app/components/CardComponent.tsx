@@ -11,7 +11,7 @@ export const CardComponent = (props: any) => {
     <main className="flex justify-center  items-center">
       <section
         className={` bg-[#373737]  md:p-10 
-     md:w-[90rem] md:h-[51rem] h-[calc(100vh-6rem)]   m-5
+     md:w-full md:h-[51rem] h-[calc(100vh-6rem)]   m-5
      w-96 rounded-xl
      scrollbar-thin scrollbar-thumb-sky-500 
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
