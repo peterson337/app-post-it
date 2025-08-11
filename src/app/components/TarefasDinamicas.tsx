@@ -551,20 +551,9 @@ export const TarefasDinamicas = () => {
                     items={tasksFiltered.map((item: any) => item.id)}
                   >
                     <section
-                      //   className="
-                      //
-                      // "
-                      className={
-                        tasksByTextFilter.length > 2
-                          ? `pt-14 md:pt-0 content-center md:content-start grid 
-                        grid-cols-[repeat(auto-fit,minmax(22rem,1fr))] w-full
-                        md:h-[35rem]  h-[22rem]  overflow-auto`
-                          : `
-                        flex flex-row flex-wrap justify-center items-center
-                        md:justify-start md:items-start
-                       md:h-[35rem]  h-[22rem] overflow-auto 
-                        `
-                      }
+                      className={` md:content-start grid 
+                      grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
+                        md:h-[35rem]  h-[22rem]  overflow-auto place-items-center `}
                     >
                       {tasksByTextFilter.length > 0 ? (
                         tasksByTextFilter.map((item: any) => (
