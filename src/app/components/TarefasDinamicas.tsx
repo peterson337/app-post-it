@@ -493,14 +493,6 @@ export const TarefasDinamicas = () => {
               </Button>
             </MenuItem>
             <MenuItem disableRipple>
-              <SelectFilterTasks
-                fecharMenuSuspenso={handleClose}
-                filterTasks={filterTasks}
-                setFilterTasks={setFilterTasks}
-                defaultValue={"Selecione um opção"}
-              />
-            </MenuItem>
-            <MenuItem disableRipple>
               <Button
                 variant="contained"
                 onClick={() => {
@@ -512,15 +504,35 @@ export const TarefasDinamicas = () => {
                 Desmarcar as tarefas
               </Button>
             </MenuItem>
-
-            {/* <MenuItem>
-              <TextField
-                id="standard-basic"
-                label="Standard"
-                variant="standard"
-                onChange={(e) => (textFilterRef.current = e.target.value)}
+            <MenuItem disableRipple>
+              <SelectFilterTasks
+                fecharMenuSuspenso={handleClose}
+                filterTasks={filterTasks}
+                setFilterTasks={setFilterTasks}
               />
-            </MenuItem> */}
+            </MenuItem>
+
+            <MenuItem>
+              <TextField
+                id="outlined-basic"
+                variant="outlined"
+                placeholder="Filtrar tarefas"
+                sx={{
+                  backgroundColor: "white",
+                  borderRadius: "20px",
+                  outline: "none",
+                  border: "none",
+                  "& .MuiOutlinedInput-root": {
+                    "&.Mui-focused fieldset": {
+                      borderColor: "transparent",
+                      outline: "none",
+                    },
+                  },
+                }}
+                value={textFilter}
+                onChange={(e) => setTextFilter(e.target.value)}
+              />
+            </MenuItem>
           </StyledMenu>
         </div>
 

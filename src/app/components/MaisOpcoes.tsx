@@ -40,6 +40,7 @@ export const MaisOpcoes = (props: any) => {
             },
           },
         }}
+        value={props.textFilter}
         onChange={(e) => props.setTextFilter(e.target.value)}
       />
 
