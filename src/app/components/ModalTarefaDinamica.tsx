@@ -23,22 +23,10 @@ export const ModalTarefaDinamica = ({
 }: T) => {
   const [taks, setTaks] = useState("");
 
-  const [reRender, setReRender] = useState(false);
-
   const { setModoTarefas, modoTarefas, Filtro } = useContext(GlobalContext);
-
-  document.getElementById("outlined-basic")?.focus();
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setReRender(!reRender);
-    }, 300);
-  }, []);
 
   const salvarTarefa = () => {
     if (taks === "") {
-      setIsOpenSnacker(true);
-      setAlert("Sem tarefas concluidas");
       return;
     } else {
       const obj = {
@@ -80,6 +68,7 @@ export const ModalTarefaDinamica = ({
             onKeyPress={(e: React.KeyboardEvent) =>
               e.key === "Enter" && salvarTarefa()
             }
+            autoFocus={true}
           />
         </div>
 

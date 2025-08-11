@@ -588,7 +588,7 @@ export const TarefasDinamicas = () => {
                       ) : (
                         <h3
                           className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
-                        h-[calc(100vh-30rem)] w-[calc(100dvw-8rem)] "
+                        h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] bg-white"
                         >
                           Nenhuma tarefa encontrada.
                         </h3>
