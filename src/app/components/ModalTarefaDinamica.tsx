@@ -57,7 +57,8 @@ export const ModalTarefaDinamica = ({
             Criar Tarefas
           </Typography>
 
-          <TextField
+          {/* <TextField
+            ref={first}
             value={taks}
             id="outlined-basic"
             label="Escreva o nome da tarefa"
@@ -68,8 +69,9 @@ export const ModalTarefaDinamica = ({
             onKeyPress={(e: React.KeyboardEvent) =>
               e.key === "Enter" && salvarTarefa()
             }
-            autoFocus={true}
-          />
+          /> */}
+
+          <input type="text" autoFocus={true} />
         </div>
 
         <div className="mt-3 flex flex-row gap-3 justify-end">
