@@ -26,8 +26,8 @@ export const MaisOpcoes = (props: any) => {
 
       <TextField
         id="outlined-basic"
-        label="Filtrar tarefas"
         variant="outlined"
+        placeholder="Filtrar tarefas"
         sx={{
           backgroundColor: "white",
           borderRadius: "20px",

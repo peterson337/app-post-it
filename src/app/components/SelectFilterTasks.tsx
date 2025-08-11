@@ -51,7 +51,16 @@ export const SelectFilterTasks = ({
         }
         label="Todas as tarefas"
         onChange={handleChange}
-        sx={{ borderRadius: "20px" }}
+        sx={{
+          borderRadius: "20px",
+          outline: "none",
+          border: "none",
+          "&.MuiOutlinedInput-root": {
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: "transparent", // remove a borda azul
+            },
+          },
+        }}
       >
         <MenuItem value={"Todas as tarefas"}>Todas as tarefas</MenuItem>
         <MenuItem value={"Tarefas concluídas"}>Tarefas concluídas</MenuItem>
