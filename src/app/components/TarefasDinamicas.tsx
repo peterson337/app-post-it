@@ -5,6 +5,7 @@ import React, {
   Fragment,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import { ModoTarefa } from "./context/ts/types";
 import { ModalEditTaksDinamica } from "./ModalEditTaksDinamica";
@@ -306,6 +307,21 @@ export const TarefasDinamicas = () => {
   const [tasksFiltered, setTasksFiltered] = React.useState([]);
   const [textFilter, setTextFilter] = React.useState("");
 
+  useEffect(() => {
+    //prettier-ignore
+    const storedTextFilter = sessionStorage.getItem(`textFilter-${String(Filtro)}`);
+
+    if (storedTextFilter) setTextFilter(storedTextFilter);
+    else setTextFilter("");
+
+    window.addEventListener("beforeunload", () => {
+      for (const item of modoTarefas) {
+        sessionStorage.removeItem(`textFilter-${String(item.id)}`);
+        localStorage.removeItem(`filterTasks`);
+      }
+    });
+  }, [Filtro]);
+
   const finishOrEditTasks = (
     id: number,
     idTypetask: number,
@@ -433,6 +449,12 @@ export const TarefasDinamicas = () => {
     formatString(item.nomeTarefa).includes(formatString(textFilter))
   );
 
+  const armazenarFiltro = (text: string) => {
+    setTextFilter(text);
+    //prettier-ignore
+    sessionStorage.setItem(`textFilter-${String(Filtro)}`, text);
+  };
+
   return (
     <>
       {isOpenModalTarefaDinamica && (
@@ -530,7 +552,7 @@ export const TarefasDinamicas = () => {
                   },
                 }}
                 value={textFilter}
-                onChange={(e) => setTextFilter(e.target.value)}
+                onChange={(e) => armazenarFiltro(e.target.value)}
               />
             </MenuItem>
           </StyledMenu>
@@ -545,73 +567,81 @@ export const TarefasDinamicas = () => {
             setFilterTasks={setFilterTasks}
             defaultValue={"string"}
             setTextFilter={setTextFilter}
+            textFilter={textFilter}
+            Filtro={Filtro}
           />
         </div>
       </section>
 
-      {modoTarefas.map((val: ModoTarefa) => (
-        <Fragment key={val.id}>
-          {Filtro === val.id && (
-            <section>
-              {tasksFiltered.length > 0 ? (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext
-                    items={tasksFiltered.map((item: any) => item.id)}
+      <div
+        className="h-[calc(100dvh-15rem)] overflow-auto scrollbar-thin 
+          scrollbar-thumb-sky-500 scrollbar-track-sky-300   scrollbar-thumb-rounded-full 
+          scrollbar-track-rounded-full"
+      >
+        {modoTarefas.map((val: ModoTarefa) => (
+          <Fragment key={val.id}>
+            {Filtro === val.id && (
+              <section>
+                {tasksFiltered.length > 0 ? (
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
                   >
-                    <section
-                      className={` md:content-start grid 
-                      grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
-                        md:h-[35rem]  h-[22rem]  overflow-auto place-items-center `}
+                    <SortableContext
+                      items={tasksFiltered.map((item: any) => item.id)}
                     >
-                      {tasksByTextFilter.length > 0 ? (
-                        tasksByTextFilter.map((item: any) => (
-                          <TaskCard
-                            key={item.id}
-                            item={item}
-                            finishOrEditTasks={finishOrEditTasks}
-                            setNewTask={setNewTask}
-                            setIsOpenModalEditTasks={setIsOpenModalEditTasks}
-                            setTest={setTest}
-                            val={val}
-                            id={item.id}
-                            isOpenModalEditTasks={isOpenModalEditTasks}
-                            test={test}
-                            newTask={newTask}
-                            setModoTarefas={setModoTarefas}
-                            modoTarefas={modoTarefas}
-                          />
-                        ))
-                      ) : (
-                        <h3
-                          className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
+                      <section
+                        className={` md:content-start grid 
+                      grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
+                         h-[22rem]  overflow-auto place-items-center `}
+                      >
+                        {tasksByTextFilter.length > 0 ? (
+                          tasksByTextFilter.map((item: any) => (
+                            <TaskCard
+                              key={item.id}
+                              item={item}
+                              finishOrEditTasks={finishOrEditTasks}
+                              setNewTask={setNewTask}
+                              setIsOpenModalEditTasks={setIsOpenModalEditTasks}
+                              setTest={setTest}
+                              val={val}
+                              id={item.id}
+                              isOpenModalEditTasks={isOpenModalEditTasks}
+                              test={test}
+                              newTask={newTask}
+                              setModoTarefas={setModoTarefas}
+                              modoTarefas={modoTarefas}
+                            />
+                          ))
+                        ) : (
+                          <h3
+                            className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
                         h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] "
-                        >
-                          Nenhuma tarefa encontrada.
-                        </h3>
-                      )}
-                    </section>
-                  </SortableContext>
-                </DndContext>
-              ) : (
-                <div className="md:flex md:justify-center">
-                  <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
-                    {filterTasks === true
-                      ? " Nenhuma tarefa foi marcada como concluída 😞"
-                      : " Não existem tarefas salvas 😞"}
-                  </p>
-                </div>
-              )}
-            </section>
-          )}
-        </Fragment>
-      ))}
+                          >
+                            Nenhuma tarefa encontrada.
+                          </h3>
+                        )}
+                      </section>
+                    </SortableContext>
+                  </DndContext>
+                ) : (
+                  <div className="md:flex md:justify-center">
+                    <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
+                      {filterTasks === true
+                        ? " Nenhuma tarefa foi marcada como concluída 😞"
+                        : " Não existem tarefas salvas 😞"}
+                    </p>
+                  </div>
+                )}
+              </section>
+            )}
+          </Fragment>
+        ))}
+      </div>
 
       <section className="w-[100%] flex justify-end mt-3 ">
-        <Fab
+        {/* <Fab
           className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
               ${
                 tasksFiltered.length === 0 ? "xl:top-[520px] top-[250px]" : ""
@@ -619,17 +649,14 @@ export const TarefasDinamicas = () => {
           onClick={() => setIsOpenModalTarefaDinamica(true)}
         >
           <FaPlus />
-        </Fab>
+        </Fab> */}
 
-        {/* <Fab
-        className={`bg-sky-500 hover:bg-sky-600  text-white   absolute bottom-3 right-3 
-              ${
-                tasksFiltered.length === 0 ? "xl:top-[520px] top-[250px]" : ""
-              } `}
-        onClick={() => setIsOpenModalTarefaDinamica(true)}
-      >
-        <FaPlus />
-      </Fab> */}
+        <Fab
+          className={`bg-sky-500 hover:bg-sky-600  text-white   absolute bottom-3 right-10`}
+          onClick={() => setIsOpenModalTarefaDinamica(true)}
+        >
+          <FaPlus />
+        </Fab>
       </section>
     </>
   );

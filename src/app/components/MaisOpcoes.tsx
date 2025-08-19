@@ -16,6 +16,12 @@ export const MaisOpcoes = (props: any) => {
     setAnchorEl(null);
   };
 
+  const armazenarFiltro = (text: string) => {
+    props.setTextFilter(text);
+
+    sessionStorage.setItem(`textFilter-${String(props.Filtro)}`, text);
+  };
+
   return (
     <>
       <SelectFilterTasks
@@ -41,7 +47,7 @@ export const MaisOpcoes = (props: any) => {
           },
         }}
         value={props.textFilter}
-        onChange={(e) => props.setTextFilter(e.target.value)}
+        onChange={(e) => armazenarFiltro(e.target.value)}
       />
 
       <Button

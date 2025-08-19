@@ -3,19 +3,41 @@ import { GlobalContext } from "./context/Store";
 import { ListaDeCompra } from "./ListaDeCompra";
 import { TarefasDinamicas } from "./TarefasDinamicas";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { FaPlus } from "react-icons/fa";
+import ModalReutilizavel from "./ModalReutilizavel";
+import useCustomHook from "../hook/useCustomHook";
 
-export const CardComponent = (props: any) => {
-  const { Filtro, setIsSideBar, modoTarefas } = useContext(GlobalContext);
+export const CardComponent = () => {
+  const { addedTabSelected } = useCustomHook();
+  //prettier-ignore
+  const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro } = useContext(GlobalContext);
+  const [modalAddTabs, setModalAddTabs] = React.useState(false);
+  const evitarAdicionarAbaRepetida = useRef(false);
+
+  useEffect(() => {
+    if (evitarAdicionarAbaRepetida.current) return;
+
+    const tabAtual = modoTarefas.find((item) => item.id === Filtro);
+
+    //prettier-ignore
+    addedTabSelected({id: tabAtual?.id || 0, nomeGrupoTarefa: tabAtual?.nomeGrupoTarefa || ""});
+    evitarAdicionarAbaRepetida.current = true;
+  }, []);
+
+  useEffect(() => {
+    const changeTab = (e: KeyboardEvent) => {
+      if (tabs[+e.key]) setFiltro(tabs[+e.key].id);
+    };
+
+    window.addEventListener("keydown", changeTab);
+
+    return () => window.removeEventListener("keydown", changeTab);
+  }, [tabs]);
 
   return (
     <main className="flex justify-center  items-center">
       <section
-        className={` bg-[#373737]  md:p-10 
-     md:w-full md:h-[51rem] h-[calc(100dvh-2rem)]   m-5
-     w-96 rounded-xl
-     scrollbar-thin scrollbar-thumb-sky-500 
-     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
-     `}
+        className={`bg-[#373737] w-[95%] h-[95dvh] mt-5 p-5 rounded-[20px] `}
       >
         <button
           onClick={() => setIsSideBar(true)}
@@ -24,28 +46,54 @@ export const CardComponent = (props: any) => {
           <TbLayoutSidebarLeftCollapse />
         </button>
 
-        <h1 className=" text-2xl font-bangers text-center mt-5 md:mt-0  md:block">
-          {modoTarefas.map((item) => {
-            return (
-              Filtro === item.id && <p key={item.id}>{item.nomeGrupoTarefa}</p>
-            );
-          })}
-        </h1>
+        <section className="flex flex-row justify-center gap-5 items-center mb-3 ">
+          <div
+            /* prettier-ignore */
+            className={`flex flex-row gap-5 ${tabs.length > 1 ? "w-[50%] overflow-auto whitespace-nowrap " : "w-auto"}`}
+          >
+            {tabs.map((item) => {
+              return (
+                <h3
+                  className={`text-white md:text-4xl text-2xl font-bangers cursor-pointer ${
+                    Filtro === item.id
+                      ? "border-b-2 border-[#1c84b8] text-[#1c84b8]"
+                      : ""
+                  }
 
-        {Filtro === 2 ? (
-          <ListaDeCompra></ListaDeCompra>
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
+                    ${tabs.length > 1 ? "mr-5" : "mr-0"}
+                    `}
+                  onClick={() => setFiltro(item.id)}
+                  key={item.id}
+                >
+                  {item.nomeTab}
+                </h3>
+              );
+            })}
+          </div>
 
-        {Filtro != 2 ? (
-          <TarefasDinamicas />
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
+          <button onClick={() => setModalAddTabs(true)}>
+            <FaPlus className="text-2xl" />
+          </button>
+
+          <ModalReutilizavel
+            isOpenModal={modalAddTabs}
+            setIsOpenModal={setModalAddTabs}
+            content={"Add Tabs"}
+          />
+        </section>
+
+        {Filtro === 2 ? <ListaDeCompra></ListaDeCompra> : <TarefasDinamicas />}
       </section>
+
+      {/* <section
+        className={` bg-[#373737]  md:p-10 
+     md:w-full md:h-[51rem] h-[calc(100dvh-2rem)]   m-5
+     w-96 rounded-xl
+     scrollbar-thin scrollbar-thumb-sky-500 
+     scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
+     `}
+      >
+  */}
     </main>
   );
 };

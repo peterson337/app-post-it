@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Petit+Formal+Script&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Petit+Formal+Script&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Petit+Formal+Script&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,10 +12,9 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-body{
+body {
   background-color: black;
 }
-
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -24,4 +23,3 @@ body{
     --background-end-rgb: 0, 0, 0;
   }
 }
-
