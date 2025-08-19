@@ -574,9 +574,9 @@ export const TarefasDinamicas = () => {
       </section>
 
       <div
-        className="h-[calc(100dvh-15rem)] overflow-auto scrollbar-thin 
+        className="h-[calc(100dvh-15rem)]  overflow-auto scrollbar-thin 
           scrollbar-thumb-sky-500 scrollbar-track-sky-300   scrollbar-thumb-rounded-full 
-          scrollbar-track-rounded-full"
+          scrollbar-track-rounded-full "
       >
         {modoTarefas.map((val: ModoTarefa) => (
           <Fragment key={val.id}>
@@ -592,9 +592,7 @@ export const TarefasDinamicas = () => {
                       items={tasksFiltered.map((item: any) => item.id)}
                     >
                       <section
-                        className={` md:content-start grid 
-                      grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
-                         h-[22rem]  overflow-auto place-items-center `}
+                        className={` grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] `}
                       >
                         {tasksByTextFilter.length > 0 ? (
                           tasksByTextFilter.map((item: any) => (

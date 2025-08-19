@@ -54,10 +54,9 @@ export const CardComponent = () => {
             {tabs.map((item) => {
               return (
                 <h3
+                  style={Filtro === item.id ? { color: "#1c84b8" } : {}}
                   className={`text-white md:text-4xl text-2xl font-bangers cursor-pointer ${
-                    Filtro === item.id
-                      ? "border-b-2 border-[#1c84b8] text-[#1c84b8]"
-                      : ""
+                    Filtro === item.id ? "border-b-2 border-[#1c84b8]" : ""
                   }
 
                     ${tabs.length > 1 ? "mr-5" : "mr-0"}
