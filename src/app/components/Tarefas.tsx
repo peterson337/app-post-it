@@ -23,7 +23,9 @@ import { useRouter } from "next/navigation";
 import { logout, recuperarIdUser } from "../actions";
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import customHook from "../hook/useCustomHook";
+import useCustomHook from "../hook/useCustomHook";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 type Backup = {
   id: number;
   nomeGrupoTarefa: string;
@@ -56,7 +58,7 @@ export const Tarefas = () => {
     setUserId,
   } = useContext(GlobalContext);
 
-  const { addedTabSelected } = customHook();
+  const { addedTabSelected, formatString } = useCustomHook();
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true);
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false);
@@ -70,11 +72,9 @@ export const Tarefas = () => {
 
   const [backupData, setBackupData] = useState<Backup[]>([]);
 
-  const [textDropdown, setTextDropdown] = useState("Selecione algo");
+  const [textDropdown, setTextDropdown] = useState("");
 
   const inputEditListName = useRef<HTMLInputElement>(null);
-
-  const [deleteBackupMode, setDeleteBackupMode] = useState(false);
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
@@ -220,30 +220,41 @@ export const Tarefas = () => {
     }
   };
 
-  const carregarBackup = (listaTarefasEscolhida: Backup) => {
+  const carregarBackup = () => {
     if (useId) {
-      //prettier-ignore
-      if (modoTarefas.filter((item) => item.id === listaTarefasEscolhida.id).length === 0) {
-       modoTarefas.push(listaTarefasEscolhida);
-       setModalBackup(false);
-       localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
-     } else {
-       //prettier-ignore
-       alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup")
-       return;
-     }
+      const listaTarefasEscolhida =  backupData.find((item) => formatString(item.nomeGrupoTarefa) === formatString(textDropdown));
+
+      if (listaTarefasEscolhida) {
+        if (
+          modoTarefas.filter((item) => item.id === listaTarefasEscolhida.id)
+            .length === 0
+        ) {
+          modoTarefas.push(listaTarefasEscolhida);
+          setModalBackup(false);
+          localStorage.setItem(
+            "colecaoTarefas",
+            JSON.stringify([...modoTarefas])
+          );
+          setTextDropdown("");
+        } else {
+          //prettier-ignore
+          alert("Essa lista de tarefa já existe, escolha outra para restaurar o backup")
+          return;
+        }
+      }
     }
   };
 
-  const deletarBackup = (listaTarefasEscolhida: Backup) => {
+  const deletarBackup = () => {
     if (useId) {
       const confirm = window.confirm("Deseja realmente deletar esse backup?");
 
       if (!confirm) return;
       //prettier-ignore
-      const backupDeleted = backupData.filter((item) => item.id !== listaTarefasEscolhida.id);
+      const backupSelected = backupData.filter((item) => formatString(item.nomeGrupoTarefa) !== formatString(textDropdown))
 
-      saveInDatabase(backupDeleted, "deletar");
+      saveInDatabase(backupSelected, "deletar");
+      setTextDropdown("");
     }
   };
 
@@ -260,48 +271,34 @@ export const Tarefas = () => {
         onClose={() => setModalBackup(false)}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>
-          {deleteBackupMode ? "Deletar backup" : "Carregar backup"}
-        </DialogTitle>
+        <DialogTitle>Carregar ou deletar backup</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Escolha o nome da lista de tarefa no dropdown abaixo.
-          </DialogContentText>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            className="w-[100%]"
-            id="demo-simple-select-standard"
+          <Autocomplete
+            options={backupData.map((item) => item.nomeGrupoTarefa)}
+            sx={{ width: 300 }}
+            onChange={(_event, value) => setTextDropdown(value || "")}
             value={textDropdown}
-            onChange={(e) => setTextDropdown(e.target.value)}
-            input={<OutlinedInput label="Name" />}
-            label="Selecione o nome de uma lista de tarefa"
-          >
-            <MenuItem
-              value={"Selecione algo"}
-              selected
-              style={{ display: "none" }}
-            >
-              Selecione algo
-            </MenuItem>
-            {backupData.map((item) => (
-              <MenuItem
-                key={item.id}
-                value={item.nomeGrupoTarefa}
-                onClick={() =>
-                  deleteBackupMode ? deletarBackup(item) : carregarBackup(item)
-                }
-              >
-                {item.nomeGrupoTarefa}
-              </MenuItem>
-            ))}
-          </Select>
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Nome de uma lista de tarefa"
+                value={textDropdown}
+                onChange={(e) => setTextDropdown(e.target.value)}
+              />
+            )}
+          />
           <div className="mt-3 text-center">
             <Button
               variant="contained"
-              color={!deleteBackupMode ? "error" : "success"}
-              onClick={() => setDeleteBackupMode((prev) => !prev)}
+              color={"error"}
+              onClick={deletarBackup}
+              sx={{ marginRight: "10px" }}
             >
-              {!deleteBackupMode ? "Deletar backup" : "Recuperar backup"}
+              Deletar backup
+            </Button>
+
+            <Button variant="contained" onClick={carregarBackup}>
+              Recuperar backup
             </Button>
           </div>
         </DialogContent>
@@ -342,7 +339,7 @@ export const Tarefas = () => {
                       color="success"
                       onClick={abrirModalBackup}
                     >
-                      Carregar Backup
+                      Administrar backups
                     </Button>
                   ) : (
                     <Button

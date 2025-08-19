@@ -13,11 +13,14 @@ export const CardComponent = () => {
   const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro } = useContext(GlobalContext);
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
   const evitarAdicionarAbaRepetida = useRef(false);
+  const numbers = useRef<string[]>([]);
 
   useEffect(() => {
     if (evitarAdicionarAbaRepetida.current) return;
 
     const tabAtual = modoTarefas.find((item) => item.id === Filtro);
+
+    for (let i = 0; i < 10; i++) numbers.current.push(String(i));
 
     //prettier-ignore
     addedTabSelected({id: tabAtual?.id || 0, nomeGrupoTarefa: tabAtual?.nomeGrupoTarefa || ""});
@@ -26,6 +29,8 @@ export const CardComponent = () => {
 
   useEffect(() => {
     const changeTab = (e: KeyboardEvent) => {
+      if (!numbers.current.includes(e.key)) return;
+
       if (tabs[+e.key]) setFiltro(tabs[+e.key].id);
     };
 

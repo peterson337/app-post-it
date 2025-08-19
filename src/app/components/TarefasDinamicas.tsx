@@ -55,7 +55,7 @@ import { FaPlus } from "react-icons/fa";
 import Fab from "@mui/material/Fab";
 import { Tasks as Tarefas } from "../components/context/ts/types";
 import TextField from "@mui/material/TextField";
-import { formatString } from "../hook/customHooks";
+import useCustomHook from "../hook/useCustomHook";
 
 export type Tasks = {
   id: number;
@@ -296,6 +296,8 @@ export const TarefasDinamicas = () => {
     isOpenModalTarefaDinamica,
     setIsOpenModalTarefaDinamica,
   } = useContext(GlobalContext);
+
+  const { formatString } = useCustomHook();
 
   const [isOpenModalEditTasks, setIsOpenModalEditTasks] = useState(false);
   const [test, setTest] = useState<number | null>(null);
@@ -642,16 +644,6 @@ export const TarefasDinamicas = () => {
       </div>
 
       <section className="w-[100%] flex justify-end mt-3 ">
-        {/* <Fab
-          className={`bg-sky-500 hover:bg-sky-600  text-white relative  mr-3 md:mr-0
-              ${
-                tasksFiltered.length === 0 ? "xl:top-[520px] top-[250px]" : ""
-              } `}
-          onClick={() => setIsOpenModalTarefaDinamica(true)}
-        >
-          <FaPlus />
-        </Fab> */}
-
         <Fab
           className={`bg-sky-500 hover:bg-sky-600  text-white   absolute bottom-3 right-10`}
           onClick={() => setIsOpenModalTarefaDinamica(true)}

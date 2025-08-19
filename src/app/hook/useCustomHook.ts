@@ -19,8 +19,19 @@ function useCustomHook() {
     } else return false;
   };
 
+  //prettier-ignore
+  // const formatString = (params : string) => params.toLocaleLowerCase().split("").filter((item) => item !== "").join("");
+
+  const formatString = (params : string) => {
+
+    console.log(params.toLocaleLowerCase().split("").filter((item) => item !== "").join(""));
+
+    return params.toLocaleLowerCase().split("").filter((item) => item !== "").join("")
+  };
+
   return {
     addedTabSelected,
+    formatString,
   };
 }
 
