@@ -592,7 +592,10 @@ export const TarefasDinamicas = () => {
                       items={tasksFiltered.map((item: any) => item.id)}
                     >
                       <section
-                        className={` grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] `}
+                        className={`
+                           md:grid md:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
+                           flex flex-col justify-center items-center gap-3
+                          `}
                       >
                         {tasksByTextFilter.length > 0 ? (
                           tasksByTextFilter.map((item: any) => (
