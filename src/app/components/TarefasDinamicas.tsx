@@ -452,7 +452,7 @@ export const TarefasDinamicas = () => {
   const armazenarFiltro = (text: string) => {
     setTextFilter(text);
     //prettier-ignore
-    localStorage.setItem("textFilter", JSON.stringify({ textFilter: text, id: Filtro }));
+    sessionStorage.setItem(`textFilter-${String(Filtro)}`, text);
   };
 
   return (
