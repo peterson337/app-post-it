@@ -1,7 +1,7 @@
 "use client";
 
 import { Children, createContext, useState, useEffect } from "react";
-import { Types, Tarefas, ModoTarefa } from "./ts/types";
+import { Types, Tarefas, ModoTarefa, Tabs } from "./ts/types";
 import api from "../../../service/api";
 
 export type Tasks = {
@@ -51,6 +51,8 @@ export const GlobalContext = createContext<Types>({
   setIsOpenModalTarefaDinamica: () => {},
   useId: null,
   setUserId: () => {},
+  tabs: [],
+  setTabs: () => {},
 });
 
 export const GlobalContextProvider = ({
@@ -83,8 +85,9 @@ export const GlobalContextProvider = ({
     },
   ]);
 
+  const [tabs, setTabs] = useState<Tabs[]>([]);
+
   const [useId, setUserId] = useState<null | string | undefined>(null);
-  const [reRender, setReRender] = useState(false);
 
   useEffect(() => {
     const data = localStorage.getItem("tarefas");
@@ -232,6 +235,8 @@ export const GlobalContextProvider = ({
         handleChandeTab,
         useId,
         setUserId,
+        tabs,
+        setTabs,
       }}
     >
       {children}

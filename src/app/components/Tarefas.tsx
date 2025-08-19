@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { logout, recuperarIdUser } from "../actions";
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import customHook from "../hook/customHook";
 type Backup = {
   id: number;
   nomeGrupoTarefa: string;
@@ -54,6 +55,8 @@ export const Tarefas = () => {
     useId,
     setUserId,
   } = useContext(GlobalContext);
+
+  const { addedTabSelected } = customHook();
 
   const openModalCreateTarefas = () => setISOpenModalCreateTareas(true);
   const closeModalCreateTarefas = () => setISOpenModalCreateTareas(false);
@@ -248,10 +251,7 @@ export const Tarefas = () => {
     <main className="md:flex md:flex-col md:h-[100vh] md:justify-between  ">
       {/* Tamanho do mnitor gande 1920 */}
 
-      <CardComponent
-        iSOpenModalCreateTareas={iSOpenModalCreateTareas}
-        setISOpenModalCreateTareas={setISOpenModalCreateTareas}
-      />
+      <CardComponent />
 
       <Dialog
         open={modalBackup}
@@ -404,6 +404,10 @@ export const Tarefas = () => {
                             onClick={() => {
                               setFiltro(item.id);
                               setIsSideBar(false);
+                              addedTabSelected({
+                                id: item.id,
+                                nomeGrupoTarefa: item.nomeGrupoTarefa,
+                              });
                             }}
                             className={` font-bangers text-2xl`}
                           >
