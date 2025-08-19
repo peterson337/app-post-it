@@ -222,7 +222,10 @@ export const Tarefas = () => {
 
   const carregarBackup = () => {
     if (useId) {
-      const listaTarefasEscolhida =  backupData.find((item) => formatString(item.nomeGrupoTarefa) === formatString(textDropdown));
+      const listaTarefasEscolhida = backupData.find(
+        (item) =>
+          formatString(item.nomeGrupoTarefa) === formatString(textDropdown)
+      );
 
       if (listaTarefasEscolhida) {
         if (
@@ -275,7 +278,6 @@ export const Tarefas = () => {
         <DialogContent>
           <Autocomplete
             options={backupData.map((item) => item.nomeGrupoTarefa)}
-            sx={{ width: 300 }}
             onChange={(_event, value) => setTextDropdown(value || "")}
             value={textDropdown}
             renderInput={(params) => (
@@ -287,13 +289,8 @@ export const Tarefas = () => {
               />
             )}
           />
-          <div className="mt-3 text-center">
-            <Button
-              variant="contained"
-              color={"error"}
-              onClick={deletarBackup}
-              sx={{ marginRight: "10px" }}
-            >
+          <div className="mt-3 text-center flex flex-row gap-3 flex-wrap justify-center items-center">
+            <Button variant="contained" color={"error"} onClick={deletarBackup}>
               Deletar backup
             </Button>
 
