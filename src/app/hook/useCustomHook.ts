@@ -6,12 +6,10 @@ type Obj = {
   nomeGrupoTarefa: string;
 };
 
-function customHook() {
+function useCustomHook() {
   const { setTabs, tabs } = React.useContext(GlobalContext);
   const addedTabSelected = (obj: Obj) => {
     const tabExists = tabs.filter((tab) => tab.nomeTab === obj.nomeGrupoTarefa);
-
-    console.log(tabExists);
 
     if (tabExists.length === 0) {
       //prettier-ignore
@@ -26,4 +24,4 @@ function customHook() {
   };
 }
 
-export default customHook;
+export default useCustomHook;

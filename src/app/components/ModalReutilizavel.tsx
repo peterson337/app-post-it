@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import { GlobalContext } from "./context/Store";
 import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
-import customHook from "../hook/customHook";
+import useCustomHook from "../hook/useCustomHook";
 
 type Props = {
   isOpenModal: boolean;
@@ -17,7 +17,7 @@ import TextField from "@mui/material/TextField";
 export default function Modal(props: Props) {
   const { isOpenModal, setIsOpenModal, content } = props;
   const { modoTarefas } = React.useContext(GlobalContext);
-  const { addedTabSelected } = customHook();
+  const { addedTabSelected } = useCustomHook();
   const textInputRef = React.useRef("");
 
   const options = modoTarefas.map((item) => item.nomeGrupoTarefa);

@@ -5,13 +5,10 @@ import { TarefasDinamicas } from "./TarefasDinamicas";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { FaPlus } from "react-icons/fa";
 import ModalReutilizavel from "./ModalReutilizavel";
-import customHook from "../hook/customHook";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import useCustomHook from "../hook/useCustomHook";
 
 export const CardComponent = () => {
-  const { addedTabSelected } = customHook();
+  const { addedTabSelected } = useCustomHook();
   //prettier-ignore
   const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro } = useContext(GlobalContext);
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
@@ -27,12 +24,20 @@ export const CardComponent = () => {
     evitarAdicionarAbaRepetida.current = true;
   }, []);
 
+  useEffect(() => {
+    const changeTab = (e: KeyboardEvent) => {
+      if (tabs[+e.key]) setFiltro(tabs[+e.key].id);
+    };
+
+    window.addEventListener("keydown", changeTab);
+
+    return () => window.removeEventListener("keydown", changeTab);
+  }, [tabs]);
+
   return (
     <main className="flex justify-center  items-center">
       <section
-        className={`bg-[#373737] w-[95%] h-[95dvh] mt-5 p-5 rounded-[20px] scrollbar-thin 
-          scrollbar-thumb-sky-500 scrollbar-track-sky-300   scrollbar-thumb-rounded-full 
-          scrollbar-track-rounded-full`}
+        className={`bg-[#373737] w-[95%] h-[95dvh] mt-5 p-5 rounded-[20px] `}
       >
         <button
           onClick={() => setIsSideBar(true)}
@@ -42,29 +47,29 @@ export const CardComponent = () => {
         </button>
 
         <section className="flex flex-row justify-center gap-5 items-center mb-3 ">
-          <Box
-            sx={{
-              maxWidth: { xs: 320, sm: 480 },
-            }}
+          <div
+            /* prettier-ignore */
+            className={`flex flex-row gap-5 ${tabs.length > 1 ? "w-[50%] overflow-auto whitespace-nowrap " : "w-auto"}`}
           >
-            <Tabs
-              variant="scrollable"
-              scrollButtons="auto"
-              aria-label="scrollable auto tabs example"
-            >
-              {tabs.map((item) => {
-                return (
-                  <Tab
-                    //prettier-ignore
-                    sx={{ color: "white", fontSize: "20px", borderBottom:  Filtro === item.id ? "2px solid #1c84b8" : "" }}
-                    label={item.nomeTab}
-                    onClick={() => setFiltro(item.id)}
-                    key={item.id}
-                  />
-                );
-              })}
-            </Tabs>
-          </Box>
+            {tabs.map((item) => {
+              return (
+                <h3
+                  className={`text-white md:text-4xl text-2xl font-bangers cursor-pointer ${
+                    Filtro === item.id
+                      ? "border-b-2 border-[#1c84b8] text-[#1c84b8]"
+                      : ""
+                  }
+
+                    ${tabs.length > 1 ? "mr-5" : "mr-0"}
+                    `}
+                  onClick={() => setFiltro(item.id)}
+                  key={item.id}
+                >
+                  {item.nomeTab}
+                </h3>
+              );
+            })}
+          </div>
 
           <button onClick={() => setModalAddTabs(true)}>
             <FaPlus className="text-2xl" />
@@ -77,19 +82,7 @@ export const CardComponent = () => {
           />
         </section>
 
-        {Filtro === 2 ? (
-          <ListaDeCompra></ListaDeCompra>
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
-
-        {Filtro != 2 ? (
-          <TarefasDinamicas />
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
+        {Filtro === 2 ? <ListaDeCompra></ListaDeCompra> : <TarefasDinamicas />}
       </section>
 
       {/* <section
@@ -100,35 +93,7 @@ export const CardComponent = () => {
      scrollbar-track-sky-300   scrollbar-thumb-rounded-full scrollbar-track-rounded-full 
      `}
       >
-        <button
-          onClick={() => setIsSideBar(true)}
-          className="text-3xl m-3 md:m-0"
-        >
-          <TbLayoutSidebarLeftCollapse />
-        </button>
-
-        <h1 className=" text-2xl font-bangers text-center mt-5 md:mt-0  md:block">
-          {modoTarefas.map((item) => {
-            return (
-              Filtro === item.id && <p key={item.id}>{item.nomeGrupoTarefa}</p>
-            );
-          })}
-        </h1>
-
-        {Filtro === 2 ? (
-          <ListaDeCompra></ListaDeCompra>
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
-
-        {Filtro != 2 ? (
-          <TarefasDinamicas />
-        ) : (
-          // <p>Nenhuma lista de compra encontrada.</p>
-          <div></div>
-        )}
-      </section> */}
+  */}
     </main>
   );
 };

@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { logout, recuperarIdUser } from "../actions";
 import { doc, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import customHook from "../hook/customHook";
+import customHook from "../hook/useCustomHook";
 type Backup = {
   id: number;
   nomeGrupoTarefa: string;
