@@ -80,6 +80,11 @@ interface TaskCardProps {
   modoTarefas: ModoTarefa[];
 }
 
+type KeyWords = {
+  id: number;
+  keyword: Set<string>;
+};
+
 const TaskCard = ({
   item,
   finishOrEditTasks,
@@ -308,6 +313,7 @@ export const TarefasDinamicas = () => {
   const [filterTasks, setFilterTasks] = React.useState<boolean | string>("null");
   const [tasksFiltered, setTasksFiltered] = React.useState([]);
   const [textFilter, setTextFilter] = React.useState("");
+  const [keyWords, setKeyWords] = useState<string[]>([]);
 
   useEffect(() => {
     //prettier-ignore
@@ -457,6 +463,29 @@ export const TarefasDinamicas = () => {
     sessionStorage.setItem(`textFilter-${String(Filtro)}`, text);
   };
 
+  useEffect(() => {
+    //prettier-ignore
+    const validarSeUsuarioTemTarefas = (modoTarefas.find((item) => item.id === Filtro)?.tasks.length ?? 0) > 0;
+
+    if (validarSeUsuarioTemTarefas) {
+      //prettier-ignore
+      const listSelected = modoTarefas.find((item) => item.id === Filtro);
+      console.log(listSelected);
+
+      //prettier-ignore
+      const keyWords = listSelected?.tasks.map((item) => item.nomeTarefa.match(/\([^)]*\)/)?.[0])
+
+      if ((keyWords ?? []).length > 0) {
+        //prettier-ignore
+        const nameTasks = (keyWords ?? []).filter(Boolean);
+
+        const removeDuplicate = new Set(nameTasks);
+
+        setKeyWords(Array.from(removeDuplicate) as string[]);
+      } else setKeyWords([]);
+    } else setKeyWords([]);
+  }, [Filtro, modoTarefas]);
+
   return (
     <>
       {isOpenModalTarefaDinamica && (
@@ -465,6 +494,7 @@ export const TarefasDinamicas = () => {
           setIsOpenModalTarefaDinamica={setIsOpenModalTarefaDinamica}
           setAlert={setAlert}
           setIsOpenSnacker={setIsOpenSnacker}
+          keyWords={keyWords}
         />
       )}
 

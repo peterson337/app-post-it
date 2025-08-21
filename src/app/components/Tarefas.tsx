@@ -125,15 +125,18 @@ export const Tarefas = () => {
 
         //prettier-ignore
 
-        const test =   backupData.map((item) => {
+        if(useId && backupData.find((item) => item.id === id)){
+
+          const test =   backupData.map((item) => {
             if(item.id === id){
-               item.nomeGrupoTarefa = newTask;
+              item.nomeGrupoTarefa = newTask;
             }
 
             return item
-            })
+          })
 
-        saveInDatabase(test);
+          saveInDatabase(test);
+        }
 
         setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
         setEditTitleTask(null);

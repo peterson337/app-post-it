@@ -14,18 +14,24 @@ type T = {
   setIsOpenModalTarefaDinamica: Dispatch<SetStateAction<boolean>>;
   setIsOpenSnacker: Dispatch<SetStateAction<boolean>>;
   setAlert: Dispatch<SetStateAction<string>>;
+  keyWords: string[];
 };
 export const ModalTarefaDinamica = ({
   isOpenModalTarefaDinamica,
   setIsOpenModalTarefaDinamica,
   setIsOpenSnacker,
   setAlert,
+  keyWords,
 }: T) => {
   const [taks, setTaks] = useState("");
 
   const { setModoTarefas, modoTarefas, Filtro } = useContext(GlobalContext);
 
   const first = React.useRef<HTMLInputElement>(null);
+  const cardColor = React.useRef({
+    color: null as string | null,
+    colorText: null as boolean | null,
+  });
 
   React.useEffect(() => {
     setTimeout(() => first.current?.focus(), 0);
@@ -39,8 +45,8 @@ export const ModalTarefaDinamica = ({
         nomeTarefa: taks,
         id: new Date().getTime(),
         completed: false,
-        color: "#fef08a",
-        colorText: true,
+        color: cardColor.current.color || "#fef08a",
+        colorText: cardColor.current.colorText ?? true,
       };
       modoTarefas.map((val) => val.id === Filtro && val.tasks.push(obj));
       setModoTarefas([...modoTarefas]);
@@ -48,6 +54,27 @@ export const ModalTarefaDinamica = ({
       setTaks("");
       localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
     }
+
+    cardColor.current = {
+      color: null,
+      colorText: null,
+    };
+  };
+
+  const keyWordSelected = (val: string) => {
+    setTaks(`${val} `);
+    first.current?.focus();
+    const card = cardInformation(val);
+
+    cardColor.current = {
+      color: card?.color ?? "#fef08a",
+      colorText: card?.colorText ?? true,
+    };
+  };
+
+  const cardInformation = (val: string) => {
+    //prettier-ignore
+    return modoTarefas.find((item) => item.id === Filtro)?.tasks.find((item) => item.nomeTarefa.includes(`${val}`));
   };
 
   return (
@@ -62,6 +89,31 @@ export const ModalTarefaDinamica = ({
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Criar Tarefas
           </Typography>
+
+          <div>
+            <div className="flex flex-row gap-1 overflow-x-auto w-full mb-4">
+              {keyWords.length > 0 &&
+                keyWords.map((val) => {
+                  const styleButtons = cardInformation(val);
+
+                  return (
+                    <Button
+                      sx={{
+                        backgroundColor: styleButtons?.color,
+                        color: styleButtons?.colorText ? "black" : "white",
+                      }}
+                      key={val}
+                      variant="contained"
+                      className="mt-2 mr-2"
+                      //prettier-ignore
+                      onClick={() => {keyWordSelected(val)}}
+                    >
+                      {val.length > 8 ? `${val.slice(0, 7)}...` : val}
+                    </Button>
+                  );
+                })}
+            </div>
+          </div>
 
           <TextField
             inputRef={first}

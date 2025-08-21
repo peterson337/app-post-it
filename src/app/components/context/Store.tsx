@@ -71,10 +71,16 @@ export const GlobalContextProvider = ({
   const [isOpenModalTarefaDinamica, setIsOpenModalTarefaDinamica] =
     useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
+
+  //prettier-ignore
+  const getNameTask = JSON.parse(localStorage.getItem("colecaoTarefas") as string || "[]")?.[0]?.nomeGrupoTarefa;
+
+  const nameTask = getNameTask || "Tarefas de Trabalho";
+
   const [modoTarefas, setModoTarefas] = useState<ModoTarefa[]>([
     {
       id: 0,
-      nomeGrupoTarefa: "Tarefas de Trabalho",
+      nomeGrupoTarefa: nameTask,
       tasks: [],
     },
 
