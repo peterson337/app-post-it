@@ -76,6 +76,8 @@ export const Tarefas = () => {
 
   const inputEditListName = useRef<HTMLInputElement>(null);
 
+  const autoComplete = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
 
@@ -168,6 +170,8 @@ export const Tarefas = () => {
 
         backup(listSelected as Backup);
       }
+
+      if (e.key === "a" && e.altKey) setiSOpenModalCreateTypeTask(true);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -233,6 +237,7 @@ export const Tarefas = () => {
     //? setBackupData(res.data.tasks);
     if (useId) {
       recuperarTasksBackUp();
+      setTimeout(() => autoComplete.current?.focus(), 0);
       setModalBackup(true);
     }
   };
@@ -303,6 +308,7 @@ export const Tarefas = () => {
                 label="Nome de uma lista de tarefa"
                 value={textDropdown}
                 onChange={(e) => setTextDropdown(e.target.value)}
+                inputRef={autoComplete}
               />
             )}
           />
