@@ -470,7 +470,6 @@ export const TarefasDinamicas = () => {
     if (validarSeUsuarioTemTarefas) {
       //prettier-ignore
       const listSelected = modoTarefas.find((item) => item.id === Filtro);
-      console.log(listSelected);
 
       //prettier-ignore
       const keyWords = listSelected?.tasks.map((item) => item.nomeTarefa.match(/\([^)]*\)/)?.[0])

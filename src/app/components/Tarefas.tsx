@@ -161,6 +161,20 @@ export const Tarefas = () => {
       ? nome.substring(0, 15) + "..."
       : nome;
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s" && e.altKey && useId) {
+        const listSelected = modoTarefas.find((item) => item.id === Filtro);
+
+        backup(listSelected as Backup);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [Filtro, useId]);
+
   const saveInDatabase = async (listTaskSelected: any, type?: string) => {
     try {
       const idUser = await recuperarIdUser();
