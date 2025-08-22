@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, createContext, useState, useEffect } from "react";
+import { Children, createContext, useState, useEffect , useRef } from "react";
 import { Types, Tarefas, ModoTarefa, Tabs } from "./ts/types";
 import api from "../../../service/api";
 
@@ -71,10 +71,26 @@ export const GlobalContextProvider = ({
   const [isOpenModalTarefaDinamica, setIsOpenModalTarefaDinamica] =
     useState(false);
   const [isSideBar, setIsSideBar] = useState(false);
+
+  const getNameTask = useRef("");
+
+  useEffect(() => {    
+    //prettier-ignore
+    const stored = localStorage.getItem("colecaoTarefas");
+    if(stored){
+
+      getNameTask.current = JSON.parse(stored as string || "[]")?.[0]?.nomeGrupoTarefa;
+    
+    }
+  }, [])
+  
+  const nameTask = getNameTask.current || "Tarefas de Trabalho";
+
+
   const [modoTarefas, setModoTarefas] = useState<ModoTarefa[]>([
     {
       id: 0,
-      nomeGrupoTarefa: "Tarefas de Trabalho",
+      nomeGrupoTarefa: nameTask,
       tasks: [],
     },
 

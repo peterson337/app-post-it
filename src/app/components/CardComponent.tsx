@@ -6,7 +6,7 @@ import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { FaPlus } from "react-icons/fa";
 import ModalReutilizavel from "./ModalReutilizavel";
 import useCustomHook from "../hook/useCustomHook";
-
+import { FaKeyboard } from "react-icons/fa";
 export const CardComponent = () => {
   const { addedTabSelected } = useCustomHook();
   //prettier-ignore
@@ -14,6 +14,7 @@ export const CardComponent = () => {
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
   const evitarAdicionarAbaRepetida = useRef(false);
   const numbers = useRef<string[]>([]);
+  const contentModal = useRef("");
 
   useEffect(() => {
     if (evitarAdicionarAbaRepetida.current) return;
@@ -44,12 +45,24 @@ export const CardComponent = () => {
       <section
         className={`bg-[#373737] w-[95%] h-[95dvh] mt-5 p-5 rounded-[20px] `}
       >
-        <button
-          onClick={() => setIsSideBar(true)}
-          className="text-3xl m-3 md:m-0"
-        >
-          <TbLayoutSidebarLeftCollapse />
-        </button>
+        <div className="flex flex-row justify-between items-center">
+          <button
+            onClick={() => setIsSideBar(true)}
+            className="text-3xl m-3 md:m-0"
+          >
+            <TbLayoutSidebarLeftCollapse />
+          </button>
+
+          <button
+            className="text-3xl"
+            onClick={() => {
+              setModalAddTabs(true),
+                (contentModal.current = "Atalhos de teclado");
+            }}
+          >
+            <FaKeyboard />
+          </button>
+        </div>
 
         <section className="flex flex-row justify-center gap-5 items-center mb-3 ">
           <div
@@ -75,14 +88,18 @@ export const CardComponent = () => {
             })}
           </div>
 
-          <button onClick={() => setModalAddTabs(true)}>
+          <button
+            onClick={() => {
+              setModalAddTabs(true), (contentModal.current = "Add Tabs");
+            }}
+          >
             <FaPlus className="text-2xl" />
           </button>
 
           <ModalReutilizavel
             isOpenModal={modalAddTabs}
             setIsOpenModal={setModalAddTabs}
-            content={"Add Tabs"}
+            content={contentModal.current}
           />
         </section>
 

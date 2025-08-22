@@ -38,7 +38,7 @@ export default function Modal(props: Props) {
 
   return (
     <Dialog onClose={() => setIsOpenModal(false)} open={isOpenModal}>
-      {content === "Add Tabs" && (
+      {content === "Add Tabs" ? (
         <section className="flex flex-col justify-center items-center">
           <DialogTitle className="text-center">Adicionar abas</DialogTitle>
 
@@ -68,6 +68,41 @@ export default function Modal(props: Props) {
             </Button>
           </div>
         </section>
+      ) : (
+        content === "Atalhos de teclado" && (
+          <section className="flex flex-col justify-center items-center p-3">
+            <h3 className="text-3xl border-b-2 pb-3 mb-3 border-black w-full text-center">
+              Atalhos de teclado
+            </h3>
+            <p className="text-2xl">
+              Salvar tarefas:{" "}
+              <span className="text-red-500 text-2xl">Alt + S</span>
+            </p>
+            <p className="text-2xl">
+              Criar uma nova lista de tarefa:{" "}
+              <span className="text-red-500 text-2xl">Alt + A</span>
+            </p>
+            <p className="text-2xl">
+              Criar uma nova lista de tarefa{" "}
+              <span className="text-red-500 text-2xl">Ctrl + M</span>
+            </p>
+            <p className="text-2xl">
+              Criar uma nova lista de compra{" "}
+              <span className="text-red-500 text-2xl">Ctrl + virgula </span>
+            </p>
+            <p className="text-2xl">Números do 0 até 9 para trocar de aba</p>
+
+            <div className="border-t-2 pt-3 mt-3 border-black w-full flex justify-center ">
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setIsOpenModal(false)}
+              >
+                Fechar modal
+              </Button>
+            </div>
+          </section>
+        )
       )}
     </Dialog>
   );

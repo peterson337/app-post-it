@@ -76,6 +76,8 @@ export const Tarefas = () => {
 
   const inputEditListName = useRef<HTMLInputElement>(null);
 
+  const autoComplete = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyPress);
 
@@ -125,15 +127,18 @@ export const Tarefas = () => {
 
         //prettier-ignore
 
-        const test =   backupData.map((item) => {
+        if(useId && backupData.find((item) => item.id === id)){
+
+          const test =   backupData.map((item) => {
             if(item.id === id){
-               item.nomeGrupoTarefa = newTask;
+              item.nomeGrupoTarefa = newTask;
             }
 
             return item
-            })
+          })
 
-        saveInDatabase(test);
+          saveInDatabase(test);
+        }
 
         setAnchorEls((prev) => ({ ...prev, [selectedId!]: null }));
         setEditTitleTask(null);
@@ -157,6 +162,22 @@ export const Tarefas = () => {
     nome.length > 17 && nome !== "Lista de compra 🛒"
       ? nome.substring(0, 15) + "..."
       : nome;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "s" && e.altKey && useId) {
+        const listSelected = modoTarefas.find((item) => item.id === Filtro);
+
+        backup(listSelected as Backup);
+      }
+
+      if (e.key === "a" && e.altKey) setiSOpenModalCreateTypeTask(true);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [Filtro, useId]);
 
   const saveInDatabase = async (listTaskSelected: any, type?: string) => {
     try {
@@ -216,6 +237,7 @@ export const Tarefas = () => {
     //? setBackupData(res.data.tasks);
     if (useId) {
       recuperarTasksBackUp();
+      setTimeout(() => autoComplete.current?.focus(), 0);
       setModalBackup(true);
     }
   };
@@ -286,6 +308,7 @@ export const Tarefas = () => {
                 label="Nome de uma lista de tarefa"
                 value={textDropdown}
                 onChange={(e) => setTextDropdown(e.target.value)}
+                inputRef={autoComplete}
               />
             )}
           />
