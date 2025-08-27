@@ -78,6 +78,9 @@ interface TaskCardProps {
   newTask: string;
   setModoTarefas: Dispatch<SetStateAction<ModoTarefa[]>>;
   modoTarefas: ModoTarefa[];
+  keyWords: string[];
+  styleCard: { color: string; colorText: boolean };
+  setStyleCard: Dispatch<SetStateAction<{ color: string; colorText: boolean }>>;
 }
 
 type KeyWords = {
@@ -98,11 +101,14 @@ const TaskCard = ({
   newTask,
   setModoTarefas,
   modoTarefas,
+  keyWords,
+  styleCard,
+  setStyleCard,
 }: TaskCardProps) => {
   const TarefaConcluida = item.completed;
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+  //prettier-ignore
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   const inputColorRef = React.useRef("");
   const inputColorValue = inputColorRef.current;
@@ -245,21 +251,26 @@ const TaskCard = ({
               }}
             >
               <div className="flex flex-col p-2 gap-3">
-                <MenuItem className="">
-                  <input
-                    type="color"
-                    onChange={(e) =>
-                      changeColorPostIt(e.target.value, item.id, val.id)
-                    }
-                    value={
-                      inputColorValue === "" ? item.color : inputColorValue
-                    }
-                    className="border-none rounded-full"
-                  />
-                </MenuItem>
+                <label
+                  htmlFor={`inputColor`}
+                  className={`
+                    w-full p-2 rounded-lg bg-sky-600 text-white text-center cursor-pointer hover:bg-sky-700
+                    `}
+                >
+                  Mudar cor do post it
+                </label>
+                <input
+                  id="inputColor"
+                  type="color"
+                  onChange={(e) =>
+                    changeColorPostIt(e.target.value, item.id, val.id)
+                  }
+                  value={inputColorValue === "" ? item.color : inputColorValue}
+                  className="w-0 h-0 absolute opacity-0"
+                />
 
-                <MenuItem
-                  className=""
+                <button
+                  className={`w-full p-2 rounded-lg bg-green-600 text-white text-center cursor-pointer hover:bg-green-700`}
                   onClick={() =>
                     changeColorPostIt(
                       "",
@@ -269,10 +280,8 @@ const TaskCard = ({
                     ) as unknown as React.MouseEventHandler<HTMLButtonElement>
                   }
                 >
-                  <button className="text-2xl">
-                    <AiOutlineFontColors />
-                  </button>
-                </MenuItem>
+                  Mudar cor do texto
+                </button>
               </div>
             </Menu>
           </div>
@@ -287,6 +296,9 @@ const TaskCard = ({
           finishOrEditTasks={finishOrEditTasks}
           item={item}
           val={val}
+          keyWords={keyWords}
+          styleCard={styleCard}
+          setStyleCard={setStyleCard}
         />
       ) : null}
     </Box>
@@ -314,6 +326,10 @@ export const TarefasDinamicas = () => {
   const [tasksFiltered, setTasksFiltered] = React.useState([]);
   const [textFilter, setTextFilter] = React.useState("");
   const [keyWords, setKeyWords] = useState<string[]>([]);
+  const [styleCard, setStyleCard] = useState({
+    color: "#fef08a",
+    colorText: true,
+  });
 
   useEffect(() => {
     //prettier-ignore
@@ -358,9 +374,13 @@ export const TarefasDinamicas = () => {
           if (newTask.length === 0)
             setIsOpenSnacker(true), setAlert("Adicione uma tarefa");
           else {
-            val.tasks.map(
-              (item) => item.id === id && (item.nomeTarefa = newTask)
-            );
+            val.tasks.map((item) => {
+              if (item.id === id) {
+                item.nomeTarefa = newTask;
+                item.color = styleCard.color;
+                item.colorText = styleCard.colorText;
+              }
+            });
             localStorage.setItem(
               "colecaoTarefas",
               JSON.stringify([...modoTarefas])
@@ -368,6 +388,7 @@ export const TarefasDinamicas = () => {
             setModoTarefas([...modoTarefas]);
             setNewTask("");
             setIsOpenModalEditTasks(false);
+            setStyleCard({ color: "#fef08a", colorText: true });
           }
         }
       }
@@ -644,6 +665,9 @@ export const TarefasDinamicas = () => {
                               newTask={newTask}
                               setModoTarefas={setModoTarefas}
                               modoTarefas={modoTarefas}
+                              keyWords={keyWords}
+                              styleCard={styleCard}
+                              setStyleCard={setStyleCard}
                             />
                           ))
                         ) : (

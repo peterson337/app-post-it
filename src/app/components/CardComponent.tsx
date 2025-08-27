@@ -10,7 +10,7 @@ import { FaKeyboard } from "react-icons/fa";
 export const CardComponent = () => {
   const { addedTabSelected } = useCustomHook();
   //prettier-ignore
-  const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro } = useContext(GlobalContext);
+  const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro, setTabs } = useContext(GlobalContext);
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
   const evitarAdicionarAbaRepetida = useRef(false);
   const numbers = useRef<string[]>([]);
@@ -28,8 +28,20 @@ export const CardComponent = () => {
     evitarAdicionarAbaRepetida.current = true;
   }, []);
 
+  const closeTabs = () => {
+    const tabSelected = tabs.filter((tab) => tab.id !== Filtro);
+    const index = tabs.findIndex((tab) => tab.id === Filtro);
+
+    if (tabSelected.length > 0) {
+      setTabs(tabSelected);
+      setFiltro(tabs[index - 1].id);
+    }
+  };
+
   useEffect(() => {
     const changeTab = (e: KeyboardEvent) => {
+      if ((e.key === "w" || e.key === "W") && e.altKey) closeTabs();
+
       if (!numbers.current.includes(e.key)) return;
 
       if (tabs[+e.key]) setFiltro(tabs[+e.key].id);
@@ -38,7 +50,7 @@ export const CardComponent = () => {
     window.addEventListener("keydown", changeTab);
 
     return () => window.removeEventListener("keydown", changeTab);
-  }, [tabs]);
+  }, [tabs, Filtro]);
 
   return (
     <main className="flex justify-center  items-center">

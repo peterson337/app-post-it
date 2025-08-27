@@ -20,6 +20,38 @@ export default function Modal(props: Props) {
   const { addedTabSelected } = useCustomHook();
   const textInputRef = React.useRef("");
 
+  const atalhoDeTeclado = [
+    {
+      instrução: "Criar oua atualizar o backup selecionado",
+      atalho: "Alt + S",
+    },
+
+    {
+      instrução: "Criar uma nova lista de tarefa",
+      atalho: "Alt + A",
+    },
+
+    {
+      instrução: "Criar uma nova lista de tarefa",
+      atalho: "Alt + M",
+    },
+
+    {
+      instrução: "Criar uma nova lista de compra",
+      atalho: "Alt + ,",
+    },
+
+    {
+      instrução: "Números para trocar de aba",
+      atalho: "0 até 9",
+    },
+
+    {
+      instrução: "Excluir aba selecionada",
+      atalho: "Alt + W",
+    },
+  ];
+
   const options = modoTarefas.map((item) => item.nomeGrupoTarefa);
 
   const addTabs = () => {
@@ -74,23 +106,13 @@ export default function Modal(props: Props) {
             <h3 className="text-3xl border-b-2 pb-3 mb-3 border-black w-full text-center">
               Atalhos de teclado
             </h3>
-            <p className="text-2xl">
-              Salvar tarefas:{" "}
-              <span className="text-red-500 text-2xl">Alt + S</span>
-            </p>
-            <p className="text-2xl">
-              Criar uma nova lista de tarefa:{" "}
-              <span className="text-red-500 text-2xl">Alt + A</span>
-            </p>
-            <p className="text-2xl">
-              Criar uma nova lista de tarefa{" "}
-              <span className="text-red-500 text-2xl">Ctrl + M</span>
-            </p>
-            <p className="text-2xl">
-              Criar uma nova lista de compra{" "}
-              <span className="text-red-500 text-2xl">Ctrl + virgula </span>
-            </p>
-            <p className="text-2xl">Números do 0 até 9 para trocar de aba</p>
+
+            {atalhoDeTeclado.map((item, index) => (
+              <p key={index} className="text-2xl">
+                {item.instrução}:{" "}
+                <span className="text-red-500 text-2xl">{item.atalho}</span>
+              </p>
+            ))}
 
             <div className="border-t-2 pt-3 mt-3 border-black w-full flex justify-center ">
               <Button
