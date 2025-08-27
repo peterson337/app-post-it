@@ -78,6 +78,9 @@ interface TaskCardProps {
   newTask: string;
   setModoTarefas: Dispatch<SetStateAction<ModoTarefa[]>>;
   modoTarefas: ModoTarefa[];
+  keyWords: string[];
+  styleCard: { color: string; colorText: boolean };
+  setStyleCard: Dispatch<SetStateAction<{ color: string; colorText: boolean }>>;
 }
 
 type KeyWords = {
@@ -98,11 +101,14 @@ const TaskCard = ({
   newTask,
   setModoTarefas,
   modoTarefas,
+  keyWords,
+  styleCard,
+  setStyleCard,
 }: TaskCardProps) => {
   const TarefaConcluida = item.completed;
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id });
+  //prettier-ignore
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   const inputColorRef = React.useRef("");
   const inputColorValue = inputColorRef.current;
@@ -287,6 +293,9 @@ const TaskCard = ({
           finishOrEditTasks={finishOrEditTasks}
           item={item}
           val={val}
+          keyWords={keyWords}
+          styleCard={styleCard}
+          setStyleCard={setStyleCard}
         />
       ) : null}
     </Box>
@@ -314,6 +323,10 @@ export const TarefasDinamicas = () => {
   const [tasksFiltered, setTasksFiltered] = React.useState([]);
   const [textFilter, setTextFilter] = React.useState("");
   const [keyWords, setKeyWords] = useState<string[]>([]);
+  const [styleCard, setStyleCard] = useState({
+    color: "#fef08a",
+    colorText: true,
+  });
 
   useEffect(() => {
     //prettier-ignore
@@ -358,9 +371,13 @@ export const TarefasDinamicas = () => {
           if (newTask.length === 0)
             setIsOpenSnacker(true), setAlert("Adicione uma tarefa");
           else {
-            val.tasks.map(
-              (item) => item.id === id && (item.nomeTarefa = newTask)
-            );
+            val.tasks.map((item) => {
+              if (item.id === id) {
+                item.nomeTarefa = newTask;
+                item.color = styleCard.color;
+                item.colorText = styleCard.colorText;
+              }
+            });
             localStorage.setItem(
               "colecaoTarefas",
               JSON.stringify([...modoTarefas])
@@ -368,6 +385,7 @@ export const TarefasDinamicas = () => {
             setModoTarefas([...modoTarefas]);
             setNewTask("");
             setIsOpenModalEditTasks(false);
+            setStyleCard({ color: "#fef08a", colorText: true });
           }
         }
       }
@@ -644,6 +662,9 @@ export const TarefasDinamicas = () => {
                               newTask={newTask}
                               setModoTarefas={setModoTarefas}
                               modoTarefas={modoTarefas}
+                              keyWords={keyWords}
+                              styleCard={styleCard}
+                              setStyleCard={setStyleCard}
                             />
                           ))
                         ) : (
