@@ -251,21 +251,26 @@ const TaskCard = ({
               }}
             >
               <div className="flex flex-col p-2 gap-3">
-                <MenuItem className="">
-                  <input
-                    type="color"
-                    onChange={(e) =>
-                      changeColorPostIt(e.target.value, item.id, val.id)
-                    }
-                    value={
-                      inputColorValue === "" ? item.color : inputColorValue
-                    }
-                    className="border-none rounded-full"
-                  />
-                </MenuItem>
+                <label
+                  htmlFor={`inputColor`}
+                  className={`
+                    w-full p-2 rounded-lg bg-sky-600 text-white text-center cursor-pointer hover:bg-sky-700
+                    `}
+                >
+                  Mudar cor do post it
+                </label>
+                <input
+                  id="inputColor"
+                  type="color"
+                  onChange={(e) =>
+                    changeColorPostIt(e.target.value, item.id, val.id)
+                  }
+                  value={inputColorValue === "" ? item.color : inputColorValue}
+                  className="w-0 h-0 absolute opacity-0"
+                />
 
-                <MenuItem
-                  className=""
+                <button
+                  className={`w-full p-2 rounded-lg bg-green-600 text-white text-center cursor-pointer hover:bg-green-700`}
                   onClick={() =>
                     changeColorPostIt(
                       "",
@@ -275,10 +280,8 @@ const TaskCard = ({
                     ) as unknown as React.MouseEventHandler<HTMLButtonElement>
                   }
                 >
-                  <button className="text-2xl">
-                    <AiOutlineFontColors />
-                  </button>
-                </MenuItem>
+                  Mudar cor do texto
+                </button>
               </div>
             </Menu>
           </div>
