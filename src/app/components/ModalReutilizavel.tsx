@@ -16,7 +16,7 @@ import TextField from "@mui/material/TextField";
 
 export default function Modal(props: Props) {
   const { isOpenModal, setIsOpenModal, content } = props;
-  const { modoTarefas, setFiltro } = React.useContext(GlobalContext);
+  const { modoTarefas, setFiltro, tabs } = React.useContext(GlobalContext);
   const { addedTabSelected } = useCustomHook();
   const textInputRef = React.useRef("");
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ export default function Modal(props: Props) {
     window.addEventListener("keydown", changeTab);
 
     return () => window.removeEventListener("keydown", changeTab);
-  }, [content]);
+  }, [content, modoTarefas, tabs]);
 
   const atalhoDeTeclado = [
     {
