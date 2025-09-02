@@ -499,7 +499,9 @@ export const TarefasDinamicas = () => {
         //prettier-ignore
         const nameTasks = (keyWords ?? []).filter(Boolean);
 
-        const removeDuplicate = new Set(nameTasks);
+        const formatWordKeys = nameTasks.map((item) => item?.toUpperCase());
+
+        const removeDuplicate = new Set(formatWordKeys);
 
         setKeyWords(Array.from(removeDuplicate) as string[]);
       } else setKeyWords([]);

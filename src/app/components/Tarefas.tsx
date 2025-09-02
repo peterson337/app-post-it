@@ -78,22 +78,6 @@ export const Tarefas = () => {
 
   const autoComplete = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
-
-  const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === "m") {
-      setIsOpenModalTarefaDinamica(true);
-    } else if (event.ctrlKey && event.key === ",") {
-      setIsOpenModal(true);
-    }
-  };
-
   const [anchorEls, setAnchorEls] = useState<{
     [key: number]: HTMLElement | null;
   }>({});
@@ -171,13 +155,16 @@ export const Tarefas = () => {
         backup(listSelected as Backup);
       }
 
+      if (e.ctrlKey && e.key === "m") setIsOpenModalTarefaDinamica(true);
+      else if (e.ctrlKey && e.key === ",") setIsOpenModal(true);
+
       if (e.key === "a" && e.altKey) setiSOpenModalCreateTypeTask(true);
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [Filtro, useId]);
+  }, [Filtro, useId, backupData]);
 
   const saveInDatabase = async (listTaskSelected: any, type?: string) => {
     try {

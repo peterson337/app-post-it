@@ -38,7 +38,7 @@ export default function Modal(props: Props) {
 
   const atalhoDeTeclado = [
     {
-      instrução: "Criar oua atualizar o backup selecionado",
+      instrução: "Criar ou atualizar o backup selecionado",
       atalho: "Alt + S",
     },
 
@@ -59,12 +59,22 @@ export default function Modal(props: Props) {
 
     {
       instrução: "Números para trocar de aba",
-      atalho: "CTRL + 0 até 9",
+      atalho: "Ctrl + 0 até 9",
     },
 
     {
       instrução: "Excluir aba selecionada",
       atalho: "Alt + W",
+    },
+
+    {
+      instrução: "Abrir modal de adicionar aba",
+      atalho: "Alt + =",
+    },
+
+    {
+      instrução: "Adicionar nova aba",
+      atalho: "ctrl + enter",
     },
   ];
 
@@ -93,7 +103,13 @@ export default function Modal(props: Props) {
 
           <Autocomplete
             options={options}
-            sx={{ width: 300 }}
+            sx={{
+              width: {
+                xs: "80%",
+                sm: "50%",
+                md: "70%",
+              },
+            }}
             onChange={(_event, value) => (textInputRef.current = value || "")}
             renderInput={(params) => (
               <TextField
@@ -105,7 +121,7 @@ export default function Modal(props: Props) {
             )}
           />
 
-          <div className="flex flex-row gap-5 p-5 ">
+          <div className="flex flex-row flex-wrap gap-5 p-5 justify-center items-center md:j ">
             <Button
               variant="contained"
               color="error"
@@ -125,12 +141,14 @@ export default function Modal(props: Props) {
               Atalhos de teclado
             </h3>
 
-            {atalhoDeTeclado.map((item, index) => (
-              <p key={index} className="text-2xl">
-                {item.instrução}:{" "}
-                <span className="text-red-500 text-2xl">{item.atalho}</span>
-              </p>
-            ))}
+            <div className="h-auto max-h-96 overflow-x-clip overflow-y-auto">
+              {atalhoDeTeclado.map((item, index) => (
+                <p key={index} className="text-2xl">
+                  {item.instrução}:{" "}
+                  <span className="text-red-500 text-2xl">{item.atalho}</span>
+                </p>
+              ))}
+            </div>
 
             <div className="border-t-2 pt-3 mt-3 border-black w-full flex justify-center ">
               <Button
