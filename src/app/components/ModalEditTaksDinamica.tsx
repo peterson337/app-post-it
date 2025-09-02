@@ -50,17 +50,19 @@ export const ModalEditTaksDinamica = ({
     return modoTarefas.find((item) => item.id === Filtro)?.tasks.find((item) => item.nomeTarefa.includes(`${val}`));
   };
 
+  React.useEffect(() => {
+    setStyleCard({
+      color: item.color || "#fef08a",
+      colorText: item.colorText ?? true,
+    });
+  }, []);
+
   const keyWordSelected = (item: string) => {
     const validation = newTask.match(/\([^)]*\)/);
-    const cardInformationConst = cardInformation(item);
     //prettier-ignore
     const removerPalavraChaveAntiga = newTask.split(" ").filter((item, index) => index !== 0).join(" ");
     //prettier-ignore
     setNewTask(`${item} ${validation? removerPalavraChaveAntiga : newTask}`);
-    setStyleCard({
-      color: cardInformationConst?.color || "#fef08a",
-      colorText: cardInformationConst?.colorText ?? false,
-    });
 
     setTimeout(() => inputRef.current?.focus(), 0);
   };

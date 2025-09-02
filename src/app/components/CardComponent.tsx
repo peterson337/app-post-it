@@ -34,7 +34,7 @@ export const CardComponent = () => {
 
     if (tabSelected.length > 0) {
       setTabs(tabSelected);
-      setFiltro(tabs[index - 1].id);
+      setFiltro(index === 0 ? tabs[index + 1].id : tabs[index - 1].id);
     }
   };
 
@@ -42,9 +42,14 @@ export const CardComponent = () => {
     const changeTab = (e: KeyboardEvent) => {
       if ((e.key === "w" || e.key === "W") && e.altKey) closeTabs();
 
+      if (e.key === "=" && e.altKey) {
+        setModalAddTabs(true);
+        contentModal.current = "Add Tabs";
+      }
+
       if (!numbers.current.includes(e.key)) return;
 
-      if (tabs[+e.key]) setFiltro(tabs[+e.key].id);
+      if (tabs[+e.key] && e.ctrlKey) setFiltro(tabs[+e.key].id);
     };
 
     window.addEventListener("keydown", changeTab);

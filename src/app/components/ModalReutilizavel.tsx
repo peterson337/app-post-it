@@ -16,9 +16,25 @@ import TextField from "@mui/material/TextField";
 
 export default function Modal(props: Props) {
   const { isOpenModal, setIsOpenModal, content } = props;
-  const { modoTarefas } = React.useContext(GlobalContext);
+  const { modoTarefas, setFiltro } = React.useContext(GlobalContext);
   const { addedTabSelected } = useCustomHook();
   const textInputRef = React.useRef("");
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setTimeout(() => inputRef.current?.focus(), 0);
+  }, [isOpenModal]);
+
+  const changeTab = (e: KeyboardEvent) => {
+    //prettier-ignore
+    if (content === "Add Tabs" && e.key === "Enter" && e.ctrlKey) addTabs();
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", changeTab);
+
+    return () => window.removeEventListener("keydown", changeTab);
+  }, [content]);
 
   const atalhoDeTeclado = [
     {
@@ -43,7 +59,7 @@ export default function Modal(props: Props) {
 
     {
       instrução: "Números para trocar de aba",
-      atalho: "0 até 9",
+      atalho: "CTRL + 0 até 9",
     },
 
     {
@@ -60,6 +76,7 @@ export default function Modal(props: Props) {
 
     if (tab) {
       const tabSelected = addedTabSelected(tab);
+      setFiltro(tab.id);
 
       if (tabSelected) setIsOpenModal(false);
       else alert("Esta aba ja foi adicionada.");
@@ -80,6 +97,7 @@ export default function Modal(props: Props) {
             onChange={(_event, value) => (textInputRef.current = value || "")}
             renderInput={(params) => (
               <TextField
+                inputRef={inputRef}
                 {...params}
                 label="Name abas"
                 onChange={(e) => (textInputRef.current = e.target.value)}
