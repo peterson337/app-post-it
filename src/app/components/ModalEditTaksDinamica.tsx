@@ -46,8 +46,11 @@ export const ModalEditTaksDinamica = ({
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const cardInformation = (val: string) => {
-    //prettier-ignore
-    return modoTarefas.find((item) => item.id === Filtro)?.tasks.find((item) => item.nomeTarefa.includes(`${val}`));
+    return modoTarefas
+      .find((item) => item.id === Filtro)
+      ?.tasks.find((item) =>
+        item.nomeTarefa.toUpperCase().includes(`${val.toUpperCase()}`)
+      );
   };
 
   React.useEffect(() => {
