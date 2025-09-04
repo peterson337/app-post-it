@@ -323,13 +323,15 @@ export const TarefasDinamicas = () => {
   const [isOpenSnacker, setIsOpenSnacker] = useState(false);
   //prettier-ignore
   const [filterTasks, setFilterTasks] = React.useState<boolean | string>("null");
-  const [tasksFiltered, setTasksFiltered] = React.useState([]);
+  const [tasksFiltered, setTasksFiltered] = React.useState<Tasks[]>([]);
   const [textFilter, setTextFilter] = React.useState("");
   const [keyWords, setKeyWords] = useState<string[]>([]);
   const [styleCard, setStyleCard] = useState({
     color: "#fef08a",
     colorText: true,
   });
+  //prettier-ignore
+  const [isShowButtonsAfterFinishTasks, setIsShowButtonsAfterFinishTasks] = useState(false);
 
   useEffect(() => {
     //prettier-ignore
@@ -477,6 +479,11 @@ export const TarefasDinamicas = () => {
   const tasksByTextFilter = tasksFiltered.filter((item: Tarefas) =>
     formatString(item.nomeTarefa).includes(formatString(textFilter))
   );
+
+  useEffect(() => {
+    //prettier-ignore
+    setIsShowButtonsAfterFinishTasks(tasksByTextFilter.every((item: Tarefas) => item.completed));
+  }, [tasksByTextFilter, tasksFiltered]);
 
   const armazenarFiltro = (text: string) => {
     setTextFilter(text);
@@ -636,7 +643,44 @@ export const TarefasDinamicas = () => {
           <Fragment key={val.id}>
             {Filtro === val.id && (
               <section>
-                {tasksFiltered.length > 0 ? (
+                {isShowButtonsAfterFinishTasks ? (
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap ">
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        apagarTodasAsTarefasConcluidas();
+                        handleClose(); // Fechar o menu após clicar
+                      }}
+                      className="bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                    >
+                      Apagar tarefas concluidas
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        apagarTodasAsTarefasConcluidas("desmarcar");
+                        handleClose(); // Fechar o menu após clicar
+                      }}
+                      className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                    >
+                      Desmarcar as tarefas
+                    </Button>
+
+                    {/* <Button
+                      variant="contained"
+                      onClick={() =>
+                        setTasksFiltered(
+                          tasksFiltered.map((item: Tarefas, index) =>
+                            index === 0 ? { ...item, completed: false } : item
+                          )
+                        )
+                      }
+                      className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                    >
+                      Mostrar os post it
+                    </Button> */}
+                  </div>
+                ) : tasksFiltered.length > 0 ? (
                   <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
