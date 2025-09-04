@@ -643,7 +643,7 @@ export const TarefasDinamicas = () => {
           <Fragment key={val.id}>
             {Filtro === val.id && (
               <section>
-                {isShowButtonsAfterFinishTasks ? (
+                {filterTasks !== true && isShowButtonsAfterFinishTasks ? (
                   <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap ">
                     <Button
                       variant="contained"
@@ -666,19 +666,13 @@ export const TarefasDinamicas = () => {
                       Desmarcar as tarefas
                     </Button>
 
-                    {/* <Button
+                    <Button
                       variant="contained"
-                      onClick={() =>
-                        setTasksFiltered(
-                          tasksFiltered.map((item: Tarefas, index) =>
-                            index === 0 ? { ...item, completed: false } : item
-                          )
-                        )
-                      }
+                      onClick={() => setFilterTasks(true)}
                       className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
                     >
                       Mostrar os post it
-                    </Button> */}
+                    </Button>
                   </div>
                 ) : tasksFiltered.length > 0 ? (
                   <DndContext
