@@ -61,11 +61,14 @@ export const ModalEditTaksDinamica = ({
   }, []);
 
   const keyWordSelected = (item: string) => {
-    const validation = newTask.match(/\([^)]*\)/);
     //prettier-ignore
-    const removerPalavraChaveAntiga = newTask.split(" ").filter((item, index) => index !== 0).join(" ");
-    //prettier-ignore
-    setNewTask(`${item} ${validation? removerPalavraChaveAntiga : newTask}`);
+    if (!newTask.toUpperCase().includes(item.toUpperCase())) {
+      const text = `${item.toUpperCase()} ${newTask}`;
+      setNewTask(newTask !== "" ? text : `${item.toUpperCase()} `);
+    } else {
+      //prettier-ignore
+      setNewTask(newTask.split(" ").filter((val) => val.toUpperCase() !== item.toUpperCase()).join(" "));
+    }
 
     setTimeout(() => inputRef.current?.focus(), 0);
   };

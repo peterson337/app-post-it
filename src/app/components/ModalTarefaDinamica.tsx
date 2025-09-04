@@ -62,7 +62,14 @@ export const ModalTarefaDinamica = ({
   };
 
   const keyWordSelected = (val: string) => {
-    setTaks(`${val} `);
+    if (!taks.includes(val)) {
+      const text = `${val} ${taks}`;
+      setTaks(taks !== "" ? text : `${val} `);
+    } else {
+      //prettier-ignore
+      setTaks(taks.split(" ").filter((item) => item !== val).join(" "));
+    }
+
     first.current?.focus();
     const card = cardInformation(val);
 
