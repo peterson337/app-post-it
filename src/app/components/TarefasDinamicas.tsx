@@ -56,6 +56,7 @@ import Fab from "@mui/material/Fab";
 import { Tasks as Tarefas } from "../components/context/ts/types";
 import TextField from "@mui/material/TextField";
 import useCustomHook from "../hook/useCustomHook";
+import { useRouter } from "next/navigation";
 
 export type Tasks = {
   id: number;
@@ -306,6 +307,8 @@ const TaskCard = ({
 };
 
 export const TarefasDinamicas = () => {
+  const router = useRouter();
+
   const {
     modoTarefas,
     setModoTarefas,
@@ -363,6 +366,7 @@ export const TarefasDinamicas = () => {
             "colecaoTarefas",
             JSON.stringify([...modoTarefas])
           );
+          ShowButtonsAfterFinishTasks();
         } else if (action === "concluida") {
           val.tasks.map(
             (item) => item.id === id && (item.completed = !item.completed)
@@ -372,6 +376,7 @@ export const TarefasDinamicas = () => {
             JSON.stringify([...modoTarefas])
           );
           setModoTarefas([...modoTarefas]);
+          ShowButtonsAfterFinishTasks();
         } else if (action === "editar") {
           if (newTask.length === 0)
             setIsOpenSnacker(true), setAlert("Adicione uma tarefa");
@@ -456,8 +461,12 @@ export const TarefasDinamicas = () => {
       if (val.id === Filtro) {
         const temTarefaconcluida = val.tasks.some((item) => item.completed);
 
-        if (!temTarefaconcluida)
-          setAlert("Sem tarefas concluidas"), setIsOpenSnacker(true);
+        if (!temTarefaconcluida) {
+          setAlert("Sem tarefas concluidas");
+          setIsOpenSnacker(true);
+          return;
+        }
+
         setModoTarefas((prev) =>
           prev.map((val) => {
             if (val.id === Filtro) {
@@ -472,18 +481,22 @@ export const TarefasDinamicas = () => {
           })
         ),
           localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
+        setIsShowButtonsAfterFinishTasks(false);
       }
     });
   };
 
-  const tasksByTextFilter = tasksFiltered.filter((item: Tarefas) =>
-    formatString(item.nomeTarefa).includes(formatString(textFilter))
-  );
+  const tasksByTextFilter = React.useMemo(() => {
+    //prettier-ignore
+    return tasksFiltered.filter((item: Tarefas) => formatString(item.nomeTarefa).includes(formatString(textFilter)));
+  }, [tasksFiltered, textFilter, tasksFiltered, modoTarefas]);
 
-  useEffect(() => {
+  //console.log(isShowMessage.current);
+
+  const ShowButtonsAfterFinishTasks = () => {
     //prettier-ignore
     setIsShowButtonsAfterFinishTasks(tasksByTextFilter.every((item: Tarefas) => item.completed));
-  }, [tasksByTextFilter, tasksFiltered]);
+  };
 
   const armazenarFiltro = (text: string) => {
     setTextFilter(text);
@@ -514,6 +527,36 @@ export const TarefasDinamicas = () => {
       } else setKeyWords([]);
     } else setKeyWords([]);
   }, [Filtro, modoTarefas]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === "d" || e.key === "D") && e.shiftKey) {
+        apagarTodasAsTarefasConcluidas();
+        if (filterTasks === true) setFilterTasks(false);
+      }
+
+      //prettier-ignore
+      if ((e.key === "f" || e.key === "F") && e.shiftKey) {
+        apagarTodasAsTarefasConcluidas("desmarcar");
+       if(filterTasks === true) setFilterTasks(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [modoTarefas, tasksByTextFilter, tasksFiltered]);
+
+  React.useEffect(() => {
+    if (tasksByTextFilter.length > 0) ShowButtonsAfterFinishTasks();
+
+    // if (
+    //   filterTasks != "Tarefas não concluídas" &&
+    //   tasksByTextFilter.length === 0
+    // ) {
+    //   setIsShowButtonsAfterFinishTasks(false);
+    // }
+  }, [tasksByTextFilter]);
 
   return (
     <>
@@ -644,7 +687,7 @@ export const TarefasDinamicas = () => {
             {Filtro === val.id && (
               <section>
                 {filterTasks !== true && isShowButtonsAfterFinishTasks ? (
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap ">
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap mt-5 md:mt-0 ">
                     <Button
                       variant="contained"
                       onClick={() => {
@@ -661,7 +704,7 @@ export const TarefasDinamicas = () => {
                         apagarTodasAsTarefasConcluidas("desmarcar");
                         handleClose(); // Fechar o menu após clicar
                       }}
-                      className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                      className="bg-green-500 hover:bg-green-600 rounded-lg active:bg-green-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
                     >
                       Desmarcar as tarefas
                     </Button>

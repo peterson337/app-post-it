@@ -48,13 +48,13 @@ export default function Modal(props: Props) {
     },
 
     {
-      instrução: "Criar uma nova lista de tarefa",
-      atalho: "Alt + M",
+      instrução: "Criar uma nova tarefa",
+      atalho: "Ctrl + M",
     },
 
     {
       instrução: "Criar uma nova lista de compra",
-      atalho: "Alt + ,",
+      atalho: "Ctrl + ,",
     },
 
     {
@@ -75,6 +75,16 @@ export default function Modal(props: Props) {
     {
       instrução: "Adicionar nova aba",
       atalho: "ctrl + enter",
+    },
+
+    {
+      instrução: "Apagar todas as tarefas concluídas",
+      atalho: "shift + d",
+    },
+
+    {
+      instrução: "Desmarcar todas as tarefas concluídas",
+      atalho: "shift + f",
     },
   ];
 

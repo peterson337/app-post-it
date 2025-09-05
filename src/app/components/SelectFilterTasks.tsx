@@ -16,6 +16,14 @@ export const SelectFilterTasks = ({
 
   const [value, setValue] = React.useState(valuepadrão);
 
+  React.useEffect(() => {
+    //prettier-ignore
+    if (filterTasks === true && value !== "Tarefas concluídas") setValue("Tarefas concluídas");
+
+    //prettier-ignore
+    if (filterTasks === false && value !== "Tarefas não concluídas") setValue("Tarefas não concluídas");
+  }, [filterTasks]);
+
   const handleChange = (event: SelectChangeEvent<typeof filterTasks>) => {
     const result = event.target.value;
 
