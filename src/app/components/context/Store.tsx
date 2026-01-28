@@ -78,9 +78,7 @@ export const GlobalContextProvider = ({
     //prettier-ignore
     const stored = localStorage.getItem("colecaoTarefas");
     if(stored){
-
-      getNameTask.current = JSON.parse(stored as string || "[]")?.[0]?.nomeGrupoTarefa;
-    
+      getNameTask.current = JSON.parse(stored as string || "[]").find((item: any) => item.id === 0).nomeGrupoTarefa;
     }
   }, [])
   

@@ -10,12 +10,13 @@ type Props = {
   isOpenModal: boolean;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   content: string;
+  children?: React.ReactNode;
 };
 
 import TextField from "@mui/material/TextField";
 
 export default function Modal(props: Props) {
-  const { isOpenModal, setIsOpenModal, content } = props;
+  const { isOpenModal, setIsOpenModal, content, children } = props;
   const { modoTarefas, setFiltro, tabs } = React.useContext(GlobalContext);
   const { addedTabSelected } = useCustomHook();
   const textInputRef = React.useRef("");
@@ -145,7 +146,7 @@ export default function Modal(props: Props) {
           </div>
         </section>
       ) : (
-        content === "Atalhos de teclado" && (
+        content === "Atalhos de teclado"? (
           <section className="flex flex-col justify-center items-center p-3">
             <h3 className="text-3xl border-b-2 pb-3 mb-3 border-black w-full text-center">
               Atalhos de teclado
@@ -170,6 +171,10 @@ export default function Modal(props: Props) {
               </Button>
             </div>
           </section>
+        ) : content === "Childreen" && (
+          <>
+          {children}
+          </>
         )
       )}
     </Dialog>

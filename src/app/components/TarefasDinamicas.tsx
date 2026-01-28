@@ -57,6 +57,7 @@ import { Tasks as Tarefas } from "../components/context/ts/types";
 import TextField from "@mui/material/TextField";
 import useCustomHook from "../hook/useCustomHook";
 import { useRouter } from "next/navigation";
+import ModalReutilizavel from "@/app/components/ModalReutilizavel";
 
 export type Tasks = {
   id: number;
@@ -64,6 +65,7 @@ export type Tasks = {
   completed: boolean;
   color: string;
   colorText: boolean;
+  link?: string;
 };
 
 interface TaskCardProps {
@@ -110,9 +112,12 @@ const TaskCard = ({
 
   //prettier-ignore
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+  const textInputModalIndexarLink = React.useRef("");
 
   const inputColorRef = React.useRef("");
   const inputColorValue = inputColorRef.current;
+
+  const [isOpenModalReutilizavel, setisOpenModalReutilizavel] = useState(false);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -156,153 +161,213 @@ const TaskCard = ({
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
+  const indexarLinkTarefaSelecionada = () => {
+    if(textInputModalIndexarLink.current === "") return;
+    item.link = textInputModalIndexarLink.current;
+    setModoTarefas([...modoTarefas]);
+    setisOpenModalReutilizavel(false);
+    localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
+  };
+
   return (
-    <Box sx={{ transform: "scale(0.9)" }}>
-      <Card
-        className={`md:w-[25rem] w-80 h-60 p-5 text-2xl rounded-[20px]`}
-        ref={setNodeRef}
-        style={style}
+    <>
+      <ModalReutilizavel
+        isOpenModal={isOpenModalReutilizavel}
+        setIsOpenModal={setisOpenModalReutilizavel}
+        content="Childreen"
       >
-        <Typography
-          className={`text-3xl md:text-4xl ${
-            TarefaConcluida
-              ? "line-through text-green-500"
-              : `${item.colorText}`
-          } w-full break-words h-36 overflow-auto font-bangers`}
-          color="text.secondary"
-          gutterBottom
-          style={styleP}
+        <section className="flex flex-col gap-4 p-4">
+          <h3 className="text-2xl">Indexar link na tarefa selecionada</h3>
+          <TextField
+            id="outlined-basic"
+            label="Outlined"
+            variant="outlined"
+            autoFocus={true}
+            onChange={(e) => textInputModalIndexarLink.current = e.target.value}
+          />
+
+          <div className="flex flex-row gap-4 w-full justify-end">
+            <Button
+              variant="contained"
+              onClick={() => setisOpenModalReutilizavel(false)}
+              color="error"
+            >
+              Fechar
+            </Button>
+
+            <Button variant="contained" onClick={indexarLinkTarefaSelecionada}>
+              Indexar
+            </Button>
+          </div>
+        </section>
+      </ModalReutilizavel>
+      <Box sx={{ transform: "scale(0.9)" }}>
+        <Card
+          className={`md:w-[25rem] w-80 h-60 p-5 text-2xl rounded-[20px]`}
+          ref={setNodeRef}
+          style={style}
         >
-          {item.nomeTarefa}
-        </Typography>
-        <CardActions className="flex flex-row justify-between">
-          <Tooltip title="Deletar tarefa">
-            <button
-              className="hover:bg-gray-300 p-3 hover:rounded-full text-red-500"
-              onClick={() => finishOrEditTasks(item.id, val.id, "excluir")}
-            >
-              <FaTrash />
-            </button>
-          </Tooltip>
-          <Tooltip title="Marca tarefa como concluída">
-            <Checkbox
-              className="hover:bg-gray-300 p-3 hover:rounded-full text-black"
-              checked={TarefaConcluida}
-              onClick={() => finishOrEditTasks(item.id, val.id, "concluida")}
-              sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-              style={styleP}
-            ></Checkbox>
-          </Tooltip>
+          <Typography
+            className={`text-3xl md:text-4xl ${
+              TarefaConcluida
+                ? "line-through text-green-500"
+                : `${item.colorText}`
+            } w-full break-words h-36 overflow-auto font-bangers`}
+            color="text.secondary"
+            gutterBottom
+            style={styleP}
+          >
+            {item.nomeTarefa}
+            <br />
+            {item.link && (
+              <a
+                href={item.link}
+                className="text-blue-700 hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.link}
+              </a>
+            )}
+          </Typography>
+          <CardActions className="flex flex-row justify-between">
+            <Tooltip title="Deletar tarefa">
+              <button
+                className="hover:bg-gray-300 p-3 hover:rounded-full text-red-500"
+                onClick={() => finishOrEditTasks(item.id, val.id, "excluir")}
+              >
+                <FaTrash />
+              </button>
+            </Tooltip>
+            <Tooltip title="Marca tarefa como concluída">
+              <Checkbox
+                className="hover:bg-gray-300 p-3 hover:rounded-full text-black"
+                checked={TarefaConcluida}
+                onClick={() => finishOrEditTasks(item.id, val.id, "concluida")}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                style={styleP}
+              ></Checkbox>
+            </Tooltip>
 
-          <Tooltip title="Editar tarefa">
-            <button
-              className="hover:bg-gray-300 p-3 hover:rounded-full text-blue-500"
-              onClick={() => {
-                setIsOpenModalEditTasks(true);
-                setTest(item.id);
-                setNewTask(item.nomeTarefa);
-              }}
-            >
-              <FaPen />
-            </button>
-          </Tooltip>
+            <Tooltip title="Editar tarefa">
+              <button
+                className="hover:bg-gray-300 p-3 hover:rounded-full text-blue-500"
+                onClick={() => {
+                  setIsOpenModalEditTasks(true);
+                  setTest(item.id);
+                  setNewTask(item.nomeTarefa);
+                }}
+              >
+                <FaPen />
+              </button>
+            </Tooltip>
 
-          <Tooltip title="Mudar o post it de lugar">
-            <button
-              {...attributes}
-              {...listeners}
-              className="cursor-grab active:cursor-grabbing"
-            >
-              <RiDraggable />
-            </button>
-          </Tooltip>
+            <Tooltip title="Mudar o post it de lugar">
+              <button
+                {...attributes}
+                {...listeners}
+                className="cursor-grab active:cursor-grabbing"
+              >
+                <RiDraggable />
+              </button>
+            </Tooltip>
 
-          <div className="flex justify-end items-center ml-2 flex-row gap-3  mr-4">
-            <Tooltip title="Mais opções">
-              <Button
-                id="basic-button"
-                aria-controls={anchorEls[item.id] ? "basic-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={anchorEls[item.id] ? "true" : undefined}
-                onClick={(event: any) => {
+            <div className="flex justify-end items-center ml-2 flex-row gap-3  mr-4">
+              <Tooltip title="Mais opções">
+                <Button
+                  id="basic-button"
+                  aria-controls={anchorEls[item.id] ? "basic-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={anchorEls[item.id] ? "true" : undefined}
+                  onClick={(event: any) => {
+                    setAnchorEls((prev) => ({
+                      ...prev,
+                      [id]: event.currentTarget,
+                    })),
+                      setSelectedId(id);
+                  }}
+                  className="text-2xl"
+                  style={styleI}
+                >
+                  <MdMoreVert />
+                </Button>
+              </Tooltip>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEls[item.id]}
+                open={Boolean(anchorEls[item.id])}
+                onClose={() =>
                   setAnchorEls((prev) => ({
                     ...prev,
-                    [id]: event.currentTarget,
-                  })),
-                    setSelectedId(id);
+                    [selectedId!]: null,
+                  }))
+                }
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
                 }}
-                className="text-2xl"
-                style={styleI}
               >
-                <MdMoreVert />
-              </Button>
-            </Tooltip>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEls[item.id]}
-              open={Boolean(anchorEls[item.id])}
-              onClose={() =>
-                setAnchorEls((prev) => ({
-                  ...prev,
-                  [selectedId!]: null,
-                }))
-              }
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <div className="flex flex-col p-2 gap-3">
-                <label
-                  htmlFor={`inputColor`}
-                  className={`
+                <div className="flex flex-col p-2 gap-3">
+                  <label
+                    htmlFor={`inputColor`}
+                    className={`
                     w-full p-2 rounded-lg bg-sky-600 text-white text-center cursor-pointer hover:bg-sky-700
                     `}
-                >
-                  Mudar cor do post it
-                </label>
-                <input
-                  id="inputColor"
-                  type="color"
-                  onChange={(e) =>
-                    changeColorPostIt(e.target.value, item.id, val.id)
-                  }
-                  value={inputColorValue === "" ? item.color : inputColorValue}
-                  className="w-0 h-0 absolute opacity-0"
-                />
+                  >
+                    Mudar cor do post it
+                  </label>
+                  <input
+                    id="inputColor"
+                    type="color"
+                    onChange={(e) =>
+                      changeColorPostIt(e.target.value, item.id, val.id)
+                    }
+                    value={
+                      inputColorValue === "" ? item.color : inputColorValue
+                    }
+                    className="w-0 h-0 absolute opacity-0"
+                  />
 
-                <button
-                  className={`w-full p-2 rounded-lg bg-green-600 text-white text-center cursor-pointer hover:bg-green-700`}
-                  onClick={() =>
-                    changeColorPostIt(
-                      "",
-                      item.id,
-                      val.id,
-                      !item.colorText
-                    ) as unknown as React.MouseEventHandler<HTMLButtonElement>
-                  }
-                >
-                  Mudar cor do texto
-                </button>
-              </div>
-            </Menu>
-          </div>
-        </CardActions>
-      </Card>
-      {isOpenModalEditTasks && test === item.id ? (
-        <ModalEditTaksDinamica
-          isOpenModalEditTasks={isOpenModalEditTasks}
-          setIsOpenModalEditTasks={setIsOpenModalEditTasks}
-          setNewTask={setNewTask}
-          newTask={newTask}
-          finishOrEditTasks={finishOrEditTasks}
-          item={item}
-          val={val}
-          keyWords={keyWords}
-          styleCard={styleCard}
-          setStyleCard={setStyleCard}
-        />
-      ) : null}
-    </Box>
+                  <button
+                    className={`w-full p-2 rounded-lg bg-green-600 text-white text-center cursor-pointer hover:bg-green-700`}
+                    onClick={() =>
+                      changeColorPostIt(
+                        "",
+                        item.id,
+                        val.id,
+                        !item.colorText
+                      ) as unknown as React.MouseEventHandler<HTMLButtonElement>
+                    }
+                  >
+                    Mudar cor do texto
+                  </button>
+
+                  <button
+                    className={`w-full p-2 rounded-lg bg-indigo-800 text-white text-center cursor-pointer hover:bg-indigo-900`}
+                    onClick={() => setisOpenModalReutilizavel(true)}
+                  >
+                    Indexar o link na tarefa
+                  </button>
+                </div>
+              </Menu>
+            </div>
+          </CardActions>
+        </Card>
+        {isOpenModalEditTasks && test === item.id ? (
+          <ModalEditTaksDinamica
+            isOpenModalEditTasks={isOpenModalEditTasks}
+            setIsOpenModalEditTasks={setIsOpenModalEditTasks}
+            setNewTask={setNewTask}
+            newTask={newTask}
+            finishOrEditTasks={finishOrEditTasks}
+            item={item}
+            val={val}
+            keyWords={keyWords}
+            styleCard={styleCard}
+            setStyleCard={setStyleCard}
+          />
+        ) : null}
+      </Box>
+    </>
   );
 };
 

@@ -27,8 +27,6 @@ export const SelectFilterTasks = ({
   const handleChange = (event: SelectChangeEvent<typeof filterTasks>) => {
     const result = event.target.value;
 
-    localStorage.setItem("filterTasks", result);
-
     setValue(result);
 
     setFilterTasks(
