@@ -401,21 +401,6 @@ export const TarefasDinamicas = () => {
   //prettier-ignore
   const [isShowButtonsAfterFinishTasks, setIsShowButtonsAfterFinishTasks] = useState(false);
 
-  useEffect(() => {
-    //prettier-ignore
-    const storedTextFilter = sessionStorage.getItem(`textFilter-${String(Filtro)}`);
-
-    if (storedTextFilter) setTextFilter(storedTextFilter);
-    else setTextFilter("");
-
-    window.addEventListener("beforeunload", () => {
-      for (const item of modoTarefas) {
-        sessionStorage.removeItem(`textFilter-${String(item.id)}`);
-        localStorage.removeItem(`filterTasks`);
-      }
-    });
-  }, [Filtro]);
-
   const finishOrEditTasks = (
     id: number,
     idTypetask: number,
