@@ -155,7 +155,7 @@ export const Tarefas = () => {
         backup(listSelected as Backup);
       }
 
-      if (e.ctrlKey && e.key === "m") setIsOpenModalTarefaDinamica(true);
+      if (e.ctrlKey && (e.key === "m" || e.key === "M")) setIsOpenModalTarefaDinamica(true);
       else if (e.ctrlKey && e.key === ",") setIsOpenModal(true);
 
       if (e.key === "a" && e.altKey) setiSOpenModalCreateTypeTask(true);

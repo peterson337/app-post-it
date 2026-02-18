@@ -65,6 +65,11 @@ export const ModalEditTaksDinamica = ({
     if (!newTask.toUpperCase().includes(item.toUpperCase())) {
       const text = `${item.toUpperCase()} ${newTask}`;
       setNewTask(newTask !== "" ? text : `${item.toUpperCase()} `);
+
+      const taskData = cardInformation(item);
+
+      if (taskData) setStyleCard({color: taskData.color, colorText: taskData.colorText});
+      
     } else {
       //prettier-ignore
       setNewTask(newTask.split(" ").filter((val) => val.toUpperCase() !== item.toUpperCase()).join(" "));

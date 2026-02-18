@@ -11,11 +11,11 @@ import {
 } from "react-icons/fa";
 import ModalReutilizavel from "./ModalReutilizavel";
 import useCustomHook from "../hook/useCustomHook";
-import { motion, AnimatePresence } from "framer-motion";
+import {motion} from "framer-motion";
 export const CardComponent = () => {
   const { addedTabSelected } = useCustomHook();
   //prettier-ignore
-  const { Filtro, setIsSideBar, modoTarefas, tabs, setFiltro, setTabs } = useContext(GlobalContext);
+  const { Filtro, setIsSideBar, tabs, setFiltro, setTabs } = useContext(GlobalContext);
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
   const evitarAdicionarAbaRepetida = useRef(false);
   const numbers = useRef<string[]>([]);
@@ -49,7 +49,9 @@ export const CardComponent = () => {
   useEffect(() => {
     if (evitarAdicionarAbaRepetida.current) return;
 
-    const tabAtual = modoTarefas.find((item) => item.id === Filtro);
+    const firstTask = JSON.parse(localStorage.getItem("colecaoTarefas") || "[]");
+
+    const tabAtual = firstTask.find((item : any) => item.id === Filtro);
 
     for (let i = 0; i < 10; i++) numbers.current.push(String(i));
 
