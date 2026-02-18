@@ -55,6 +55,8 @@ export type Tasks = {
   completed: boolean;
   color: string;
   colorText: boolean;
+  link?: string;
+  nomeLink?: string;
 };
 
 export type Tarefas = {

@@ -12,9 +12,7 @@ export const SelectFilterTasks = ({
 }: any) => {
   const [open, setOpen] = React.useState(false);
 
-  const valuepadrão = localStorage.getItem("filterTasks") || "Todas as tarefas";
-
-  const [value, setValue] = React.useState(valuepadrão);
+  const [value, setValue] = React.useState("Todas as tarefas");
 
   React.useEffect(() => {
     //prettier-ignore

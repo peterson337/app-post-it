@@ -3,10 +3,15 @@ import { GlobalContext } from "./context/Store";
 import { ListaDeCompra } from "./ListaDeCompra";
 import { TarefasDinamicas } from "./TarefasDinamicas";
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
-import { FaPlus } from "react-icons/fa";
+import {
+  FaPlus,
+  FaChevronLeft,
+  FaChevronRight,
+  FaKeyboard,
+} from "react-icons/fa";
 import ModalReutilizavel from "./ModalReutilizavel";
 import useCustomHook from "../hook/useCustomHook";
-import { FaKeyboard } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 export const CardComponent = () => {
   const { addedTabSelected } = useCustomHook();
   //prettier-ignore
@@ -15,6 +20,31 @@ export const CardComponent = () => {
   const evitarAdicionarAbaRepetida = useRef(false);
   const numbers = useRef<string[]>([]);
   const contentModal = useRef("");
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showArrows, setShowArrows] = useState(false);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollWidth, clientWidth } = scrollRef.current;
+      setShowArrows(scrollWidth > clientWidth);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener("resize", checkScroll);
+    return () => window.removeEventListener("resize", checkScroll);
+  }, [tabs]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const scrollAmount = 200;
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
 
   useEffect(() => {
     if (evitarAdicionarAbaRepetida.current) return;
@@ -82,36 +112,68 @@ export const CardComponent = () => {
         </div>
 
         <section className="flex flex-row justify-center gap-5 items-center mb-3 ">
+          {showArrows && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleScroll("left")}
+            >
+              <FaChevronLeft className="text-white text-2xl" />
+            </motion.button>
+          )}
+
           <div
+            ref={scrollRef}
             /* prettier-ignore */
-            className={`flex flex-row gap-5 ${tabs.length > 1 ? "w-[50%] overflow-auto whitespace-nowrap " : "w-auto"}`}
+            className={`flex flex-row ${tabs.length > 1 && showArrows === false  && 'justify-center'} gap-5 ${tabs.length > 1 ? "w-[100%] overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] " : "w-auto"}`}
           >
             {tabs.map((item) => {
               return (
-                <h3
-                  style={Filtro === item.id ? { color: "#1c84b8" } : {}}
-                  className={`text-white md:text-4xl text-2xl font-bangers cursor-pointer ${
-                    Filtro === item.id ? "border-b-2 border-[#1c84b8]" : ""
-                  }
-
-                    ${tabs.length > 1 ? "mr-5" : "mr-0"}
-                    `}
-                  onClick={() => setFiltro(item.id)}
+                <motion.div
                   key={item.id}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setFiltro(item.id)}
+                  className={`cursor-pointer ${
+                    tabs.length > 1 ? "mr-5" : "mr-0"
+                  }`}
                 >
-                  {item.nomeTab}
-                </h3>
+                  <motion.h3
+                    animate={{
+                      color: Filtro === item.id ? "#1c84b8" : "#ffffff",
+                    }}
+                    transition={{
+                      duration: 0.5,
+                    }}
+                    className={`md:text-4xl text-2xl font-bangers ${
+                      Filtro === item.id ? "border-b-2 border-[#1c84b8]" : ""
+                    }`}
+                  >
+                    {item.nomeTab}
+                  </motion.h3>
+                </motion.div>
               );
             })}
           </div>
 
-          <button
+          {showArrows && (
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleScroll("right")}
+            >
+              <FaChevronRight className="text-white text-2xl" />
+            </motion.button>
+          )}
+
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => {
               setModalAddTabs(true), (contentModal.current = "Add Tabs");
             }}
           >
             <FaPlus className="text-2xl" />
-          </button>
+          </motion.button>
 
           <ModalReutilizavel
             isOpenModal={modalAddTabs}
@@ -120,7 +182,11 @@ export const CardComponent = () => {
           />
         </section>
 
-        {Filtro === 2 ? <ListaDeCompra></ListaDeCompra> : <TarefasDinamicas />}
+            {Filtro === 2 ? (
+              <ListaDeCompra></ListaDeCompra>
+            ) : (
+              <TarefasDinamicas />
+            )}
       </section>
 
       {/* <section

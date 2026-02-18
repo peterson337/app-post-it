@@ -51,7 +51,7 @@ import { SelectFilterTasks } from "./SelectFilterTasks";
 import { FaArrowDown } from "react-icons/fa";
 import { MaisOpcoes } from "./MaisOpcoes";
 import { FaPlus } from "react-icons/fa";
-
+import { motion, AnimatePresence } from "framer-motion";
 import Fab from "@mui/material/Fab";
 import { Tasks as Tarefas } from "../components/context/ts/types";
 import TextField from "@mui/material/TextField";
@@ -66,6 +66,7 @@ export type Tasks = {
   color: string;
   colorText: boolean;
   link?: string;
+  nomeLink?: string;
 };
 
 interface TaskCardProps {
@@ -113,6 +114,7 @@ const TaskCard = ({
   //prettier-ignore
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
   const textInputModalIndexarLink = React.useRef("");
+  const textInputModalNomeLink = React.useRef("");
 
   const inputColorRef = React.useRef("");
   const inputColorValue = inputColorRef.current;
@@ -162,8 +164,9 @@ const TaskCard = ({
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const indexarLinkTarefaSelecionada = () => {
-    if(textInputModalIndexarLink.current === "") return;
+    if (textInputModalIndexarLink.current === "") return;
     item.link = textInputModalIndexarLink.current;
+    item.nomeLink = textInputModalNomeLink.current || textInputModalIndexarLink.current;
     setModoTarefas([...modoTarefas]);
     setisOpenModalReutilizavel(false);
     localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
@@ -180,10 +183,21 @@ const TaskCard = ({
           <h3 className="text-2xl">Indexar link na tarefa selecionada</h3>
           <TextField
             id="outlined-basic"
-            label="Outlined"
+            label="Nome do Link"
             variant="outlined"
             autoFocus={true}
-            onChange={(e) => textInputModalIndexarLink.current = e.target.value}
+            onChange={(e) =>
+              (textInputModalNomeLink.current = e.target.value)
+            }
+          />
+          <TextField
+            id="outlined-basic"
+            label="URL do Link"
+            variant="outlined"
+            placeholder="Insira um link"
+            onChange={(e) =>
+              (textInputModalIndexarLink.current = e.target.value)
+            }
           />
 
           <div className="flex flex-row gap-4 w-full justify-end">
@@ -226,7 +240,7 @@ const TaskCard = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {item.link}
+                {item.nomeLink}
               </a>
             )}
           </Typography>
@@ -692,6 +706,7 @@ export const TarefasDinamicas = () => {
               <TextField
                 id="outlined-basic"
                 variant="outlined"
+                type="search"
                 placeholder="Filtrar tarefas"
                 sx={{
                   backgroundColor: "white",
@@ -726,117 +741,133 @@ export const TarefasDinamicas = () => {
           />
         </div>
       </section>
-
-      <div
-        className="h-[calc(100dvh-15rem)]  overflow-auto scrollbar-thin 
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={Filtro}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.9 }}
+        >
+          <div
+            className="h-[calc(100dvh-15rem)]  overflow-auto scrollbar-thin 
           scrollbar-thumb-sky-500 scrollbar-track-sky-300   scrollbar-thumb-rounded-full 
           scrollbar-track-rounded-full "
-      >
-        {modoTarefas.map((val: ModoTarefa) => (
-          <Fragment key={val.id}>
-            {Filtro === val.id && (
-              <section>
-                {filterTasks !== true && isShowButtonsAfterFinishTasks ? (
-                  <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap mt-5 md:mt-0 ">
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        apagarTodasAsTarefasConcluidas();
-                        handleClose(); // Fechar o menu após clicar
-                      }}
-                      className="bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
-                    >
-                      Apagar tarefas concluidas
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        apagarTodasAsTarefasConcluidas("desmarcar");
-                        handleClose(); // Fechar o menu após clicar
-                      }}
-                      className="bg-green-500 hover:bg-green-600 rounded-lg active:bg-green-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
-                    >
-                      Desmarcar as tarefas
-                    </Button>
+          >
+            {modoTarefas.map((val: ModoTarefa) => (
+              <Fragment key={val.id}>
+                {Filtro === val.id && (
+                  <section>
+                    {filterTasks !== true && isShowButtonsAfterFinishTasks ? (
+                      <div className="flex flex-col md:flex-row justify-center items-center gap-3 flex-wrap mt-5 md:mt-0 ">
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            apagarTodasAsTarefasConcluidas();
+                            handleClose(); // Fechar o menu após clicar
+                          }}
+                          className="bg-red-500 hover:bg-red-600 rounded-lg active:bg-red-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                        >
+                          Apagar tarefas concluidas
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            apagarTodasAsTarefasConcluidas("desmarcar");
+                            handleClose(); // Fechar o menu após clicar
+                          }}
+                          className="bg-green-500 hover:bg-green-600 rounded-lg active:bg-green-600 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                        >
+                          Desmarcar as tarefas
+                        </Button>
 
-                    <Button
-                      variant="contained"
-                      onClick={() => setFilterTasks(true)}
-                      className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
-                    >
-                      Mostrar os post it
-                    </Button>
-                  </div>
-                ) : tasksFiltered.length > 0 ? (
-                  <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleDragEnd}
-                  >
-                    <SortableContext
-                      items={tasksFiltered.map((item: any) => item.id)}
-                    >
-                      <section
-                        className={`
+                        <Button
+                          variant="contained"
+                          onClick={() => setFilterTasks(true)}
+                          className="bg-cyan-600 hover:bg-cyan-700 rounded-lg active:bg-cyan-700 w-72 p-2 md:w-96 md:text-[20px] font-bold"
+                        >
+                          Mostrar os post it
+                        </Button>
+                      </div>
+                    ) : tasksFiltered.length > 0 ? (
+                      <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                      >
+                        <SortableContext
+                          items={tasksFiltered.map((item: any) => item.id)}
+                        >
+                          <section
+                            className={`
                            md:grid md:grid-cols-[repeat(auto-fill,minmax(22rem,1fr))]
                            flex flex-col justify-center items-center gap-3
                           `}
-                      >
-                        {tasksByTextFilter.length > 0 ? (
-                          tasksByTextFilter.map((item: any) => (
-                            <TaskCard
-                              key={item.id}
-                              item={item}
-                              finishOrEditTasks={finishOrEditTasks}
-                              setNewTask={setNewTask}
-                              setIsOpenModalEditTasks={setIsOpenModalEditTasks}
-                              setTest={setTest}
-                              val={val}
-                              id={item.id}
-                              isOpenModalEditTasks={isOpenModalEditTasks}
-                              test={test}
-                              newTask={newTask}
-                              setModoTarefas={setModoTarefas}
-                              modoTarefas={modoTarefas}
-                              keyWords={keyWords}
-                              styleCard={styleCard}
-                              setStyleCard={setStyleCard}
-                            />
-                          ))
-                        ) : (
-                          <h3
-                            className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
-                        h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] "
                           >
-                            Nenhuma tarefa encontrada.
-                          </h3>
-                        )}
-                      </section>
-                    </SortableContext>
-                  </DndContext>
-                ) : (
-                  <div className="md:flex md:justify-center">
-                    <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
-                      {filterTasks === true
-                        ? " Nenhuma tarefa foi marcada como concluída 😞"
-                        : " Não existem tarefas salvas 😞"}
-                    </p>
-                  </div>
+                            {tasksByTextFilter.length > 0 ? (
+                              tasksByTextFilter.map((item: any) => (
+                                <TaskCard
+                                  key={item.id}
+                                  item={item}
+                                  finishOrEditTasks={finishOrEditTasks}
+                                  setNewTask={setNewTask}
+                                  setIsOpenModalEditTasks={
+                                    setIsOpenModalEditTasks
+                                  }
+                                  setTest={setTest}
+                                  val={val}
+                                  id={item.id}
+                                  isOpenModalEditTasks={isOpenModalEditTasks}
+                                  test={test}
+                                  newTask={newTask}
+                                  setModoTarefas={setModoTarefas}
+                                  modoTarefas={modoTarefas}
+                                  keyWords={keyWords}
+                                  styleCard={styleCard}
+                                  setStyleCard={setStyleCard}
+                                />
+                              ))
+                            ) : (
+                              <h3
+                                className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
+                        h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] "
+                              >
+                                Nenhuma tarefa encontrada.
+                              </h3>
+                            )}
+                          </section>
+                        </SortableContext>
+                      </DndContext>
+                    ) : (
+                      <div className="md:flex md:justify-center">
+                        <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
+                          {filterTasks === true
+                            ? " Nenhuma tarefa foi marcada como concluída 😞"
+                            : " Não existem tarefas salvas 😞"}
+                        </p>
+                      </div>
+                    )}
+                  </section>
                 )}
-              </section>
-            )}
-          </Fragment>
-        ))}
-      </div>
+              </Fragment>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
-      <section className="w-[100%] flex justify-end mt-3 ">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9 }}
+        className="absolute bottom-3 right-10"
+      >
         <Fab
-          className={`bg-sky-500 hover:bg-sky-600  text-white   absolute bottom-3 right-10`}
+          className={`bg-sky-500 hover:bg-sky-600  text-white`}
           onClick={() => setIsOpenModalTarefaDinamica(true)}
         >
           <FaPlus />
         </Fab>
-      </section>
+      </motion.div>
     </>
   );
 };

@@ -33,6 +33,7 @@ export const MaisOpcoes = (props: any) => {
       <TextField
         id="outlined-basic"
         variant="outlined"
+        type="search"
         placeholder="Filtrar tarefas"
         sx={{
           backgroundColor: "white",
