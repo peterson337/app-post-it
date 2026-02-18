@@ -140,7 +140,7 @@ const TaskCard = ({
     e: string,
     postId: number,
     grupTasksId: number,
-    colorText?: boolean
+    colorText?: boolean,
   ) => {
     modoTarefas.map((val) => {
       if (val.id === grupTasksId)
@@ -149,7 +149,7 @@ const TaskCard = ({
             item.id === postId &&
             (e === ""
               ? (item.colorText = colorText as any)
-              : ((item.color = e), (inputColorRef.current = e)))
+              : ((item.color = e), (inputColorRef.current = e))),
         );
       setModoTarefas([...modoTarefas]);
     });
@@ -166,7 +166,8 @@ const TaskCard = ({
   const indexarLinkTarefaSelecionada = () => {
     if (textInputModalIndexarLink.current === "") return;
     item.link = textInputModalIndexarLink.current;
-    item.nomeLink = textInputModalNomeLink.current || textInputModalIndexarLink.current;
+    item.nomeLink =
+      textInputModalNomeLink.current || textInputModalIndexarLink.current;
     setModoTarefas([...modoTarefas]);
     setisOpenModalReutilizavel(false);
     localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
@@ -186,9 +187,7 @@ const TaskCard = ({
             label="Nome do Link"
             variant="outlined"
             autoFocus={true}
-            onChange={(e) =>
-              (textInputModalNomeLink.current = e.target.value)
-            }
+            onChange={(e) => (textInputModalNomeLink.current = e.target.value)}
           />
           <TextField
             id="outlined-basic"
@@ -294,11 +293,11 @@ const TaskCard = ({
                   aria-haspopup="true"
                   aria-expanded={anchorEls[item.id] ? "true" : undefined}
                   onClick={(event: any) => {
-                    setAnchorEls((prev) => ({
+                    (setAnchorEls((prev) => ({
                       ...prev,
                       [id]: event.currentTarget,
                     })),
-                      setSelectedId(id);
+                      setSelectedId(id));
                   }}
                   className="text-2xl"
                   style={styleI}
@@ -348,7 +347,7 @@ const TaskCard = ({
                         "",
                         item.id,
                         val.id,
-                        !item.colorText
+                        !item.colorText,
                       ) as unknown as React.MouseEventHandler<HTMLButtonElement>
                     }
                   >
@@ -418,7 +417,7 @@ export const TarefasDinamicas = () => {
   const finishOrEditTasks = (
     id: number,
     idTypetask: number,
-    action: string
+    action: string,
   ) => {
     modoTarefas.map((val) => {
       if (val.id === idTypetask && val.tasks.length > 0) {
@@ -428,22 +427,22 @@ export const TarefasDinamicas = () => {
           setModoTarefas([...modoTarefas]);
           localStorage.setItem(
             "colecaoTarefas",
-            JSON.stringify([...modoTarefas])
+            JSON.stringify([...modoTarefas]),
           );
           ShowButtonsAfterFinishTasks();
         } else if (action === "concluida") {
           val.tasks.map(
-            (item) => item.id === id && (item.completed = !item.completed)
+            (item) => item.id === id && (item.completed = !item.completed),
           );
           localStorage.setItem(
             "colecaoTarefas",
-            JSON.stringify([...modoTarefas])
+            JSON.stringify([...modoTarefas]),
           );
           setModoTarefas([...modoTarefas]);
           ShowButtonsAfterFinishTasks();
         } else if (action === "editar") {
           if (newTask.length === 0)
-            setIsOpenSnacker(true), setAlert("Adicione uma tarefa");
+            (setIsOpenSnacker(true), setAlert("Adicione uma tarefa"));
           else {
             val.tasks.map((item) => {
               if (item.id === id) {
@@ -454,7 +453,7 @@ export const TarefasDinamicas = () => {
             });
             localStorage.setItem(
               "colecaoTarefas",
-              JSON.stringify([...modoTarefas])
+              JSON.stringify([...modoTarefas]),
             );
             setModoTarefas([...modoTarefas]);
             setNewTask("");
@@ -473,7 +472,7 @@ export const TarefasDinamicas = () => {
     modoTarefas.map((val) => {
       if (val.id === Filtro) {
         const activeIndex = val.tasks.findIndex(
-          (item) => item.id === active.id
+          (item) => item.id === active.id,
         );
         const overIndex = val.tasks.findIndex((item) => item.id === over.id);
         const newTasks = arrayMove(val.tasks, activeIndex, overIndex);
@@ -490,7 +489,7 @@ export const TarefasDinamicas = () => {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -507,7 +506,7 @@ export const TarefasDinamicas = () => {
       if (item.id === Filtro) {
         if (filterTasks !== "null") {
           const tasksFiltered = item.tasks.filter(
-            (item) => item.completed === (filterTasks as unknown as boolean)
+            (item) => item.completed === (filterTasks as unknown as boolean),
           );
           setTasksFiltered(tasksFiltered as any);
         } else {
@@ -531,7 +530,7 @@ export const TarefasDinamicas = () => {
           return;
         }
 
-        setModoTarefas((prev) =>
+        (setModoTarefas((prev) =>
           prev.map((val) => {
             if (val.id === Filtro) {
               const updatedTasks =
@@ -542,9 +541,9 @@ export const TarefasDinamicas = () => {
               return { ...val, tasks: updatedTasks };
             }
             return val;
-          })
+          }),
         ),
-          localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas));
+          localStorage.setItem("colecaoTarefas", JSON.stringify(modoTarefas)));
         setIsShowButtonsAfterFinishTasks(false);
       }
     });
@@ -743,7 +742,7 @@ export const TarefasDinamicas = () => {
       </section>
       <AnimatePresence mode="wait">
         <motion.div
-          key={Filtro}
+          key={`${Filtro}-${filterTasks}`}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
@@ -805,47 +804,76 @@ export const TarefasDinamicas = () => {
                           `}
                           >
                             {tasksByTextFilter.length > 0 ? (
-                              tasksByTextFilter.map((item: any) => (
-                                <TaskCard
-                                  key={item.id}
-                                  item={item}
-                                  finishOrEditTasks={finishOrEditTasks}
-                                  setNewTask={setNewTask}
-                                  setIsOpenModalEditTasks={
-                                    setIsOpenModalEditTasks
-                                  }
-                                  setTest={setTest}
-                                  val={val}
-                                  id={item.id}
-                                  isOpenModalEditTasks={isOpenModalEditTasks}
-                                  test={test}
-                                  newTask={newTask}
-                                  setModoTarefas={setModoTarefas}
-                                  modoTarefas={modoTarefas}
-                                  keyWords={keyWords}
-                                  styleCard={styleCard}
-                                  setStyleCard={setStyleCard}
-                                />
-                              ))
+                              <AnimatePresence initial={false}>
+                                {tasksByTextFilter.map((item: any) => (
+                                  <motion.div
+                                    key={item.id}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.98, y: 8 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.98, y: -8 }}
+                                    transition={{ duration: 0.18 }}
+                                  >
+                                    <TaskCard
+                                      item={item}
+                                      finishOrEditTasks={finishOrEditTasks}
+                                      setNewTask={setNewTask}
+                                      setIsOpenModalEditTasks={
+                                        setIsOpenModalEditTasks
+                                      }
+                                      setTest={setTest}
+                                      val={val}
+                                      id={item.id}
+                                      isOpenModalEditTasks={
+                                        isOpenModalEditTasks
+                                      }
+                                      test={test}
+                                      newTask={newTask}
+                                      setModoTarefas={setModoTarefas}
+                                      modoTarefas={modoTarefas}
+                                      keyWords={keyWords}
+                                      styleCard={styleCard}
+                                      setStyleCard={setStyleCard}
+                                    />
+                                  </motion.div>
+                                ))}
+                              </AnimatePresence>
                             ) : (
-                              <h3
-                                className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
+                              <AnimatePresence>
+                                <motion.h3
+                                  key="no-tasks-message"
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: -10 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
                         h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] "
-                              >
-                                Nenhuma tarefa encontrada.
-                              </h3>
+                                >
+                                  Nenhuma tarefa encontrada.
+                                </motion.h3>
+                              </AnimatePresence>
                             )}
                           </section>
                         </SortableContext>
                       </DndContext>
                     ) : (
-                      <div className="md:flex md:justify-center">
-                        <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
-                          {filterTasks === true
-                            ? " Nenhuma tarefa foi marcada como concluída 😞"
-                            : " Não existem tarefas salvas 😞"}
-                        </p>
-                      </div>
+                      <motion.h3
+                        key="no-tasks-message"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="text-red-500 text-2xl mt-3 font-bold m-[auto] text-center md:mx-auto 
+            h-[calc(100vh-30rem)] w-[calc(100dvw-10rem)] "
+                      >
+                        <div className="md:flex md:justify-center">
+                          <p className="text-red-500 md:text-2xl font-bold text-start text-[22px] mt-3">
+                            {filterTasks === true
+                              ? " Nenhuma tarefa foi marcada como concluída 😞"
+                              : " Não existem tarefas salvas 😞"}
+                          </p>
+                        </div>
+                      </motion.h3>
                     )}
                   </section>
                 )}

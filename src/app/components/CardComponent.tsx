@@ -11,11 +11,11 @@ import {
 } from "react-icons/fa";
 import ModalReutilizavel from "./ModalReutilizavel";
 import useCustomHook from "../hook/useCustomHook";
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 export const CardComponent = () => {
   const { addedTabSelected } = useCustomHook();
   //prettier-ignore
-  const { Filtro, setIsSideBar, tabs, setFiltro, setTabs } = useContext(GlobalContext);
+  const { Filtro, setIsSideBar, tabs, modoTarefas, setFiltro, setTabs } = useContext(GlobalContext);
   const [modalAddTabs, setModalAddTabs] = React.useState(false);
   const evitarAdicionarAbaRepetida = useRef(false);
   const numbers = useRef<string[]>([]);
@@ -49,9 +49,13 @@ export const CardComponent = () => {
   useEffect(() => {
     if (evitarAdicionarAbaRepetida.current) return;
 
+    //prettier-ignore
     const firstTask = JSON.parse(localStorage.getItem("colecaoTarefas") || "[]");
 
-    const tabAtual = firstTask.find((item : any) => item.id === Filtro);
+    const tabAtual =
+      firstTask && firstTask.length > 0
+        ? firstTask.find((item: any) => item.id === Filtro)
+        : modoTarefas.find((item: any) => item.id === Filtro);
 
     for (let i = 0; i < 10; i++) numbers.current.push(String(i));
 
@@ -95,22 +99,26 @@ export const CardComponent = () => {
         className={`bg-[#373737] w-[95%] h-[95dvh] mt-5 p-5 rounded-[20px] `}
       >
         <div className="flex flex-row justify-between items-center">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => setIsSideBar(true)}
             className="text-3xl m-3 md:m-0"
           >
             <TbLayoutSidebarLeftCollapse />
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
             className="text-3xl"
             onClick={() => {
-              setModalAddTabs(true),
-                (contentModal.current = "Atalhos de teclado");
+              (setModalAddTabs(true),
+                (contentModal.current = "Atalhos de teclado"));
             }}
           >
             <FaKeyboard />
-          </button>
+          </motion.button>
         </div>
 
         <section className="flex flex-row justify-center gap-5 items-center mb-3 ">
@@ -130,9 +138,14 @@ export const CardComponent = () => {
             className={`flex flex-row ${tabs.length > 1 && showArrows === false  && 'justify-center'} gap-5 ${tabs.length > 1 ? "w-[100%] overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] " : "w-auto"}`}
           >
             {tabs.map((item) => {
+              const isActive = Filtro === item.id;
               return (
                 <motion.div
                   key={item.id}
+                  whileHover={{
+                    scale: 1.05,
+                    y: -4,
+                  }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setFiltro(item.id)}
                   className={`cursor-pointer ${
@@ -141,13 +154,13 @@ export const CardComponent = () => {
                 >
                   <motion.h3
                     animate={{
-                      color: Filtro === item.id ? "#1c84b8" : "#ffffff",
+                      color: isActive ? "#1c84b8" : "#ffffff",
                     }}
                     transition={{
-                      duration: 0.5,
+                      duration: 1.3,
                     }}
                     className={`md:text-4xl text-2xl font-bangers ${
-                      Filtro === item.id ? "border-b-2 border-[#1c84b8]" : ""
+                      isActive ? "border-b-2 border-[#1c84b8]" : ""
                     }`}
                   >
                     {item.nomeTab}
@@ -171,7 +184,7 @@ export const CardComponent = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => {
-              setModalAddTabs(true), (contentModal.current = "Add Tabs");
+              (setModalAddTabs(true), (contentModal.current = "Add Tabs"));
             }}
           >
             <FaPlus className="text-2xl" />
@@ -184,11 +197,7 @@ export const CardComponent = () => {
           />
         </section>
 
-            {Filtro === 2 ? (
-              <ListaDeCompra></ListaDeCompra>
-            ) : (
-              <TarefasDinamicas />
-            )}
+        {Filtro === 2 ? <ListaDeCompra></ListaDeCompra> : <TarefasDinamicas />}
       </section>
 
       {/* <section
