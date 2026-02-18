@@ -58,6 +58,7 @@ import TextField from "@mui/material/TextField";
 import useCustomHook from "../hook/useCustomHook";
 import { useRouter } from "next/navigation";
 import ModalReutilizavel from "@/app/components/ModalReutilizavel";
+import { IoCopy } from "react-icons/io5";
 
 export type Tasks = {
   id: number;
@@ -110,6 +111,19 @@ const TaskCard = ({
   setStyleCard,
 }: TaskCardProps) => {
   const TarefaConcluida = item.completed;
+
+  const handleCopyTaskName = async () => {
+    const text = item.nomeTarefa ?? "";
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      alert(
+        "Não foi possível copiar automaticamente. Copie manualmente o texto.",
+      );
+    }
+  };
 
   //prettier-ignore
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
@@ -220,29 +234,33 @@ const TaskCard = ({
           ref={setNodeRef}
           style={style}
         >
-          <Typography
-            className={`text-3xl md:text-4xl ${
-              TarefaConcluida
-                ? "line-through text-green-500"
-                : `${item.colorText}`
-            } w-full break-words h-36 overflow-auto font-bangers`}
-            color="text.secondary"
-            gutterBottom
-            style={styleP}
-          >
-            {item.nomeTarefa}
-            <br />
-            {item.link && (
-              <a
-                href={item.link}
-                className="text-blue-700 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {item.nomeLink}
-              </a>
-            )}
-          </Typography>
+          <div className="flex flex-row justify-between">
+            <Typography
+              className={`text-3xl md:text-4xl ${
+                TarefaConcluida
+                  ? "line-through text-green-500"
+                  : `${item.colorText}`
+              } w-full break-words h-36 overflow-auto font-bangers
+            `}
+              color="text.secondary"
+              gutterBottom
+              style={styleP}
+            >
+              {item.nomeTarefa}
+
+              {item.link && (
+                <a
+                  href={item.link}
+                  className="text-blue-700 hover:underline ml-5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {item.nomeLink}
+                </a>
+              )}
+            </Typography>
+          </div>
+
           <CardActions className="flex flex-row justify-between">
             <Tooltip title="Deletar tarefa">
               <button
@@ -320,14 +338,18 @@ const TaskCard = ({
                 }}
               >
                 <div className="flex flex-col p-2 gap-3">
-                  <label
-                    htmlFor={`inputColor`}
+                  <Button
                     className={`
-                    w-full p-2 rounded-lg bg-sky-600 text-white text-center cursor-pointer hover:bg-sky-700
+                    w-full p-2 rounded-lg bg-sky-600 text-white text-center cursor-pointer hover:bg-sky-700 relative
                     `}
                   >
-                    Mudar cor do post it
-                  </label>
+                    <h3>Mudar cor do post it</h3>
+
+                    <label
+                      htmlFor="inputColor"
+                      className="cursor-pointer w-full  h-full p-3 absolute"
+                    />
+                  </Button>
                   <input
                     id="inputColor"
                     type="color"
@@ -340,7 +362,7 @@ const TaskCard = ({
                     className="w-0 h-0 absolute opacity-0"
                   />
 
-                  <button
+                  <Button
                     className={`w-full p-2 rounded-lg bg-green-600 text-white text-center cursor-pointer hover:bg-green-700`}
                     onClick={() =>
                       changeColorPostIt(
@@ -352,14 +374,25 @@ const TaskCard = ({
                     }
                   >
                     Mudar cor do texto
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
                     className={`w-full p-2 rounded-lg bg-indigo-800 text-white text-center cursor-pointer hover:bg-indigo-900`}
                     onClick={() => setisOpenModalReutilizavel(true)}
                   >
                     Indexar o link na tarefa
-                  </button>
+                  </Button>
+
+                  <Button
+                    className={`w-full p-2 rounded-lg bg-red-600 text-white text-center cursor-pointer hover:bg-red-700`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleCopyTaskName();
+                    }}
+                  >
+                    Copiar o texto da tarefa
+                  </Button>
                 </div>
               </Menu>
             </div>
@@ -413,6 +446,10 @@ export const TarefasDinamicas = () => {
   });
   //prettier-ignore
   const [isShowButtonsAfterFinishTasks, setIsShowButtonsAfterFinishTasks] = useState(false);
+
+  const prevTaskIdsRef = React.useRef<Set<number> | null>(null);
+  const addedTaskTimeoutRef = React.useRef<number | null>(null);
+  const [lastAddedTaskId, setLastAddedTaskId] = useState<number | null>(null);
 
   const finishOrEditTasks = (
     id: number,
@@ -553,6 +590,47 @@ export const TarefasDinamicas = () => {
     //prettier-ignore
     return tasksFiltered.filter((item: Tarefas) => formatString(item.nomeTarefa).includes(formatString(textFilter)));
   }, [tasksFiltered, textFilter, tasksFiltered, modoTarefas]);
+
+  React.useEffect(() => {
+    //prettier-ignore
+    const tasksCurrentTab = modoTarefas.find((item) => item.id === Filtro)?.tasks ?? [];
+
+    const currentIds: number[] = tasksCurrentTab.map((t) => t.id);
+
+    const prev = prevTaskIdsRef.current;
+    if (!prev) {
+      prevTaskIdsRef.current = new Set<number>(currentIds);
+      return;
+    }
+
+    let addedId: number | null = null;
+    for (const id of currentIds) {
+      if (!prev.has(id)) addedId = id;
+    }
+
+    prevTaskIdsRef.current = new Set<number>(currentIds);
+
+    if (addedId !== null) {
+      setLastAddedTaskId(addedId);
+
+      if (addedTaskTimeoutRef.current !== null) {
+        window.clearTimeout(addedTaskTimeoutRef.current);
+      }
+
+      addedTaskTimeoutRef.current = window.setTimeout(() => {
+        setLastAddedTaskId(null);
+        addedTaskTimeoutRef.current = null;
+      }, 900);
+    }
+  }, [modoTarefas, Filtro]);
+
+  React.useEffect(() => {
+    return () => {
+      if (addedTaskTimeoutRef.current !== null) {
+        window.clearTimeout(addedTaskTimeoutRef.current);
+      }
+    };
+  }, []);
 
   //console.log(isShowMessage.current);
 
@@ -810,9 +888,28 @@ export const TarefasDinamicas = () => {
                                     key={item.id}
                                     layout
                                     initial={{ opacity: 0, scale: 0.98, y: 8 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    animate={
+                                      item.id === lastAddedTaskId
+                                        ? {
+                                            opacity: 1,
+                                            scale: [1, 1.03, 1],
+                                            y: [0, -2, 0],
+                                          }
+                                        : {
+                                            opacity: 1,
+                                            scale: 1,
+                                            y: 0,
+                                            boxShadow:
+                                              "0px 0px 0px rgba(0,0,0,0)",
+                                          }
+                                    }
                                     exit={{ opacity: 0, scale: 0.98, y: -8 }}
-                                    transition={{ duration: 0.18 }}
+                                    transition={{
+                                      duration:
+                                        item.id === lastAddedTaskId
+                                          ? 0.45
+                                          : 0.18,
+                                    }}
                                   >
                                     <TaskCard
                                       item={item}

@@ -36,7 +36,7 @@ type Backup = {
       completed: boolean;
       id: number;
       nomeTarefa: string;
-    }
+    },
   ];
 };
 
@@ -84,7 +84,7 @@ export const Tarefas = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    id: number
+    id: number,
   ) => {
     setAnchorEls((prev) => ({ ...prev, [id]: event.currentTarget }));
     setSelectedId(id);
@@ -134,12 +134,12 @@ export const Tarefas = () => {
   useEffect(() => {if (editTitleTask !== null && inputEditListName.current) inputEditListName.current.focus();}, [editTitleTask]);
 
   const inputEditTaskNameList = (item: any) => {
-    setEditTitleTask(item.id),
+    (setEditTitleTask(item.id),
       setAnchorEls((prev) => ({
         ...prev,
         [selectedId!]: null,
       })),
-      setNewTask(item.nomeGrupoTarefa);
+      setNewTask(item.nomeGrupoTarefa));
   };
 
   const formatNomeGrupoTarefa = (nome: string) =>
@@ -155,7 +155,8 @@ export const Tarefas = () => {
         backup(listSelected as Backup);
       }
 
-      if (e.ctrlKey && (e.key === "m" || e.key === "M")) setIsOpenModalTarefaDinamica(true);
+      if (e.ctrlKey && (e.key === "m" || e.key === "M"))
+        setIsOpenModalTarefaDinamica(true);
       else if (e.ctrlKey && e.key === ",") setIsOpenModal(true);
 
       if (e.key === "a" && e.altKey) setiSOpenModalCreateTypeTask(true);
@@ -233,7 +234,7 @@ export const Tarefas = () => {
     if (useId) {
       const listaTarefasEscolhida = backupData.find(
         (item) =>
-          formatString(item.nomeGrupoTarefa) === formatString(textDropdown)
+          formatString(item.nomeGrupoTarefa) === formatString(textDropdown),
       );
 
       if (listaTarefasEscolhida) {
@@ -245,7 +246,7 @@ export const Tarefas = () => {
           setModalBackup(false);
           localStorage.setItem(
             "colecaoTarefas",
-            JSON.stringify([...modoTarefas])
+            JSON.stringify([...modoTarefas]),
           );
           setTextDropdown("");
         } else {
@@ -385,8 +386,8 @@ export const Tarefas = () => {
                           Filtro === item.id && editTitleTask !== item.id
                             ? "bg-[#116d96]"
                             : editTitleTask === item.id
-                            ? "justify-center items-center gap-2"
-                            : "hover:bg-white/20"
+                              ? "justify-center items-center gap-2"
+                              : "hover:bg-white/20"
                         } mx-2 cursor-pointer  mb-3 rounded-lg`}
                         key={item.id}
                       >
@@ -399,7 +400,7 @@ export const Tarefas = () => {
                               className="ml-4 h-12 rounded-xl text-black pl-3  border-white bg-white  outline-none border-none w-[11rem]"
                               required
                               onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>
+                                e: React.ChangeEvent<HTMLInputElement>,
                               ) => setNewTask(e.target.value)}
                             />
                           </>
@@ -447,15 +448,26 @@ export const Tarefas = () => {
                               {editTitleTask !== item.id ? (
                                 <>
                                   <MenuItem
-                                    onClick={() =>
-                                      handleClose("excluir", item.id)
-                                    }
+                                    onClick={() => {
+                                      setAnchorEls((prev) => ({
+                                        ...prev,
+                                        [selectedId!]: null,
+                                      }));
+                                      handleClose("excluir", item.id);
+                                    }}
                                   >
                                     Excluir do grupo de tarefas
                                   </MenuItem>
 
                                   <MenuItem
-                                    onClick={() => inputEditTaskNameList(item)}
+                                    onClick={() => {
+                                      setAnchorEls((prev) => ({
+                                        ...prev,
+                                        [selectedId!]: null,
+                                      }));
+
+                                      inputEditTaskNameList(item);
+                                    }}
                                   >
                                     Editar o nome da lista de tarefas
                                   </MenuItem>
@@ -478,17 +490,24 @@ export const Tarefas = () => {
                               ) : (
                                 <>
                                   <MenuItem
-                                    onClick={() => handleClose("edit", item.id)}
+                                    onClick={() => {
+                                      setAnchorEls((prev) => ({
+                                        ...prev,
+                                        [selectedId!]: null,
+                                      }));
+
+                                      handleClose("edit", item.id);
+                                    }}
                                   >
                                     Salvar o novo nome da lista de tarefa{" "}
                                   </MenuItem>
                                   <MenuItem
                                     onClick={() => {
-                                      setEditTitleTask(null),
+                                      (setEditTitleTask(null),
                                         setAnchorEls((prev) => ({
                                           ...prev,
                                           [selectedId!]: null,
-                                        }));
+                                        })));
                                     }}
                                   >
                                     Cancelar a edição
