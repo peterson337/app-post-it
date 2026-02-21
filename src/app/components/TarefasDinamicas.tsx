@@ -68,6 +68,7 @@ export type Tasks = {
   colorText: boolean;
   link?: string;
   nomeLink?: string;
+  linkColor?: string;
 };
 
 interface TaskCardProps {
@@ -129,6 +130,7 @@ const TaskCard = ({
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
   const textInputModalIndexarLink = React.useRef("");
   const textInputModalNomeLink = React.useRef("");
+  const textInputModalLinkColor = React.useRef("");
 
   const inputColorRef = React.useRef("");
   const inputColorValue = inputColorRef.current;
@@ -180,8 +182,8 @@ const TaskCard = ({
   const indexarLinkTarefaSelecionada = () => {
     if (textInputModalIndexarLink.current === "") return;
     item.link = textInputModalIndexarLink.current;
-    item.nomeLink =
-      textInputModalNomeLink.current || textInputModalIndexarLink.current;
+    item.nomeLink = textInputModalNomeLink.current || textInputModalIndexarLink.current;
+    item.linkColor = textInputModalLinkColor.current;
     setModoTarefas([...modoTarefas]);
     setisOpenModalReutilizavel(false);
     localStorage.setItem("colecaoTarefas", JSON.stringify([...modoTarefas]));
@@ -201,6 +203,7 @@ const TaskCard = ({
             label="Nome do Link"
             variant="outlined"
             autoFocus={true}
+            defaultValue={item.nomeLink}
             onChange={(e) => (textInputModalNomeLink.current = e.target.value)}
           />
           <TextField
@@ -208,10 +211,20 @@ const TaskCard = ({
             label="URL do Link"
             variant="outlined"
             placeholder="Insira um link"
+            defaultValue={item.link}
             onChange={(e) =>
               (textInputModalIndexarLink.current = e.target.value)
             }
           />
+          <div className="flex flex-row items-center gap-2">
+            <Typography>Cor do Link:</Typography>
+            <input
+              type="color"
+              defaultValue={item.linkColor || "#1d4ed8"}
+              onChange={(e) => (textInputModalLinkColor.current = e.target.value)}
+              className="cursor-pointer w-10 h-10 rounded-full cursor-pointer border-none p-0 overflow-hidden [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-full"
+            />
+          </div>
 
           <div className="flex flex-row gap-4 w-full justify-end">
             <Button
@@ -251,7 +264,8 @@ const TaskCard = ({
               {item.link && (
                 <a
                   href={item.link}
-                  className="text-blue-700 hover:underline ml-5"
+                  className={`hover:underline ml-5`}
+                  style={{ color: item.linkColor ? item.linkColor : "#1d4ed8" }}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -662,9 +676,11 @@ export const TarefasDinamicas = () => {
 
         const formatWordKeys = nameTasks.map((item) => item?.toUpperCase());
 
-        const removeDuplicate = new Set(formatWordKeys);
+        const finalKeys: string[] = [];
+        
+        formatWordKeys.forEach((key) => {if (key) !key.includes("-") && finalKeys.push(key)});
 
-        setKeyWords(Array.from(removeDuplicate) as string[]);
+        setKeyWords(finalKeys);
       } else setKeyWords([]);
     } else setKeyWords([]);
   }, [Filtro, modoTarefas]);
