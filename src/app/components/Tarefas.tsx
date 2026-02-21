@@ -26,6 +26,9 @@ import { db } from "../firebase";
 import useCustomHook from "../hook/useCustomHook";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 type Backup = {
   id: number;
   nomeGrupoTarefa: string;
@@ -149,6 +152,12 @@ export const Tarefas = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+
+        if (e.key === "s" && e.altKey && !useId) {
+          toast.error("Você precisa estar logado.");
+          return ;
+        }
+
       if (e.key === "s" && e.altKey && useId) {
         const listSelected = modoTarefas.find((item) => item.id === Filtro);
 
@@ -533,6 +542,8 @@ export const Tarefas = () => {
           iSOpenModalCreateTypeTask={iSOpenModalCreateTypeTask}
         />
       ) : null}
+      
+      <ToastContainer theme="colored" />
     </main>
   );
 };
