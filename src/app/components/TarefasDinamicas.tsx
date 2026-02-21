@@ -676,9 +676,11 @@ export const TarefasDinamicas = () => {
 
         const formatWordKeys = nameTasks.map((item) => item?.toUpperCase());
 
+        const removeDuplicate = new Set(formatWordKeys);
+
         const finalKeys: string[] = [];
         
-        formatWordKeys.forEach((key) => {if (key) !key.includes("-") && finalKeys.push(key)});
+        Array.from(removeDuplicate).forEach((key) => {if (key) !key.includes("-") && finalKeys.push(key)});
 
         setKeyWords(finalKeys);
       } else setKeyWords([]);
